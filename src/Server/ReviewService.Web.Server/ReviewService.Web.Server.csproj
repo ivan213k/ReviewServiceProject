@@ -10,10 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Client\ReviewService.Blazor.Client\ReviewService.Blazor.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\Shared\ReviewService.Shared\ReviewService.Shared.csproj" />
+    <ProjectReference Include="..\ReviewService.Infrastructure\ReviewService.Infrastructure.csproj" />
   </ItemGroup>
 
 

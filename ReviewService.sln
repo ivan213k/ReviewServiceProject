@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService.Blazor.Client", "src\Client\ReviewService.Blazor.Client\ReviewService.Blazor.Client.csproj", "{FA85C2EB-66A5-4BFA-BDBD-5BA4B3EE0B8B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{410FB839-8FED-4FCE-8D0E-1445F80A326A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewService.Shared", "src\Shared\ReviewService.Shared\ReviewService.Shared.csproj", "{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,10 @@ Global
 		{FA85C2EB-66A5-4BFA-BDBD-5BA4B3EE0B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA85C2EB-66A5-4BFA-BDBD-5BA4B3EE0B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA85C2EB-66A5-4BFA-BDBD-5BA4B3EE0B8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +84,8 @@ Global
 		{30EBF555-8DDF-49CB-9158-DAE029426A8B} = {7D6E969A-6BA1-49AD-8E00-EA7F922B0E1D}
 		{3773E1D0-4F6B-49CA-BDB7-5390D5A07A62} = {7D6E969A-6BA1-49AD-8E00-EA7F922B0E1D}
 		{FA85C2EB-66A5-4BFA-BDBD-5BA4B3EE0B8B} = {ED915D1F-B3B7-41FA-B373-1085D6D62D0E}
+		{410FB839-8FED-4FCE-8D0E-1445F80A326A} = {8F464667-8BC6-46F2-BD58-0A76C1DC5014}
+		{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F} = {410FB839-8FED-4FCE-8D0E-1445F80A326A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABF9B33B-58F0-4B1D-BADF-B956A6829098}
