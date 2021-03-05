@@ -4,14 +4,12 @@ using ReviewService.Domain.Entites;
 
 namespace ReviewService.Infrastructure.Persistance.Configurations
 {
-    class AreaConfiguration : IEntityTypeConfiguration<Area>
+    class EvaluationPointConfiguration : IEntityTypeConfiguration<EvaluationPoint>
     {
-        public void Configure(EntityTypeBuilder<Area> builder)
+        public void Configure(EntityTypeBuilder<EvaluationPoint> builder)
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Name).IsRequired();
-
-            builder.HasMany(p => p.AreaItems);
         }
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ReviewService.Domain.Entites;
 
 namespace ReviewService.Infrastructure.Persistance.Configurations
 {
-    class AreaItemConfiguration
+    class AreaItemConfiguration : IEntityTypeConfiguration<AreaItem>
     {
+        public void Configure(EntityTypeBuilder<AreaItem> builder)
+        {
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Name).IsRequired();
+        }
     }
 }
