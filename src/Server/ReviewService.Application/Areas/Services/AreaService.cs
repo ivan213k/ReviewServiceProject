@@ -1,7 +1,6 @@
 ﻿using ReviewService.Application.Areas.Interfaces;
 using ReviewService.Application.Repository.Interfaces;
 using ReviewService.Domain.Entites;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,19 +14,29 @@ namespace ReviewService.Application.Areas.Services
         {
             _areaRepository = areaRepository;
         }
-        public Task AddAreaAsync(Area area)
+        public async Task AddAreaAsync(Area area)
         {
-            throw new NotImplementedException();
+            await _areaRepository.CreateAsync(area);
         }
 
-        public Task<Area> GetAreaByIdAsync(int id)
+        public async Task DeleteAreaAsync(Area area)
         {
-            throw new NotImplementedException();
+            await _areaRepository.DeleteAsync(area);
         }
 
-        public Task<List<Area>> GetAreasAsync()
+        public async Task<Area> GetAreaByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _areaRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<Area>> GetAreasAsync()
+        {
+            return await _areaRepository.GetAllAsync();
+        }
+
+        public async Task UpdateAreaAsync(Area area)
+        {
+            await _areaRepository.UpdateAsync(area);
         }
     }
 }

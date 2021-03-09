@@ -1,0 +1,5 @@
+﻿{
+  "ConnectionStrings": {
+    "LocalConnection": "Server=(localdb)\\mssqllocaldb;Database=ReviewServiceDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}
