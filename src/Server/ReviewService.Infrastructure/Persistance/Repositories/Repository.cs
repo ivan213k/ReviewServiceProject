@@ -45,7 +45,7 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
 
         public async Task UpdateAsync(TEntity item)
         {
-            _dbSet.Update(item);
+            _dbContext.Entry(item).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
     }
