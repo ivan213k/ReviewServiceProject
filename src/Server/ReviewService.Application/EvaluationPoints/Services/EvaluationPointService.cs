@@ -1,10 +1,10 @@
-﻿using ReviewService.Application.Areas.Interfaces;
+﻿using ReviewService.Application.EvaluationPoints.Interfaces;
 using ReviewService.Application.Repository.Interfaces;
 using ReviewService.Domain.Entites;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ReviewService.Application.Areas.Services
+namespace ReviewService.Application.EvaluationPoints.Services
 {
     public class EvaluationPointService : IEvaluationPointService
     {

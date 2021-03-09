@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ReviewService.Application.Areas.Interfaces
+namespace ReviewService.Application.ImportanceLevels.Interfaces
 {
     public interface IImportanceLevelService
     {
