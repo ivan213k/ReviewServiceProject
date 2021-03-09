@@ -27,7 +27,7 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
             return await _dbSet.AsNoTracking().Where(searchExpression).ToListAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(object id)
         {
             return await _dbSet.FindAsync(id);
         }
