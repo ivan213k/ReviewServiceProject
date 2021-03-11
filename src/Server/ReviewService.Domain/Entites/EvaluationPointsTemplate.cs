@@ -2,12 +2,12 @@
 
 namespace ReviewService.Domain.Entites
 {
-    public class EvaluationPoint
+    public class EvaluationPointsTemplate
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int EvaluationPointsTemplateId { get; set; }
-
+        public List<ReviewTemplate> ReviewTemplates { get; set; }
+        public List<EvaluationPoint> EvaluationPoints { get; set; }
     }
 }

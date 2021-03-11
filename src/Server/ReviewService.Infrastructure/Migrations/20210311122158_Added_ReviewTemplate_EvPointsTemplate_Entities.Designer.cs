@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReviewService.Infrastructure.Persistance;
 
 namespace ReviewService.Infrastructure.Migrations
 {
     [DbContext(typeof(ReviewServiceDbContext))]
-    partial class ReviewServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210311122158_Added_ReviewTemplate_EvPointsTemplate_Entities")]
+    partial class Added_ReviewTemplate_EvPointsTemplate_Entities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

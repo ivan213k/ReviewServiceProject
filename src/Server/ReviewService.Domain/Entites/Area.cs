@@ -8,5 +8,6 @@ namespace ReviewService.Domain.Entites
         public string Name { get; set; }
         public string Description { get; set; }
         public List<AreaItem> AreaItems { get; set; }
+        public List<ReviewTemplate> ReviewTemplates { get; set; }
     }
 }
