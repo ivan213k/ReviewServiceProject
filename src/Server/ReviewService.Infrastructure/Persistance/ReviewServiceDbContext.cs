@@ -11,6 +11,7 @@ namespace ReviewService.Infrastructure.Persistance
         public virtual DbSet<Area> Areas { get; set; }
         public virtual DbSet<AreaItem> AreaItems { get; set; }
         public virtual DbSet<EvaluationPoint> EvaluationPoints { get; set; }
+        public virtual DbSet<EvaluationPointItem> EvaluationPointItems { get; set; }
         public virtual DbSet<ImportanceLevel> ImportanceLevels { get; set; }
         public ReviewServiceDbContext()
         {
@@ -23,7 +24,7 @@ namespace ReviewService.Infrastructure.Persistance
             modelBuilder.ApplyConfiguration(new AreaItemConfiguration());
             modelBuilder.ApplyConfiguration(new EvaluationPointConfiguration());
             modelBuilder.ApplyConfiguration(new ImportanceLevelConfiguration());
-
+            modelBuilder.ApplyConfiguration(new EvaluationPointItemConfiguration());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
