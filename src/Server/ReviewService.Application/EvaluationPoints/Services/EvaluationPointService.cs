@@ -8,21 +8,21 @@ namespace ReviewService.Application.EvaluationPoints.Services
 {
     public class EvaluationPointService : IEvaluationPointService
     {
-        private readonly IRepository<EvaluationPoint> _evaluationPointRepository;
+        private readonly IRepository<EvaluationPointsTemplate> _evaluationPointTemplateRepository;
 
-        public EvaluationPointService(IRepository<EvaluationPoint> evaluationPointRepository)
+        public EvaluationPointService(IRepository<EvaluationPointsTemplate> evaluationPointTemplateRepository)
         {
-            _evaluationPointRepository = evaluationPointRepository;
+            _evaluationPointTemplateRepository = evaluationPointTemplateRepository;
         }
 
-        public async Task<List<EvaluationPoint>> GetEvaluationPointsAsync()
+        public async Task<List<EvaluationPointsTemplate>> GetEvaluationPointTemplatesAsync()
         {
-            return await _evaluationPointRepository.GetAllAsync();
+            return await _evaluationPointTemplateRepository.GetAllAsync();
         }
 
-        public async Task AddEvaluationPointAsync(EvaluationPoint evaluationPoint)
+        public async Task AddEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)
         {
-            await _evaluationPointRepository.CreateAsync(evaluationPoint);
+            await _evaluationPointTemplateRepository.CreateAsync(evaluationPointsTemplate);
         }
 
     }

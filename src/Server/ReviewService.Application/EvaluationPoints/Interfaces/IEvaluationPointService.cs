@@ -6,7 +6,7 @@ namespace ReviewService.Application.EvaluationPoints.Interfaces
 {
     public interface IEvaluationPointService
     {
-        Task<List<EvaluationPoint>> GetEvaluationPointsAsync();
-        Task AddEvaluationPointAsync(EvaluationPoint evaluationPoint);
+        Task<List<EvaluationPointsTemplate>> GetEvaluationPointTemplatesAsync();
+        Task AddEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate);
     }
 }
