@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService.Blazor.Client
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{410FB839-8FED-4FCE-8D0E-1445F80A326A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewService.Shared", "src\Shared\ReviewService.Shared\ReviewService.Shared.csproj", "{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService.Shared", "src\Shared\ReviewService.Shared\ReviewService.Shared.csproj", "{727EFA87-48E0-4CDD-AA76-A5840D9C6A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
