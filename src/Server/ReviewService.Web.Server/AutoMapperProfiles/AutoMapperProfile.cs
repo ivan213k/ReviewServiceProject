@@ -11,6 +11,8 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<AreaItem, AreaItemApiModel>().ReverseMap();
             CreateMap<Area, AreaApiModel>().ReverseMap();
             CreateMap<ImportanceLevel, ImportanceLevelApiModel>().ReverseMap();
+            CreateMap<EvaluationPointsTemplate, EvaluationPointsTemplateApiModel>().ReverseMap();
+            CreateMap<EvaluationPoint, EvaluationPointApiModel>().ReverseMap();
         }
     }
 }
