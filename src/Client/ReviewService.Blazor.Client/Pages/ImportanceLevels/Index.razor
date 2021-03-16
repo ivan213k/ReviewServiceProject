@@ -1,0 +1,51 @@
+﻿@page "/importancelevels"
+
+<Header Value="Importance levels"></Header>
+
+<div class="content">
+    <form method="post">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Name" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Description" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Color" />
+            </div>
+            <div class="col-md-1">
+                <input type="submit" class="btn-light " value="Add row" />
+            </div>
+        </div>
+    </form>
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" class="table-light">Name</th>
+                        <th scope="col" class="table-light">Description</th>
+                        <th scope="col" class="table-light">Color</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>il1</td>
+                        <td>il1</td>
+                        <td>il1</td>
+                        <td><a href="#" class="oi oi-trash"></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
+
+
