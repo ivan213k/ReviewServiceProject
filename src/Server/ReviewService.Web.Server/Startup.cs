@@ -46,6 +46,7 @@ namespace ReviewService.Web.Server
 
             services.AddTransient<IRepository<Area>,Repository<Area>>();
             services.AddTransient<IRepository<EvaluationPoint>, Repository<EvaluationPoint>>();
+            services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
             services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
             services.AddTransient<IRepository<ReviewTemplate>, Repository<ReviewTemplate>>();

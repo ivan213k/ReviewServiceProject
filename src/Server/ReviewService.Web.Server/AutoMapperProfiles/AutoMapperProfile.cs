@@ -8,6 +8,8 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
     {
         public AutoMapperProfile()
         {
+            CreateMap<AreaItem, AreaItemApiModel>().ReverseMap();
+            CreateMap<Area, AreaApiModel>().ReverseMap();
             CreateMap<ImportanceLevel, ImportanceLevelApiModel>().ReverseMap();
         }
     }
