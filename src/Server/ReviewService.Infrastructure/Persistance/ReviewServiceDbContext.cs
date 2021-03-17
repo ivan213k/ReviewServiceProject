@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using ReviewService.Domain.Entites;
 using ReviewService.Infrastructure.Persistance.Configurations;
-using System.IO;
 
 namespace ReviewService.Infrastructure.Persistance
 {
@@ -16,7 +14,8 @@ namespace ReviewService.Infrastructure.Persistance
         public virtual DbSet<EvaluationPointsTemplate> EvaluationPointsTemplates { get; set; }
         public virtual DbSet<EvaluationPoint> EvaluationPoints { get; set; }
         public virtual DbSet<ImportanceLevel> ImportanceLevels { get; set; }
-        public ReviewServiceDbContext()
+        public ReviewServiceDbContext(DbContextOptions<ReviewServiceDbContext> options)
+            : base(options)
         {
             Database.Migrate();
         }
@@ -32,14 +31,6 @@ namespace ReviewService.Infrastructure.Persistance
             modelBuilder.ApplyConfiguration(new ReviewEvaluationConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewSessionConfiguration());
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile("dbsettings.json");
-            var config = builder.Build();
-            string connectionString = config.GetConnectionString("LocalConnection");
-            optionsBuilder.UseSqlServer(connectionString);
-        }
+        
     }
 }

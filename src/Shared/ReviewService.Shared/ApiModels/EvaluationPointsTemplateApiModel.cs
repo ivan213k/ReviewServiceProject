@@ -2,11 +2,11 @@
 
 namespace ReviewService.Shared.ApiModels
 {
-    public class AreaApiModel
+    public class EvaluationPointsTemplateApiModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<AreaItemApiModel> AreaItems { get; set; }
+        public List<EvaluationPointApiModel> EvaluationPoints { get; set; }
     }
 }
