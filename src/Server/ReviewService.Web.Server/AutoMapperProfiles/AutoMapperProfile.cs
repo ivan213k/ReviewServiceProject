@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ReviewService.Domain.Entites;
+using ReviewService.Domain.Enums;
+using ReviewService.Shared.ApiEnums;
 using ReviewService.Shared.ApiModels;
 
 namespace ReviewService.Web.Server.AutoMapperProfiles
@@ -14,6 +16,11 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<EvaluationPointsTemplate, EvaluationPointsTemplateApiModel>().ReverseMap();
             CreateMap<EvaluationPoint, EvaluationPointApiModel>().ReverseMap();
             CreateMap<ReviewTemplate, ReviewTemplateApiModel>().ReverseMap();
+            CreateMap<ReviewSession, ReviewSessionApiModel>().ReverseMap();
+            CreateMap<ReviewEvaluation, ReviewEvaluationApiModel>().ReverseMap();
+
+            CreateMap<ReviewSessionStatus, ReviewSessionStatusApiEnum>().ReverseMap();
+            CreateMap<ReviewEvaluationStatus, ReviewEvaluationStatusApiEnum>().ReverseMap();
         }
     }
 }
