@@ -13,6 +13,7 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<ImportanceLevel, ImportanceLevelApiModel>().ReverseMap();
             CreateMap<EvaluationPointsTemplate, EvaluationPointsTemplateApiModel>().ReverseMap();
             CreateMap<EvaluationPoint, EvaluationPointApiModel>().ReverseMap();
+            CreateMap<ReviewTemplate, ReviewTemplateApiModel>().ReverseMap();
         }
     }
 }
