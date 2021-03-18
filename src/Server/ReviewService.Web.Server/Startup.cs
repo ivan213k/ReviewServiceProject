@@ -43,7 +43,7 @@ namespace ReviewService.Web.Server
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddTransient<IAreaRepository, AreaRepository>();
-            services.AddTransient<IRepository<EvaluationPoint>, Repository<EvaluationPoint>>();
+            services.AddTransient<IEvaluationPointTemplateRepository, EvaluationPointTemplateRepository>();
             services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
             services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
