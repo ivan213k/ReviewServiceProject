@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ using ReviewService.Application.ReviewTemplates.Services;
 using ReviewService.Domain.Entites;
 using ReviewService.Infrastructure.Persistance;
 using ReviewService.Infrastructure.Persistance.Repositories;
-using ReviewService.Web.Server.AutoMapperProfiles;
+using System.Reflection;
 
 namespace ReviewService.Web.Server
 {
@@ -41,8 +40,7 @@ namespace ReviewService.Web.Server
                     Configuration.GetConnectionString("LocalConnection")));
             services.AddControllersWithViews();
             services.AddRazorPages();
-            var mapperConfig = new MapperConfiguration(mc => mc.AddProfile<AutoMapperProfile>());
-            services.AddSingleton(mapperConfig.CreateMapper());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddTransient<IRepository<Area>,Repository<Area>>();
             services.AddTransient<IRepository<EvaluationPoint>, Repository<EvaluationPoint>>();

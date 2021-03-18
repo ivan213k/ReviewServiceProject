@@ -28,14 +28,6 @@ namespace ReviewService.Web.Server.Controllers
             return _mapper.Map<List<ReviewSessionApiModel>>(reviewSessions);
         }
 
-        [HttpPost]
-        public async Task CreateReviewSession([FromBody] ReviewSessionApiModel reviewSessionApiModel, ReviewTemplateApiModel reviewTemplateApiModel)
-        {
-            var reviewTemplate = _mapper.Map<ReviewTemplate>(reviewTemplateApiModel);
-            var reviewSession = _mapper.Map<ReviewSession>(reviewSessionApiModel);
-            
-            await _reviewSessionService.CreateReviewSessionAsync(reviewTemplate, reviewSession);
-        }
 
         [HttpPut]
         public async Task PublishReviewSession([FromBody] ReviewSessionApiModel reviewSessionApiModel)
