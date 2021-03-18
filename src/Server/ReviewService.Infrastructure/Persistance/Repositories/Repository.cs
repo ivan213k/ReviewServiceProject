@@ -13,7 +13,7 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
         DbContext _dbContext;
         DbSet<TEntity> _dbSet;
 
-        public Repository(DbContext dbContext)
+        public Repository(ReviewServiceDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = dbContext.Set<TEntity>();

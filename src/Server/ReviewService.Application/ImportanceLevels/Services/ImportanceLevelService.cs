@@ -29,5 +29,15 @@ namespace ReviewService.Application.ImportanceLevels.Services
         {
             await _importanceLevelRepository.DeleteAsync(importanceLevel);
         }
+
+        public async Task<ImportanceLevel> GetByIdAsync(int id)
+        {
+            return await _importanceLevelRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateImportanceLevelAsync(ImportanceLevel importanceLevel)
+        {
+            await _importanceLevelRepository.UpdateAsync(importanceLevel);
+        }
     }
 }

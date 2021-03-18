@@ -8,16 +8,16 @@ namespace ReviewService.Application.EvaluationPoints.Services
 {
     public class EvaluationPointService : IEvaluationPointService
     {
-        private readonly IRepository<EvaluationPointsTemplate> _evaluationPointTemplateRepository;
+        private readonly IEvaluationPointTemplateRepository _evaluationPointTemplateRepository;
 
-        public EvaluationPointService(IRepository<EvaluationPointsTemplate> evaluationPointTemplateRepository)
+        public EvaluationPointService(IEvaluationPointTemplateRepository evaluationPointTemplateRepository)
         {
             _evaluationPointTemplateRepository = evaluationPointTemplateRepository;
         }
 
         public async Task<List<EvaluationPointsTemplate>> GetEvaluationPointTemplatesAsync()
         {
-            return await _evaluationPointTemplateRepository.GetAllAsync();
+            return await _evaluationPointTemplateRepository.GetEvaluationPointsTemplates();
         }
 
         public async Task AddEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)
@@ -25,5 +25,14 @@ namespace ReviewService.Application.EvaluationPoints.Services
             await _evaluationPointTemplateRepository.CreateAsync(evaluationPointsTemplate);
         }
 
+        public async Task<EvaluationPointsTemplate> GetByIdAsync(int id)
+        {
+            return await _evaluationPointTemplateRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)
+        {
+            await _evaluationPointTemplateRepository.UpdateAsync(evaluationPointsTemplate);
+        }
     }
 }

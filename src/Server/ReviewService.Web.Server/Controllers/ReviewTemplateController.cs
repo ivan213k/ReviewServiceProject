@@ -4,7 +4,6 @@ using ReviewService.Application.ReviewTemplates.Interfaces;
 using ReviewService.Domain.Entites;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewService.Web.Server.Controllers
@@ -38,8 +37,7 @@ namespace ReviewService.Web.Server.Controllers
         [HttpPut]
         public async Task UpdateReviewTemplate([FromBody] ReviewTemplateApiModel reviewTemplateApiModel) 
         {
-            var reviewTemplates = await _reviewTemplateService.GetReviewTemplatesAsync();
-            var reviewTemplate = reviewTemplates.FirstOrDefault(r => r.Id == reviewTemplateApiModel.Id);
+            var reviewTemplate = await _reviewTemplateService.GetByIdAsync(reviewTemplateApiModel.Id);
             if (reviewTemplate is null)
             {
                 return;
@@ -51,8 +49,7 @@ namespace ReviewService.Web.Server.Controllers
         [HttpDelete]
         public async Task DeleteReviewTemplate(int id)
         {
-            var reviewTemplates = await _reviewTemplateService.GetReviewTemplatesAsync();
-            var reviewTemplate = reviewTemplates.FirstOrDefault(r => r.Id == id);
+            var reviewTemplate = await _reviewTemplateService.GetByIdAsync(id);
             if (reviewTemplate is null)
             {
                 return;

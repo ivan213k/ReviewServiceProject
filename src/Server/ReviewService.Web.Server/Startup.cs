@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ using ReviewService.Application.ReviewTemplates.Services;
 using ReviewService.Domain.Entites;
 using ReviewService.Infrastructure.Persistance;
 using ReviewService.Infrastructure.Persistance.Repositories;
-using ReviewService.Web.Server.AutoMapperProfiles;
+using System.Reflection;
 
 namespace ReviewService.Web.Server
 {
@@ -36,20 +35,19 @@ namespace ReviewService.Web.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DbContext, ReviewServiceDbContext>(options =>
+            services.AddDbContext<ReviewServiceDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("LocalConnection")));
             services.AddControllersWithViews();
             services.AddRazorPages();
-            var mapperConfig = new MapperConfiguration(mc => mc.AddProfile<AutoMapperProfile>());
-            services.AddSingleton(mapperConfig.CreateMapper());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddTransient<IRepository<Area>,Repository<Area>>();
-            services.AddTransient<IRepository<EvaluationPoint>, Repository<EvaluationPoint>>();
+            services.AddTransient<IAreaRepository, AreaRepository>();
+            services.AddTransient<IEvaluationPointTemplateRepository, EvaluationPointTemplateRepository>();
             services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
             services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
-            services.AddTransient<IRepository<ReviewTemplate>, Repository<ReviewTemplate>>();
+            services.AddTransient<IReviewTemplateRepository, ReviewTemplateRepository>();
 
             services.AddTransient<IAreaService, AreaService>();
             services.AddTransient<IEvaluationPointService, EvaluationPointService>();

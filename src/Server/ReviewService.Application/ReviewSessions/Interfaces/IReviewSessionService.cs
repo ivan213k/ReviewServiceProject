@@ -7,6 +7,7 @@ namespace ReviewService.Application.ReviewSessions.Interfaces
     public interface IReviewSessionService
     {
         Task<List<ReviewSession>> GetReviewSessionsAsync();
+        Task<ReviewSession> GetByIdAsync(int id);
         Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession);
         Task DeleteReviewSessionAsync(ReviewSession reviewSession);
         Task PublishReviewSessionAsync(ReviewSession reviewSession);

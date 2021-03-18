@@ -8,9 +8,9 @@ namespace ReviewService.Application.Areas.Services
 {
     public class AreaService : IAreaService
     {
-        private readonly IRepository<Area> _areaRepository;
+        private readonly IAreaRepository _areaRepository;
 
-        public AreaService(IRepository<Area> areaRepository)
+        public AreaService(IAreaRepository areaRepository)
         {
             _areaRepository = areaRepository;
         }
@@ -31,7 +31,7 @@ namespace ReviewService.Application.Areas.Services
 
         public async Task<List<Area>> GetAreasAsync()
         {
-            return await _areaRepository.GetAllAsync();
+            return await _areaRepository.GetAllAreasAsync();
         }
 
         public async Task UpdateAreaAsync(Area area)
