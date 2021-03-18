@@ -8,8 +8,8 @@ namespace ReviewService.Application.ReviewTemplates.Services
 {
     public class ReviewTemplateService : IReviewTemplateService
     {
-        private readonly IRepository<ReviewTemplate> _reviewTemplateRepository;
-        public ReviewTemplateService(IRepository<ReviewTemplate> reviewTemplateRepository)
+        private readonly IReviewTemplateRepository _reviewTemplateRepository;
+        public ReviewTemplateService(IReviewTemplateRepository reviewTemplateRepository)
         {
             _reviewTemplateRepository = reviewTemplateRepository;
         }
@@ -25,7 +25,7 @@ namespace ReviewService.Application.ReviewTemplates.Services
 
         public async Task<List<ReviewTemplate>> GetReviewTemplatesAsync()
         {
-            return await _reviewTemplateRepository.GetAllAsync();
+            return await _reviewTemplateRepository.GetReviewTemplatesAsync();
         }
 
         public async Task UpdateReviewTemplateAsync(ReviewTemplate reviewTemplate)
