@@ -35,14 +35,14 @@ namespace ReviewService.Web.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DbContext, ReviewServiceDbContext>(options =>
+            services.AddDbContext<ReviewServiceDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("LocalConnection")));
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddTransient<IRepository<Area>,Repository<Area>>();
+            services.AddTransient<IAreaRepository, AreaRepository>();
             services.AddTransient<IRepository<EvaluationPoint>, Repository<EvaluationPoint>>();
             services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
