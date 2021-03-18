@@ -25,5 +25,14 @@ namespace ReviewService.Application.EvaluationPoints.Services
             await _evaluationPointTemplateRepository.CreateAsync(evaluationPointsTemplate);
         }
 
+        public async Task<EvaluationPointsTemplate> GetByIdAsync(int id)
+        {
+            return await _evaluationPointTemplateRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)
+        {
+            await _evaluationPointTemplateRepository.UpdateAsync(evaluationPointsTemplate);
+        }
     }
 }

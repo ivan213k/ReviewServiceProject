@@ -4,7 +4,6 @@ using ReviewService.Application.ImportanceLevels.Interfaces;
 using ReviewService.Domain.Entites;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewService.Web.Server.Controllers
@@ -36,11 +35,21 @@ namespace ReviewService.Web.Server.Controllers
             await _importanceLevelService.AddImportanceLevelAsync(importanceLevel);
         }
 
+        [HttpPut]
+        public async Task UpdateImportanceLevel([FromBody] ImportanceLevelApiModel importanceLevelApiModel)
+        {
+            var importanceLevel = await _importanceLevelService.GetByIdAsync(importanceLevelApiModel.Id);
+            if (importanceLevel is null)
+            {
+                return;
+            }
+            _autoMapper.Map(importanceLevelApiModel, importanceLevel);
+            await _importanceLevelService.UpdateImportanceLevelAsync(importanceLevel);
+        }
         [HttpDelete]
         public async Task DeleteImportanceLevel(int id)
         {
-            var importanceLevels = await _importanceLevelService.GetImportanceLevelsAsync();
-            var importanceLevel = importanceLevels.FirstOrDefault(r => r.Id == id);
+            var importanceLevel = await _importanceLevelService.GetByIdAsync(id);
             if (importanceLevel is null)
             {
                 return;

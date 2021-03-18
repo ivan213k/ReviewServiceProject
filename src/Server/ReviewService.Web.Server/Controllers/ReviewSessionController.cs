@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.ReviewSessions.Interfaces;
-using ReviewService.Domain.Entites;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewService.Web.Server.Controllers
@@ -32,8 +30,7 @@ namespace ReviewService.Web.Server.Controllers
         [HttpPut]
         public async Task PublishReviewSession([FromBody] ReviewSessionApiModel reviewSessionApiModel)
         {
-            var reviewSessions = await _reviewSessionService.GetReviewSessionsAsync();
-            var reviewSession = reviewSessions.FirstOrDefault(r => r.Id == reviewSessionApiModel.Id);
+            var reviewSession = await _reviewSessionService.GetByIdAsync(reviewSessionApiModel.Id);
             if (reviewSession is null)
             {
                 return;
@@ -44,8 +41,7 @@ namespace ReviewService.Web.Server.Controllers
         [HttpDelete]
         public async Task DeleteReviewSession(int id)
         {
-            var reviewSessions = await _reviewSessionService.GetReviewSessionsAsync();
-            var reviewSession = reviewSessions.FirstOrDefault(r => r.Id == id);
+            var reviewSession = await _reviewSessionService.GetByIdAsync(id);
             if (reviewSession is null)
             {
                 return;

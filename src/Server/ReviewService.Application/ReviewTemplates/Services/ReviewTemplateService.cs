@@ -23,6 +23,11 @@ namespace ReviewService.Application.ReviewTemplates.Services
             await _reviewTemplateRepository.DeleteAsync(reviewTemplate);
         }
 
+        public async Task<ReviewTemplate> GetByIdAsync(int id)
+        {
+            return await _reviewTemplateRepository.GetByIdAsync(id);
+        }
+
         public async Task<List<ReviewTemplate>> GetReviewTemplatesAsync()
         {
             return await _reviewTemplateRepository.GetReviewTemplatesAsync();
