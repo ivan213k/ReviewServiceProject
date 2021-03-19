@@ -24,6 +24,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: 'src/Server/ReviewService.Web.Server/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/src/Server/ReviewService.Web.Server/Dockerfile'
         tags: |
-          $(tag)
+          $(Build.BuildId)
