@@ -7,15 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["src/Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj", "src/Server/ReviewService.Web.Server/"]
-COPY ["src/Shared/ReviewService.Shared/ReviewService.Shared.csproj", "src/Shared/ReviewService.Shared/"]
-COPY ["src/Server/ReviewService.Infrastructure/ReviewService.Infrastructure.csproj", "src/Server/ReviewService.Infrastructure/"]
-COPY ["src/Server/ReviewService.Application/ReviewService.Application.csproj", "src/Server/ReviewService.Application/"]
-COPY ["src/Server/ReviewService.Domain/ReviewService.Domain.csproj", "src/Server/ReviewService.Domain/"]
-COPY ["src/Client/ReviewService.Blazor.Client/ReviewService.Blazor.Client.csproj", "src/Client/ReviewService.Blazor.Client/"]
-RUN dotnet restore "src/Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj"
+COPY ["Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj", "Server/ReviewService.Web.Server/"]
+RUN dotnet restore "Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj"
 COPY . .
-WORKDIR "/src/src/Server/ReviewService.Web.Server"
+WORKDIR "/src/Server/ReviewService.Web.Server"
 RUN dotnet build "ReviewService.Web.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
