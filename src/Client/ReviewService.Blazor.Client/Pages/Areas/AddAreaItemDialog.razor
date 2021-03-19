@@ -1,0 +1,55 @@
+﻿@if (showDialog)
+{
+<div class="modal fade show d-block" id="staticBackdrop" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">@Title</h5>
+                <button @onclick="@Close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@AreaItem">
+                    <div class="form-group">
+                        <label for="areaItemName" class="col-form-label">Name:</label>
+                        <InputText @bind-Value="@AreaItem.Name" class="form-control" id="areaItemName"></InputText>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button @onclick="@Close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button @onclick="@PrimaryButtonClicked" type="button" class="btn btn-primary">Add area item</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    private bool showDialog;
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public Action OnPrimaryButtonClicked { get; set; }
+
+    public AreaItemApiModel AreaItem { get; set; }
+
+    public void Show()
+    {
+        AreaItem = new AreaItemApiModel();
+        showDialog = true;
+        StateHasChanged();
+    }
+    public void Close()
+    {
+        showDialog = false;
+        StateHasChanged();
+    }
+
+    private void PrimaryButtonClicked()
+    {
+        Close();
+        OnPrimaryButtonClicked?.Invoke();
+    }
+}

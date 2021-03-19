@@ -16,28 +16,30 @@
     </EditForm>
     <div class="row">
         <div class="col-md-5">
-            <h3 class="float-left">Area items: </h3>
+            <h4 class="float-left">Area items: </h4>
         </div>
         <div class="col-md-5">
-            <button class="btn-primary float-right">Add Row</button>
+            <button class="btn-primary float-right" @onclick="@AddRowClicked">Add Row</button>
         </div>
     </div>
-    <table class="table table-bordered m-2">
+    <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col" class="table-light">Name</th>         
-            </tr>
+                <th scope="col" class="table-light text-center">Name</th>
+                <th scope="col" class="table-light"></th>
+           </tr>
         </thead>
         <tbody>
             @foreach (var areaItem in area.AreaItems)
             {
                 <tr>
-                    <td>@areaItem.Name</td>
-                    <td><a href="#" class="oi oi-trash text-center"> Delete</a></td>
+                    <td class="text-center">@areaItem.Name</td>
+                    <td class="text-center"><button class="btn-danger" @onclick="() => DeleteRow(areaItem)">Delete</button></td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<Footer></Footer>
+<AddAreaItemDialog Title="Enter area item" @ref="@addAreaItemDialog" OnPrimaryButtonClicked="@AddAreaItemClicked"></AddAreaItemDialog>
+<Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
 
