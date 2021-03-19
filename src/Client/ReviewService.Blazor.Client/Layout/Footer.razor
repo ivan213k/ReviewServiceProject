@@ -1,0 +1,37 @@
+﻿<div class="container-fluid navbar-light bg-light border">
+    <div class="row float-right m-md-2">
+        <div class="float-right">
+            @if (IsSecondaryButtonVisible)
+            {
+                <button @onclick="@SecondaryButtonClicked" class="btn-secondary m-1">@SecondaryButtonText</button>
+            }
+                <button @onclick="@PrimaryButtonClicked" class="btn-primary m-1">@PrimaryButtonText</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string PrimaryButtonText { get; set; } = "Save";
+
+    [Parameter]
+    public string SecondaryButtonText { get; set; } = "Cancel";
+
+    [Parameter]
+    public bool IsSecondaryButtonVisible { get; set; } = true;
+
+    [Parameter]
+    public Action OnPrimaryButtonClicked { get; set; }
+
+    [Parameter]
+    public Action OnSecondaryButtonClicked { get; set; }
+
+    private void PrimaryButtonClicked()
+    {
+        OnPrimaryButtonClicked?.Invoke();
+    }
+    private void SecondaryButtonClicked()
+    {
+        OnSecondaryButtonClicked?.Invoke();
+    }
+}
