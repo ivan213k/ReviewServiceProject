@@ -20,5 +20,10 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
         {
             return await _dbContext.Areas.Include(a => a.AreaItems).ToListAsync();
         }
+
+        public async Task<Area> GetAreaByIdAsync(int id)
+        {
+            return await _dbContext.Areas.Include(a => a.AreaItems).FirstOrDefaultAsync(a => a.Id == id);
+        }
     }
 }

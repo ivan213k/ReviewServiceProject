@@ -1,0 +1,45 @@
+﻿@page "/addArea";
+<Header Value="Areas add"></Header>
+<div class="content">
+    <EditForm Model="@area">
+        <div class="row text-center">
+            <div class="col-md-5">
+                <label class="float-left" for="inputName">Name: </label>
+                <InputText @bind-Value="@area.Name" id="inputName" class="form-control" placeholder="area name"></InputText>
+            </div>
+            <div class="col-md-5">
+                <label class="float-left" for="inputDescription">Description: </label>
+                <InputTextArea @bind-Value="@area.Description" id="inputDescription" class="form-control" placeholder="area description"></InputTextArea>
+            </div>
+        </div>
+        <br />
+    </EditForm>
+    <div class="row">
+        <div class="col-md-5">
+            <h4 class="float-left">Area items: </h4>
+        </div>
+        <div class="col-md-5">
+            <button class="btn-primary float-right" @onclick="@AddRowClicked">Add Row</button>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" class="table-light text-center">Name</th>
+                <th scope="col" class="table-light"></th>
+           </tr>
+        </thead>
+        <tbody>
+            @foreach (var areaItem in area.AreaItems)
+            {
+                <tr>
+                    <td class="text-center">@areaItem.Name</td>
+                    <td class="text-center"><button class="btn-danger" @onclick="() => DeleteRow(areaItem)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<AddAreaItemDialog Title="Enter area item" @ref="@addAreaItemDialog" OnPrimaryButtonClicked="@AddAreaItemClicked"></AddAreaItemDialog>
+<Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
+

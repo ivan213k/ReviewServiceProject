@@ -54,7 +54,7 @@ namespace ReviewService.Web.Server.Controllers
             await _areaService.UpdateAreaAsync(area);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task DeleteArea(int id)
         {
             var area = await _areaService.GetAreaByIdAsync(id);

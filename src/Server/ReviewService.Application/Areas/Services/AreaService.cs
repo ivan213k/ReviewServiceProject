@@ -26,7 +26,7 @@ namespace ReviewService.Application.Areas.Services
 
         public async Task<Area> GetAreaByIdAsync(int id)
         {
-            return await _areaRepository.GetByIdAsync(id);
+            return await _areaRepository.GetAreaByIdAsync(id);
         }
 
         public async Task<List<Area>> GetAreasAsync()
