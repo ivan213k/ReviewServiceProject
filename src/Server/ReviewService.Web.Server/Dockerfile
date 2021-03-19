@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj", "Server/ReviewService.Web.Server/"]
-RUN dotnet restore "Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj"
+COPY ["src/Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj", "src/Server/ReviewService.Web.Server/"]
+RUN dotnet restore "src/Server/ReviewService.Web.Server/ReviewService.Web.Server.csproj"
 COPY . .
-WORKDIR "/src/Server/ReviewService.Web.Server"
+WORKDIR "/src/src/Server/ReviewService.Web.Server"
 RUN dotnet build "ReviewService.Web.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
