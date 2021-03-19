@@ -24,7 +24,7 @@ else
                         <td>@area.Name</td>
                         <td>@area.AreaItems.Count</td>
                         <td><a href="#" class="oi text-center">Edit</a></td>
-                        <td><a href="#" class="oi oi-trash text-center"> Delete</a></td>
+                        <td><button @onclick="() => OnDeleteClicked(area)" class="btn-danger">Delete</button></td>
                     </tr>
                     }
                 </tbody>
@@ -32,5 +32,6 @@ else
         </div>
     </div>
     <Footer IsSecondaryButtonVisible="false" PrimaryButtonText="Add new area" OnPrimaryButtonClicked="@OnAddNewAreaClicked"></Footer>
+    <DeleteConfirmation @ref="@deleteConfirmationDialog" OnPrimaryButtonClicked="DeleteArea"></DeleteConfirmation>
 }
 
