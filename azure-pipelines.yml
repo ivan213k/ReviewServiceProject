@@ -25,5 +25,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/src/Server/ReviewService.Web.Server/Dockerfile'
+        buildContext: .
         tags: |
           $(Build.BuildId)
