@@ -23,7 +23,7 @@ else
                     <tr>
                         <td>@area.Name</td>
                         <td>@area.AreaItems.Count</td>
-                        <td><a href="#" class="oi text-center">Edit</a></td>
+                        <td><a href="/editArea/@area.Id" class="oi text-center">Edit</a></td>
                         <td><button @onclick="() => OnDeleteClicked(area)" class="btn-danger">Delete</button></td>
                     </tr>
                     }
