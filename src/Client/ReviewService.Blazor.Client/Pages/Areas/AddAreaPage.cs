@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
+using ReviewService.Blazor.Client.Components;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,12 +14,14 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         private AreaApiModel area;
         private AddAreaItemDialog addAreaItemDialog;
         private EditForm editForm;
+        private ErrorMessage errorMessage;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
         public HttpClient HttpClient { get; set; }
+
         public AddAreaPage()
         {
             area = new AreaApiModel();
@@ -25,7 +29,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         }
 
         private void AddRowClicked()
-        {  
+        {
             addAreaItemDialog.Show();
         }
         private void AddAreaItemClicked()
@@ -45,9 +49,18 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             if (editForm.EditContext.Validate())
             {
-                await HttpClient.PostAsJsonAsync("api/Area", area);
-                NavigationManager.NavigateTo("/areas");
-            } 
+                var responseMessage = await HttpClient.PostAsJsonAsync("api/Area", area);
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/areas");
+                }
+                else
+                {
+                    var error = await responseMessage.Content.ReadFromJsonAsync<ProblemDetails>();  
+                    
+                    errorMessage.Show($"{responseMessage.ReasonPhrase}: {error.Title} {error.Detail}");
+                }
+            }
         }
     }
 }

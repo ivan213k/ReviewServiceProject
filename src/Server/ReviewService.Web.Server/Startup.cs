@@ -19,6 +19,9 @@ using ReviewService.Domain.Entites;
 using ReviewService.Infrastructure.Persistance;
 using ReviewService.Infrastructure.Persistance.Repositories;
 using System.Reflection;
+using FluentValidation.AspNetCore;
+using ReviewService.Shared.FluentValidators;
+using ReviewService.Web.Server.Filters;
 
 namespace ReviewService.Web.Server
 {
@@ -38,7 +41,10 @@ namespace ReviewService.Web.Server
             services.AddDbContext<ReviewServiceDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("LocalConnection")));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+                options.Filters.Add<ApiExceptionFilterAttribute>())
+                .AddFluentValidation(
+                fv => fv.RegisterValidatorsFromAssemblyContaining<AreaValidator>());
             services.AddRazorPages();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
