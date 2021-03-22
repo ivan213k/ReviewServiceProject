@@ -46,7 +46,7 @@ namespace ReviewService.Web.Server.Controllers
             await _reviewTemplateService.UpdateReviewTemplateAsync(reviewTemplate);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task DeleteReviewTemplate(int id)
         {
             var reviewTemplate = await _reviewTemplateService.GetByIdAsync(id);

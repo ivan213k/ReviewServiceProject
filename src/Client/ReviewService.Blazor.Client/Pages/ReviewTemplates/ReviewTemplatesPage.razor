@@ -24,7 +24,7 @@ else
                             <td>@reviewTemplate.Name</td>
                             <td>@reviewTemplate.Areas.Count</td>
                             <td><a href="" class="oi text-center">Edit</a></td>
-                            <td><button class="btn-danger">Delete</button></td>
+                            <td><button @onclick="() => OnDeleteClicked(reviewTemplate)" class="btn-danger">Delete</button></td>
                         </tr>
                     }
                 </tbody>
@@ -32,4 +32,5 @@ else
         </div>
     </div>
     <Footer IsSecondaryButtonVisible="false" PrimaryButtonText="Add new template"></Footer>
+    <DeleteConfirmation @ref="@deleteConfirmationDialog" OnPrimaryButtonClicked="DeleteReviewTemplate"></DeleteConfirmation>
 }
