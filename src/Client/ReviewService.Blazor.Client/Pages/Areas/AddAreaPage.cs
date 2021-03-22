@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,6 +11,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
     {
         private AreaApiModel area;
         private AddAreaItemDialog addAreaItemDialog;
+        private EditForm editForm;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -41,8 +43,11 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         }
         private async void OnSaveClicked()
         {
-            await HttpClient.PostAsJsonAsync("api/Area", area);
-            NavigationManager.NavigateTo("/areas");
+            if (editForm.EditContext.Validate())
+            {
+                await HttpClient.PostAsJsonAsync("api/Area", area);
+                NavigationManager.NavigateTo("/areas");
+            } 
         }
     }
 }

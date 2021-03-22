@@ -7,11 +7,13 @@
 else
 {
     <div class="content">
-        <EditForm Model="@area">
+        <EditForm @ref="@editForm" Model="@area">
+            <FluentValidationValidator />
             <div class="row text-center">
                 <div class="col-md-5">
                     <label class="float-left" for="inputName">Name: </label>
                     <InputText @bind-Value="@area.Name" id="inputName" class="form-control" placeholder="area name"></InputText>
+                    <ValidationMessage For="@(()=>area.Name)" />
                 </div>
                 <div class="col-md-5">
                     <label class="float-left" for="inputDescription">Description: </label>
