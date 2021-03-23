@@ -19,6 +19,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");

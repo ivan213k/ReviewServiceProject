@@ -1,51 +1,61 @@
-﻿@page "/importancelevels"
+﻿@page "/importancelevels";
 
 <Header Value="Importance levels"></Header>
 
-<div class="content m-md-4">
-    <form method="post">
-        <div class="row text-center">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Name" />
+@if (_importanceLevels == null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <div class="content m-md-4">
+        <EditForm method="post" Model="@_importanceLevel">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <input @bind-value="@_importanceLevel.Name" type="text" class="form-control" placeholder="Name" />
+                </div>
+                <div class="col-md-4">
+                    <input @bind-value="@_importanceLevel.Description" type="text" class="form-control" placeholder="Description" />
+                </div>
+                <div class="col-md-3">
+                    <input @bind-value="@_importanceLevel.Color" type="text" class="form-control" placeholder="Color" />
+                </div>
+                <div class="col-md-1">
+                    <input type="submit" class="btn-light" value="Add row" @onclick="@AddRowClicked" />
+                </div>
             </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Description" />
+        </EditForm>
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="table-light">Name</th>
+                            <th scope="col" class="table-light">Description</th>
+                            <th scope="col" class="table-light">Color</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var level in _importanceLevels)
+                        {
+                            <tr>
+                                <td>@level.Name</td>
+                                <td>@level.Description</td>
+                                <td>@level.Color</td>
+                                <td><button class="btn-danger" @onclick="() => OnDeleteClicked(level)">Delete</button></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Color" />
-            </div>
-            <div class="col-md-1">
-                <input type="submit" class="btn-light " value="Add row" />
-            </div>
-        </div>
-    </form>
-    <hr />
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col" class="table-light">Name</th>
-                        <th scope="col" class="table-light">Description</th>
-                        <th scope="col" class="table-light">Color</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>il1</td>
-                        <td>il1</td>
-                        <td>il1</td>
-                        <td><a href="#" class="oi oi-trash"></a></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
-</div>
-
-@code {
+    <Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
+    <DeleteConfirmation @ref="@_deleteConfirmation" OnPrimaryButtonClicked="DeleteLevel"></DeleteConfirmation>
 
 }
-
 
