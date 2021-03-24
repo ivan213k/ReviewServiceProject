@@ -1,0 +1,74 @@
+﻿@page "/addReviewTemplate";
+<Header Value="Review Template Add"></Header>
+@if (evaluationPointsTemplates is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="content">
+        <EditForm @ref="@editForm" Model="@reviewTemplate">
+            <FluentValidationValidator />
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <label class="float-left" for="inputName">Name: </label>
+                    <InputText @bind-Value="@reviewTemplate.Name" id="inputName" class="form-control" placeholder="template name"></InputText>
+                    <ValidationMessage For="@(() => reviewTemplate.Name)" />
+                </div>
+                <div class="col-md-4">
+                    <label class="float-left" for="inputDescription">Description: </label>
+                    <InputTextArea @bind-Value="@reviewTemplate.Description" id="inputDescription" class="form-control" placeholder="template description"></InputTextArea>
+                </div>
+                <div class="col-md-3">
+                    <label class="float-left" for="inputEvPoints">Evaluation Points: </label>
+                    <InputSelect @bind-Value="@reviewTemplate.EvaluationPointsTemplateId" @oninput="@OnEvaluationPointTemplateSelectionChanged" id="inputEvPoints" class="form-control">
+                        @foreach (var evaluationPointsTemplate in evaluationPointsTemplates)
+                            {
+                            <option class="dropdown-item" value="@evaluationPointsTemplate.Id">@evaluationPointsTemplate.Name</option>
+                            }
+                    </InputSelect>
+                    <label class="float-left" for="inputForMidPoint">Mid Evaluation Point: </label>
+                    <InputSelect @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">                     
+                        @foreach (var evaluationPoint in evaluationPoints)
+                            {
+                            <option class="dropdown-item" value="@evaluationPoint.Id">@evaluationPoint.Name</option>
+                            }   
+                    </InputSelect>
+                </div>
+            </div>
+            <br />
+        </EditForm>
+        <div class="row">
+            <div class="col-md-8">
+                <SearchArea OnAddAreaClicked="@AddAreaRow"></SearchArea>
+            </div>           
+        </div>
+        @if (selectedAreas.Count != 0)
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="table-light text-center">Name</th>
+                                <th scope="col" class="table-light">Area items</th>
+                                <th scope="col" class="table-light"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var area in selectedAreas)
+                            {
+                                <tr>
+                                    <td class="text-center">@area.Name</td>
+                                    <td class="text-center">@area.AreaItems.Count</td>
+                                    <td class="text-center"><button class="btn-danger" @onclick="() => DeleteAreaRow(area)">Delete</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>     
+        }
+    </div>
+    <Footer OnSecondaryButtonClicked="@OnCancelClicked" OnPrimaryButtonClicked="OnSaveClicked"></Footer>
+}

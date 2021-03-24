@@ -16,9 +16,16 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 
         [Inject]
         public HttpClient HttpClient { get; set; }
+        
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
+        }
+        private void OnAddReviewTemlateClicked()
+        {
+            NavigationManager.NavigateTo("/addReviewTemplate");
         }
 
         private void OnDeleteClicked(ReviewTemplateApiModel reviewTemplate)

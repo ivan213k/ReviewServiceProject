@@ -9,5 +9,6 @@ namespace ReviewService.Shared.ApiModels
         public string Description { get; set; }
         public List<AreaApiModel> Areas { get; set; }
         public int EvaluationPointsTemplateId { get; set; }
+        public int MidEvaluationPointId { get; set; }
     }
 }

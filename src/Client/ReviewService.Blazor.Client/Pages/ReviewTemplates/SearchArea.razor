@@ -1,0 +1,30 @@
+﻿<div>
+    <ul class="search-container">
+        <li>
+            <div>
+                <div class="form-outline">
+                    <label class="form-label m-2" for="form">Search areas: </label>
+                    <input type="search" @onfocus="@OnInputGetFocus" @bind-value="@SearchTerm" @bind-value:event="oninput" @onkeyup="SearchChanged" placeholder="type area name..." id="form" />
+                </div>
+            </div>
+        </li>
+        @if (isDropDownListVisible && areas != null)
+        {
+            <li><hr class="dropdown-divider" /></li>
+            @foreach (var area in areas)
+            {
+                <li>
+                    <div class="dropdown-item">
+                        <div class="row">
+                            <div class="col-sm">@area.Name</div>
+                            <div class="col-sm">
+                                <button @onclick="@(()=>AddAreaClicked(area))" class="btn-primary float-right">Add</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+</div>
