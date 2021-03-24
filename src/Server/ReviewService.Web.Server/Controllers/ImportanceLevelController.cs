@@ -46,7 +46,7 @@ namespace ReviewService.Web.Server.Controllers
             _autoMapper.Map(importanceLevelApiModel, importanceLevel);
             await _importanceLevelService.UpdateImportanceLevelAsync(importanceLevel);
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task DeleteImportanceLevel(int id)
         {
             var importanceLevel = await _importanceLevelService.GetByIdAsync(id);
