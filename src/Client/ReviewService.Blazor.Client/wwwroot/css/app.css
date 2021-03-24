@@ -31,11 +31,17 @@ a, .btn-link {
 }
 
 .search-container {
-    min-width:20rem;
-    padding: .5rem 0;
-    list-style: none;
+    min-width: 20rem;
+    padding: .5rem;
     border: 1px solid rgba(0,0,0,.15);
-    border-radius: .25rem;
+    border-radius: .25rem;  
+}
+.search-dropdown {
+    list-style: none;
+    max-height: 170px;
+    overflow: auto;
+    padding:1px;
+    margin:1px;
 }
 
 #blazor-error-ui {

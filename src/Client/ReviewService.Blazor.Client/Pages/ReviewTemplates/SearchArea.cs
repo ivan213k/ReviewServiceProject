@@ -12,10 +12,12 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 {
     public partial class SearchArea
     {
-        private bool isDropDownListVisible;
         private List<AreaApiModel> areas;
         private Timer timer;
-
+        public SearchArea()
+        {
+            areas = new List<AreaApiModel>();
+        }
         public string SearchTerm { get; set; }
 
         [Inject]
@@ -28,16 +30,6 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         {
             return await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
         }
-        private async void OnInputGetFocus()
-        {
-            areas = await LoadAreas();
-            isDropDownListVisible = true;
-            StateHasChanged();
-        }
-        private void OnInputLostFocus()
-        {
-            isDropDownListVisible = false;
-        }
         private void SearchChanged()
         {
             if (timer != null)
@@ -46,12 +38,21 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         }
         private async void OnTimerElapsed(object sender)
         {
-            areas = (await LoadAreas()).Where(a => a.Name.ToLower().Contains(SearchTerm.ToLower())).ToList();
+            if (string.IsNullOrEmpty(SearchTerm))
+            {
+                areas.Clear();
+            }
+            else
+            {
+                areas = (await LoadAreas()).Where(a => a.Name.ToLower().Contains(SearchTerm.ToLower())).ToList();
+            }
             StateHasChanged();
             timer.Dispose();
         }
         private void AddAreaClicked(AreaApiModel area)
         {
+            SearchTerm = "";
+            areas.Clear();
             OnAddAreaClicked?.Invoke(area);
         }
     }
