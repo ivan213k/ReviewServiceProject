@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ReviewService.Application.Areas.Interfaces;
 using ReviewService.Application.ReviewTemplates.Interfaces;
 using ReviewService.Domain.Entites;
 using ReviewService.Shared.ApiModels;
@@ -13,11 +14,13 @@ namespace ReviewService.Web.Server.Controllers
     public class ReviewTemplateController : ControllerBase
     {
         private readonly IReviewTemplateService _reviewTemplateService;
+        private readonly IAreaService _areService;
         private readonly IMapper _mapper;
-        public ReviewTemplateController(IReviewTemplateService reviewTemplateService, IMapper mapper)
+        public ReviewTemplateController(IReviewTemplateService reviewTemplateService, IMapper mapper, IAreaService areaService)
         {
             _reviewTemplateService = reviewTemplateService;
             _mapper = mapper;
+            _areService = areaService;
         }
 
         [HttpGet]
@@ -31,6 +34,11 @@ namespace ReviewService.Web.Server.Controllers
         public async Task AddReviewTemplate([FromBody] ReviewTemplateApiModel reviewTemplateApiModel)
         {
             var reviewTemplate = _mapper.Map<ReviewTemplate>(reviewTemplateApiModel);
+            reviewTemplate.Areas.Clear();
+            foreach (var area in reviewTemplateApiModel.Areas)
+            {
+                reviewTemplate.Areas.Add(await _areService.GetAreaByIdAsync(area.Id));
+            }
             await _reviewTemplateService.AddReviewTemplateAsync(reviewTemplate);
         }
 
@@ -43,6 +51,11 @@ namespace ReviewService.Web.Server.Controllers
                 return;
             }
             _mapper.Map(reviewTemplateApiModel, reviewTemplate);
+            reviewTemplate.Areas.Clear();
+            foreach (var area in reviewTemplateApiModel.Areas)
+            {
+                reviewTemplate.Areas.Add(await _areService.GetAreaByIdAsync(area.Id));
+            }
             await _reviewTemplateService.UpdateReviewTemplateAsync(reviewTemplate);
         }
 
