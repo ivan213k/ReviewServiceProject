@@ -1,11 +1,13 @@
 ﻿@page "/addArea";
 <Header Value="Areas add"></Header>
-<div class="content m-md-4">
-    <EditForm Model="@area">
+<div class="content">
+    <EditForm @ref="@editForm" Model="@area" On>
+        <FluentValidationValidator/>
         <div class="row text-center">
             <div class="col-md-5">
                 <label class="float-left" for="inputName">Name: </label>
                 <InputText @bind-Value="@area.Name" id="inputName" class="form-control" placeholder="area name"></InputText>
+                <ValidationMessage For="@(()=>area.Name)" />
             </div>
             <div class="col-md-5">
                 <label class="float-left" for="inputDescription">Description: </label>
@@ -40,6 +42,7 @@
         </tbody>
     </table>
 </div>
+<ErrorMessage @ref="@errorMessage"/>
 <AddAreaItemDialog Title="Enter area item" @ref="@addAreaItemDialog" OnPrimaryButtonClicked="@AddAreaItemClicked"></AddAreaItemDialog>
 <Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
 

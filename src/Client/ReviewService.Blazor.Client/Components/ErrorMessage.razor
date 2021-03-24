@@ -1,0 +1,25 @@
+﻿@if (isShow)
+{
+<div style="display:block" id="blazor-error-ui">
+    @Message
+    <a @onclick="@Close" class="dismiss">🗙</a>
+</div>
+}
+
+@code {
+    private bool isShow;
+    [Parameter]
+    public string Message { get; set; }
+
+    public void Show(string message)
+    {
+        isShow = true;
+        Message = message;
+        StateHasChanged();
+    }
+    public void Close() 
+    {
+        isShow = false;
+        StateHasChanged();
+    }
+}
