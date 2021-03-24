@@ -27,7 +27,7 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         private void OnAddEvaluationClicked()
         {
-            NavigationManager.NavigateTo("/evaluationpoints/add");
+            NavigationManager.NavigateTo("/evaluationpoints/create");
         }
 
     }

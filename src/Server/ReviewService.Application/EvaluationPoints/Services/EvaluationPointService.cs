@@ -34,5 +34,10 @@ namespace ReviewService.Application.EvaluationPoints.Services
         {
             await _evaluationPointTemplateRepository.UpdateAsync(evaluationPointsTemplate);
         }
+
+        public async Task DeleteEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)
+        {
+            await _evaluationPointTemplateRepository.DeleteAsync(evaluationPointsTemplate);
+        }
     }
 }

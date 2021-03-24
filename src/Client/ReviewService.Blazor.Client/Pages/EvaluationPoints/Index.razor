@@ -23,10 +23,10 @@ else
                         @foreach (var points in _evaluationpoints)
                         {
                             <tr>
-                                <td>il1</td>
-                                <td>il1</td>
+                                <td>@points.Name</td>
+                                <td>@points.Description</td>
                                 <td>
-                                    <a href="#">Edit</a>
+                                    <a href="/evaluationpoints/edit/@points.Id">Edit</a>
                                 </td>
                                 <td>
                                     <a href="#">Delete</a>

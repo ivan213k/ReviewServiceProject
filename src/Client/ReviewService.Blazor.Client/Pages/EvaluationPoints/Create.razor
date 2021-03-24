@@ -1,71 +1,54 @@
-﻿@page "/evaluationpoints/add"
+﻿@page "/evaluationpoints/create"
 
 <Header Value="Evaluation Points Add"></Header>
 
 <div class="content">
-    <div class="row">
-        <div class="col-9">
-            <form method="post">
-                <div class="row m-md-2">
-                    <div class="col-6">
-                        <label for="name">Name evaluation point:</label>
-                        <input type="text" id="name" class="form-control form-control-sm" />
+        <div class="row">
+            <div class="col-9">
+                <EditForm Model="_evaluationPointsTemplate" method="post">
+                    <div class="row m-md-2">
+                        <div class="col-6">
+                            <label for="name">Name evaluation point:</label>
+                            <input @bind-value="@_evaluationPointsTemplate.Name" type="text" id="name" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-6">
+                            <label for="description">Description:</label>
+                            <InputTextArea @bind-Value="_evaluationPointsTemplate.Description" id="description" class="form-control form-control-sm"></InputTextArea>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label for="description">Description:</label>
-                        <textarea id="description" class="form-control form-control-sm"></textarea>
+                    <div class="row m-md-2">
+                        <div class="col-md-9">
+                            <input @bind-value="@_evaluationPoint.Name" type="text" class="form-control" placeholder="Name evaluation point item" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="submit" class="btn-light " value="Add row" @onclick="@OnAddRowClicked" />
+                        </div>
                     </div>
-                </div>
-                <div class="row m-md-2">
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" placeholder="Name evaluation point item" />
+                    <div class="row m-md-2">
+                        <div class="col-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="table-light">Order</th>
+                                        <th scope="col" class="table-light">Name</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var point in _evaluationPointsTemplate.EvaluationPoints)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>@point.Name</td>
+                                            <td><button class="btn-danger" @onclick="() => OnDeleteClicked(point)">Delete</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <input type="submit" class="btn-light " value="Add row" />
-                    </div>
-                </div>
-                <div class="row m-md-2">
-                    <div class="col-12">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="table-light">Order</th>
-                                    <th scope="col" class="table-light">Name</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td>low</td>
-                                    <td>
-                                        <a href="#">Delete</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>middle</td>
-                                    <td>
-                                        <a href="#">Delete</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row m-md-2 text-right">
-                    <div class="col-12">
-                        <hr />
-                        <input type="submit" class="btn-light" value="Сancel"/>
-                        <input type="submit" class="btn-light" value="Save"/>
-                    </div>
-
-                </div>
-            </form>
+                </EditForm>
+            </div>
         </div>
     </div>
-</div>
-
-@code {
-
-}
+    <Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
