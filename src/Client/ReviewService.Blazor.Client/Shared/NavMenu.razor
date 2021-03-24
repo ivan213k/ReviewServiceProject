@@ -1,57 +1,10 @@
-﻿<div class="top-row navbar navbar-dark">
-    <a class="navbar-brand" href="">ReviewService</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="reviewsessions">
-                <span class="oi oi-plus" aria-hidden="true"></span> Review Sessions
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="reviewtemplates">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Review Templates
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="areas">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Areas
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="importancelevels">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Importance Levels
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="evaluationpoints">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Evoluation Points
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="roles">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Roles
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="users">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Users
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<MudNavMenu>
+    <MudNavLink Match="NavLinkMatch.All" Href="reviewsessions">Review Sessions</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="reviewtemplates">Review Templates</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="areas">Areas</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="importancelevels">Importance Levels</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="evaluationpoints">Evaluation Points</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="roles">Roles</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.All" Href="users">Users</MudNavLink>
+    <MudNavLink Href="">Main</MudNavLink>
+</MudNavMenu>

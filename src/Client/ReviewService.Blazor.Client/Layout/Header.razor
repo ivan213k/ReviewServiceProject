@@ -1,13 +1,10 @@
-﻿<div class="head px-4 row text-center ">
-    <div class="col-10">
-        <h3 class="text">@Value</h3>
-    </div>
-    <div class="col-2">
-        <a href="#" class="text">Enter</a>
-    </div>
-</div>
-
-@code {
-    [Parameter]
-    public string Value { get; set; }
-}
+﻿<MudAppBar Elevation="1">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+    <MudAppBarSpacer />
+    <MudText Typo="Typo.h5" Class="ml-3" Align="Align.Center">@Value</MudText>
+    <MudAppBarSpacer />
+    <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.End" />
+</MudAppBar>
+<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <NavMenu />
+</MudDrawer>
