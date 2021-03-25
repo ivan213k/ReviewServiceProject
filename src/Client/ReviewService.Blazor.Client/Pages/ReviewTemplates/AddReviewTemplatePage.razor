@@ -1,5 +1,6 @@
 ﻿@page "/addReviewTemplate";
-<Header Value="Review Template Add"></Header>
+@page "/editReviewTemplate/{Id:int}"
+<Header @ref="@header" Value="Review Template Add"></Header>
 @if (evaluationPointsTemplates is null)
 {
     <Loading />
@@ -28,7 +29,7 @@ else
                             }
                     </InputSelect>
                     <label class="float-left" for="inputForMidPoint">Mid Evaluation Point: </label>
-                    <InputSelect @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">                     
+                    <InputSelect  @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">                     
                         @foreach (var evaluationPoint in evaluationPoints)
                             {
                             <option class="dropdown-item" value="@evaluationPoint.Id">@evaluationPoint.Name</option>
@@ -54,7 +55,7 @@ else
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var area in selectedAreas)
+                            @foreach (var area in reviewTemplate.Areas)
                             {
                                 <tr>
                                     <td class="text-center">@area.Name</td>

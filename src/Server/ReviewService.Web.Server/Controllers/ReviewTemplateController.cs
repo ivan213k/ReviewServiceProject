@@ -30,6 +30,13 @@ namespace ReviewService.Web.Server.Controllers
             return _mapper.Map<List<ReviewTemplateApiModel>>(reviewTemplates);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ReviewTemplateApiModel> GetReviewTemplate(int id)
+        {
+            var reviewTemplate = await _reviewTemplateService.GetByIdAsync(id);
+            return _mapper.Map<ReviewTemplateApiModel>(reviewTemplate);
+        }
+
         [HttpPost]
         public async Task AddReviewTemplate([FromBody] ReviewTemplateApiModel reviewTemplateApiModel)
         {

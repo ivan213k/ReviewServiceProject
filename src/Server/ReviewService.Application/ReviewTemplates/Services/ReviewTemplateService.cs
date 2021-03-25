@@ -25,7 +25,7 @@ namespace ReviewService.Application.ReviewTemplates.Services
 
         public async Task<ReviewTemplate> GetByIdAsync(int id)
         {
-            return await _reviewTemplateRepository.GetByIdAsync(id);
+            return await _reviewTemplateRepository.GetReviewTemplateById(id);
         }
 
         public async Task<List<ReviewTemplate>> GetReviewTemplatesAsync()

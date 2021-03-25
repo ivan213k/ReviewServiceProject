@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using ReviewService.Blazor.Client.Layout;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,13 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
     {
         private ReviewTemplateApiModel reviewTemplate;
         private EditForm editForm;
-        private List<AreaApiModel> selectedAreas;
+        private Header header;
         private List<EvaluationPointsTemplateApiModel> evaluationPointsTemplates;
         private List<EvaluationPointApiModel> evaluationPoints;
-        
+
+        [Parameter]
+        public int? Id { get; set; }
+
         [Inject]
         public HttpClient HttpClient { get; set; }
        
@@ -25,26 +29,32 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         public AddReviewTemplatePage()
         {
             reviewTemplate = new ReviewTemplateApiModel();
-            selectedAreas = new List<AreaApiModel>();
+            reviewTemplate.Areas = new List<AreaApiModel>();
             evaluationPoints = new List<EvaluationPointApiModel>();
         }
 
         protected override async Task OnInitializedAsync()
         {
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
+            if (Id != null)
+            {
+                header.SetTitle("Review Template Edit");
+                reviewTemplate = await HttpClient.GetFromJsonAsync<ReviewTemplateApiModel>($"api/ReviewTemplate/{Id}");
+                evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == reviewTemplate.EvaluationPointsTemplateId).EvaluationPoints;
+            }
         }
 
         private void DeleteAreaRow(AreaApiModel area)
         {
-            selectedAreas.Remove(area);
+            reviewTemplate.Areas.Remove(area);
         }
         private void AddAreaRow(AreaApiModel area)
         {
-            if (selectedAreas.Any(a=>a.Name == area.Name))
+            if (reviewTemplate.Areas.Any(a=>a.Name == area.Name))
             {
                 return;
             }
-            selectedAreas.Add(area);
+            reviewTemplate.Areas.Add(area);
             StateHasChanged();
         }
         private void OnCancelClicked()
@@ -53,16 +63,28 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         }
         private async void OnSaveClicked() 
         {
-            reviewTemplate.Areas = selectedAreas;
-            await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
-            NavigationManager.NavigateTo("/reviewTemplates");
+            if (Id is null)
+            {
+                await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+            }
+            else
+            {
+                await HttpClient.PutAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+            }
+            NavigateToReviewTemplates();
         }
         private void OnEvaluationPointTemplateSelectionChanged(ChangeEventArgs args)
         {
-            if (int.TryParse(args.Value.ToString(),out int pointTemplateId))
+            if (int.TryParse(args.Value.ToString(), out int pointTemplateId))
             {
                 evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == pointTemplateId).EvaluationPoints;
+                reviewTemplate.MidEvaluationPointId = evaluationPoints.FirstOrDefault().Id;
             }
+        }
+
+        private void NavigateToReviewTemplates()
+        {
+            NavigationManager.NavigateTo("/reviewTemplates");
         }
     }
 }

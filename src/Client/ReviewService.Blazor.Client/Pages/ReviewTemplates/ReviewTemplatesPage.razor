@@ -23,7 +23,7 @@ else
                         <tr>
                             <td>@reviewTemplate.Name</td>
                             <td>@reviewTemplate.Areas.Count</td>
-                            <td><a href="" class="oi text-center">Edit</a></td>
+                            <td><a href="/editReviewTemplate/@reviewTemplate.Id" class="oi text-center">Edit</a></td>
                             <td><button @onclick="() => OnDeleteClicked(reviewTemplate)" class="btn-danger">Delete</button></td>
                         </tr>
                     }

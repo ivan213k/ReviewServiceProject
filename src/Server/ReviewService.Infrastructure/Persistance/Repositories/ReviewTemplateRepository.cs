@@ -14,9 +14,14 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task<List<ReviewTemplate>> GetReviewTemplatesAsync()
         {
             return await _dbContext.ReviewTemplates.Include(r => r.Areas).ToListAsync();
+        }
+        public async Task<ReviewTemplate> GetReviewTemplateById(int id)
+        {
+            return await _dbContext.ReviewTemplates.Include(r => r.Areas).ThenInclude(a=>a.AreaItems).FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }
