@@ -1,54 +1,45 @@
 ﻿@page "/evaluationpoints/create"
 
 <Header Value="Evaluation Points Add"></Header>
-
-<div class="content">
-        <div class="row">
-            <div class="col-9">
-                <EditForm Model="_evaluationPointsTemplate" method="post">
-                    <div class="row m-md-2">
-                        <div class="col-6">
-                            <label for="name">Name evaluation point:</label>
-                            <input @bind-value="@_evaluationPointsTemplate.Name" type="text" id="name" class="form-control form-control-sm" />
-                        </div>
-                        <div class="col-6">
-                            <label for="description">Description:</label>
-                            <InputTextArea @bind-Value="_evaluationPointsTemplate.Description" id="description" class="form-control form-control-sm"></InputTextArea>
-                        </div>
-                    </div>
-                    <div class="row m-md-2">
-                        <div class="col-md-9">
-                            <input @bind-value="@_evaluationPoint.Name" type="text" class="form-control" placeholder="Name evaluation point item" />
-                        </div>
-                        <div class="col-md-3">
-                            <input type="submit" class="btn-light " value="Add row" @onclick="@OnAddRowClicked" />
-                        </div>
-                    </div>
-                    <div class="row m-md-2">
-                        <div class="col-12">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="table-light">Order</th>
-                                        <th scope="col" class="table-light">Name</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var point in _evaluationPointsTemplate.EvaluationPoints)
-                                    {
-                                        <tr>
-                                            <td></td>
-                                            <td>@point.Name</td>
-                                            <td><button class="btn-danger" @onclick="() => OnDeleteClicked(point)">Delete</button></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
-    </div>
-    <Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
+<MudContainer Class="mt-8 px-4" MaxWidth="MaxWidth.False">
+    <EditForm Model="@_evaluationPointsTemplate">
+        <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Name evaluation point" @bind-Value="@_evaluationPointsTemplate.Name" For="@(() =>@_evaluationPointsTemplate.Name)" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Description evaluation point" @bind-Value="@_evaluationPointsTemplate.Description" For="@(() => @_evaluationPointsTemplate.Description)" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
+            <MudGrid>
+                <MudItem xs="0" sm="2">
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Name evaluation point item" @bind-Value="@_evaluationPoint.Name" For="@(() => @_evaluationPoint.Name)" />
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="OnAddRowClicked">AddRow</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </EditForm>
+              
+    <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.Sm" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Order</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Order"></MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+<Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
