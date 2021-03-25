@@ -63,15 +63,18 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         }
         private async void OnSaveClicked() 
         {
-            if (Id is null)
+            if (editForm.EditContext.Validate())
             {
-                await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
-            }
-            else
-            {
-                await HttpClient.PutAsJsonAsync("api/ReviewTemplate", reviewTemplate);
-            }
-            NavigateToReviewTemplates();
+                if (Id is null)
+                {
+                    await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+                }
+                else
+                {
+                    await HttpClient.PutAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+                }
+                NavigateToReviewTemplates();
+            }        
         }
         private void OnEvaluationPointTemplateSelectionChanged(ChangeEventArgs args)
         {

@@ -1,7 +1,10 @@
-﻿using ReviewService.Application.Repository.Interfaces;
+﻿using FluentValidation.Results;
+using ReviewService.Application.Common.Exceptions;
+using ReviewService.Application.Repository.Interfaces;
 using ReviewService.Application.ReviewTemplates.Interfaces;
 using ReviewService.Domain.Entites;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReviewService.Application.ReviewTemplates.Services
@@ -15,6 +18,13 @@ namespace ReviewService.Application.ReviewTemplates.Services
         }
         public async Task AddReviewTemplateAsync(ReviewTemplate reviewTemplate)
         {
+            var reviewTemplates = await _reviewTemplateRepository.GetReviewTemplatesAsync();
+            List<ValidationFailure> failures = new List<ValidationFailure>();
+            if (reviewTemplates.Any(r => r.Name == reviewTemplate.Name))
+            {
+                failures.Add(new ValidationFailure(nameof(reviewTemplate.Name), "Review template with the same name already exist"));
+                throw new ValidationException(failures);
+            }
             await _reviewTemplateRepository.CreateAsync(reviewTemplate);
         }
 
@@ -37,5 +47,6 @@ namespace ReviewService.Application.ReviewTemplates.Services
         {
             await _reviewTemplateRepository.UpdateAsync(reviewTemplate);
         }
+        
     }
 }

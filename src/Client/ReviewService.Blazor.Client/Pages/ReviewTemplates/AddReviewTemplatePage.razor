@@ -28,13 +28,15 @@ else
                             <option class="dropdown-item" value="@evaluationPointsTemplate.Id">@evaluationPointsTemplate.Name</option>
                             }
                     </InputSelect>
+                    <ValidationMessage For="@(() => reviewTemplate.EvaluationPointsTemplateId)" />
                     <label class="float-left" for="inputForMidPoint">Mid Evaluation Point: </label>
-                    <InputSelect  @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">                     
+                    <InputSelect @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">
                         @foreach (var evaluationPoint in evaluationPoints)
                             {
                             <option class="dropdown-item" value="@evaluationPoint.Id">@evaluationPoint.Name</option>
-                            }   
+                            }
                     </InputSelect>
+                    <ValidationMessage For="@(() => reviewTemplate.MidEvaluationPointId)" />
                 </div>
             </div>
             <br />
