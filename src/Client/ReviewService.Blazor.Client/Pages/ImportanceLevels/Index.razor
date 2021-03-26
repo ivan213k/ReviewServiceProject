@@ -1,51 +1,49 @@
-﻿@page "/importancelevels"
+﻿@page "/importancelevels";
 
 <Header Value="Importance levels"></Header>
 
-<div class="content">
-    <form method="post">
-        <div class="row text-center">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Name" />
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Description" />
-            </div>
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Color" />
-            </div>
-            <div class="col-md-1">
-                <input type="submit" class="btn-light " value="Add row" />
-            </div>
-        </div>
-    </form>
-    <hr />
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col" class="table-light">Name</th>
-                        <th scope="col" class="table-light">Description</th>
-                        <th scope="col" class="table-light">Color</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>il1</td>
-                        <td>il1</td>
-                        <td>il1</td>
-                        <td><a href="#" class="oi oi-trash"></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-@code {
+@if (_importanceLevels == null)
+{
+    <Loading></Loading>
+}
+else
+{
+<MudContainer MaxWidth="MaxWidth.False">
+        <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
+            <EditForm Model="@_importanceLevel">
+                <MudGrid>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Name" @bind-Value="@_importanceLevel.Name" For="@(() => _importanceLevel.Name)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Description" @bind-Value="@_importanceLevel.Description" For="@(() => _importanceLevel.Description)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Color" @bind-Value="@_importanceLevel.Color" For="@(() => _importanceLevel.Color)" />
+                    </MudItem>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="AddRowClicked">AddRow</MudButton>
+                </MudGrid>
+            </EditForm>
+        </MudPaper>
+        <MudTable Items="@_importanceLevels" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Color</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Color">@context.Color</MudTd>
+                <MudTd  DataLabel="Action">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+</MudContainer>
+<Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
+<DeleteConfirmation @ref="@_deleteConfirmation" OnPrimaryButtonClicked="DeleteLevel"></DeleteConfirmation>
 
 }
-
 

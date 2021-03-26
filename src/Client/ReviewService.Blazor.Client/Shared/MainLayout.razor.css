@@ -1,3 +1,6 @@
+.min-height{
+    min-height:100%
+}
 .page {
     position: relative;
     display: flex;

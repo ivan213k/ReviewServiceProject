@@ -1,0 +1,30 @@
+﻿@page "/evaluationpoints"
+
+<Header Value="Evaluation points"></Header>
+@if (_evaluationpoints == null)
+{
+    <Loading />
+}
+else
+{
+    <MudTable Items="@_evaluationpoints" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Action</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Edit</MudButton>
+            </MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <Footer IsSecondaryButtonVisible="false" PrimaryButtonText="Add Evaluation" OnPrimaryButtonClicked="@OnAddEvaluationClicked"></Footer>
+
+}

@@ -46,5 +46,16 @@ namespace ReviewService.Web.Server.Controllers
             _mapper.Map(evaluationPointsTemplateApiModel, evaluationPointTemplate);
             await _evaluationPointService.UpdateEvaluationPointTemplateAsync(evaluationPointTemplate);
         }
+
+        [HttpDelete("{id}")]
+        public async Task DeleteArea(int id)
+        {
+            var evaluationPoint = await _evaluationPointService.GetByIdAsync(id);
+            if (evaluationPoint is null)
+            {
+                return;
+            }
+            await _evaluationPointService.DeleteEvaluationPointTemplateAsync(evaluationPoint);
+        }
     }
 }

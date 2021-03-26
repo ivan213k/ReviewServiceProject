@@ -10,5 +10,6 @@ namespace ReviewService.Application.EvaluationPoints.Interfaces
         Task<EvaluationPointsTemplate> GetByIdAsync(int id);
         Task AddEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate);
         Task UpdateEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate);
+        Task DeleteEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate);
     }
 }
