@@ -13,6 +13,7 @@ namespace ReviewService.Infrastructure.Persistance.Configurations
             builder.Property(p => p.Name).IsRequired();
 
             builder.HasMany(r => r.Areas).WithMany(a => a.ReviewTemplates);
+            builder.HasOne(r => r.MidEvaluationPoint);
         }
     }
 }

@@ -7,5 +7,6 @@ namespace ReviewService.Application.Repository.Interfaces
     public interface IReviewTemplateRepository : IRepository<ReviewTemplate>
     {
         Task<List<ReviewTemplate>> GetReviewTemplatesAsync();
+        Task<ReviewTemplate> GetReviewTemplateById(int id);
     }
 }

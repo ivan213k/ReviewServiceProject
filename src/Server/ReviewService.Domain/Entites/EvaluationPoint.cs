@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ReviewService.Domain.Entites
+﻿namespace ReviewService.Domain.Entites
 {
     public class EvaluationPoint
     {
@@ -8,6 +6,5 @@ namespace ReviewService.Domain.Entites
         public string Name { get; set; }
         public string Description { get; set; }
         public int EvaluationPointsTemplateId { get; set; }
-
     }
 }
