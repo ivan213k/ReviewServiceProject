@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,6 +14,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         private List<AreaApiModel> areas;
         private DeleteConfirmation deleteConfirmationDialog;
         private AreaApiModel areaForDeletion;
+
+        [Inject]
+        public ApplicationState ApplicationState { get; set; }
         
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -22,6 +26,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
 
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Areas");
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
         }
 

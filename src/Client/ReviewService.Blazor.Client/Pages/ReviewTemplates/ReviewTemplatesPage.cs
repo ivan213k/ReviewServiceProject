@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -15,12 +16,16 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         private ReviewTemplateApiModel reviewTemplateForDeletion;
 
         [Inject]
+        public ApplicationState ApplicationState { get; set; }
+
+        [Inject]
         public HttpClient HttpClient { get; set; }
         
         [Inject]
         public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Review Templates");
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
         }
         private void OnAddReviewTemlateClicked()
