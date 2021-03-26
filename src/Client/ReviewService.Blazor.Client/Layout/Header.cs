@@ -14,5 +14,11 @@ namespace ReviewService.Blazor.Client.Layout
     {
         [Parameter]
         public string Value { get; set; }
+
+        public void SetTitle(string title)
+        {
+            Value = title;
+            StateHasChanged();
+        }
     }
 }
