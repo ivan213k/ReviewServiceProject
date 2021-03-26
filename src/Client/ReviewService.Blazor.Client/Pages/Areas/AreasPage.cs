@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ReviewService.Blazor.Client.Components;
+using MudBlazor;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,7 +11,6 @@ namespace ReviewService.Blazor.Client.Pages.Areas
     public partial class AreasPage
     {
         private List<AreaApiModel> areas;
-        private DeleteConfirmation deleteConfirmationDialog;
         private AreaApiModel areaForDeletion;
         
         [Inject]
@@ -20,6 +19,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IDialogService DialogService { get; set; }
+         
         protected override async Task OnInitializedAsync()
         {
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
@@ -29,10 +31,22 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             NavigationManager.NavigateTo("/addArea");
         }
+
+        private void OnEditClicked(int areaId)
+        {
+            NavigationManager.NavigateTo($"/editArea/{areaId}");
+        }
         private void OnDeleteClicked(AreaApiModel area)
         {
             areaForDeletion = area;
-            deleteConfirmationDialog.Show($"Actually delete\"{area.Name}\" area ?");
+            var message = $"Actually delete\"{area.Name}\" area ?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+            parameters.Add("ButtonText", "Delete");
+            parameters.Add("Color", Color.Error);
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
         }
         private async void DeleteArea()
         {
