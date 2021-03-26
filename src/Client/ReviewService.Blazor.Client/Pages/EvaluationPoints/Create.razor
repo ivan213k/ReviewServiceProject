@@ -1,7 +1,7 @@
 ﻿@page "/evaluationpoints/create"
 
 <Header Value="Evaluation Points Add"></Header>
-<MudContainer Class="mt-8 px-4" MaxWidth="MaxWidth.False">
+<MudContainer>
     <EditForm Model="@_evaluationPointsTemplate">
         <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
             <MudGrid>
@@ -15,19 +15,17 @@
         </MudPaper>
         <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
             <MudGrid>
-                <MudItem xs="0" sm="2">
-                </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField Label="Name evaluation point item" @bind-Value="@_evaluationPoint.Name" For="@(() => @_evaluationPoint.Name)" />
                 </MudItem>
-                <MudItem xs="12" sm="4">
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="OnAddRowClicked">AddRow</MudButton>
+                <MudItem xs="12" sm="6">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2 justify-content-end" OnClick="OnAddRowClicked">AddRow</MudButton>
                 </MudItem>
             </MudGrid>
         </MudPaper>
     </EditForm>
               
-    <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.Sm" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+    <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
         <HeaderContent>
             <MudTh>Order</MudTh>
             <MudTh>Name</MudTh>

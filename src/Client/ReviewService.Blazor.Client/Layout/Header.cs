@@ -14,12 +14,5 @@ namespace ReviewService.Blazor.Client.Layout
     {
         [Parameter]
         public string Value { get; set; }
-
-        private bool _drawerOpen;
-
-        private void DrawerToggle()
-        {
-            _drawerOpen = !_drawerOpen;
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
         private ImportanceLevelApiModel _deleteImportanceLevel;
         private DeleteConfirmation _deleteConfirmation;
         private List<ImportanceLevelApiModel> _importanceLevels;
-        private List<ImportanceLevelApiModel> _newLevels;
+        private List<ImportanceLevelApiModel> _previousLevels;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -27,18 +27,19 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
         public Index()
         {
             _importanceLevel = new ImportanceLevelApiModel();
-            _newLevels = new List<ImportanceLevelApiModel>();
+            _previousLevels = new List<ImportanceLevelApiModel>();
+            _importanceLevels = new List<ImportanceLevelApiModel>();
             _deleteImportanceLevel = new ImportanceLevelApiModel();
         }
 
         protected override async Task OnInitializedAsync()
         {
-            _importanceLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
+            _previousLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
+            _importanceLevels.AddRange(_previousLevels);
         }
 
         private void AddRowClicked()
         {
-            _newLevels.Add(_importanceLevel);
             _importanceLevels.Add(_importanceLevel);
             _importanceLevel = new ImportanceLevelApiModel();
             StateHasChanged();
@@ -50,10 +51,9 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
             _deleteConfirmation.Show($"Actually delete\"{level.Name}\" importance level?");
         }
 
-        public async void DeleteLevel()
+        public void DeleteLevel()
         {
-            await HttpClient.DeleteAsync($"api/ImportanceLevel/{_deleteImportanceLevel.Id}");
-            _importanceLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
+            _importanceLevels.Remove(_deleteImportanceLevel);
             StateHasChanged();
         }
 
@@ -64,9 +64,19 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         private async void OnSaveClicked()
         {
-            foreach(var level in _newLevels)
+            foreach(var level in _importanceLevels)
             {
-                await HttpClient.PostAsJsonAsync("api/ImportanceLevel", level);
+                if(!_previousLevels.Contains(level))
+                {
+                    await HttpClient.PostAsJsonAsync("api/ImportanceLevel", level);
+                }
+            }
+            foreach(var level in _previousLevels)
+            {
+                if(!_importanceLevels.Contains(level))
+                {
+                    await HttpClient.DeleteAsync($"api/ImportanceLevel/{level.Id}");
+                }
             }
             NavigationManager.NavigateTo("/importancelevels");
         }
