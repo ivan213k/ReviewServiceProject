@@ -7,12 +7,16 @@ using ReviewService.Blazor.Client.Components;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using ReviewService.Blazor.Client.State;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
-    public partial class Index
+    public partial class EvaluationPointsIndex
     {
         private List<EvaluationPointsTemplateApiModel> _evaluationpoints;
+
+        [Inject]
+        public ApplicationState ApplicationState { get; set; }
 
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -22,12 +26,13 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Evaluation Points");
             _evaluationpoints = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
         }
 
         private void OnAddEvaluationClicked()
         {
-            NavigationManager.NavigateTo("/evaluationpoints/create");
+            NavigationManager.NavigateTo("/evaluationpoints/add");
         }
 
     }

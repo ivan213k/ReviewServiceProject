@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.Areas
 {
@@ -17,6 +19,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         private ErrorMessage errorMessage;
 
         [Inject]
+        public ApplicationState ApplicationState { get; set; }
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
@@ -26,6 +31,11 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             area = new AreaApiModel();
             area.AreaItems = new List<AreaItemApiModel>();
+        }
+
+        protected override void OnInitialized()
+        {
+            ApplicationState.SetHeaderTitle("Area Add");
         }
 
         private void AddRowClicked()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using ReviewService.Blazor.Client.Layout;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
     {
         private ReviewTemplateApiModel reviewTemplate;
         private EditForm editForm;
-        private Header header;
         private List<EvaluationPointsTemplateApiModel> evaluationPointsTemplates;
         private List<EvaluationPointApiModel> evaluationPoints;
 
         [Parameter]
         public int? Id { get; set; }
+
+        [Inject]
+        public ApplicationState ApplicationState { get; set; }
 
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -35,10 +38,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Review Template Add");
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
             if (Id != null)
             {
-                header.SetTitle("Review Template Edit");
+                //header.SetTitle("Review Template Edit");
                 reviewTemplate = await HttpClient.GetFromJsonAsync<ReviewTemplateApiModel>($"api/ReviewTemplate/{Id}");
                 evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == reviewTemplate.EvaluationPointsTemplateId).EvaluationPoints;
             }
