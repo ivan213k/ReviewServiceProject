@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using ReviewService.Blazor.Client.Components;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -36,21 +37,23 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             NavigationManager.NavigateTo($"/editArea/{areaId}");
         }
-        private void OnDeleteClicked(AreaApiModel area)
+        private async void OnDeleteClicked(AreaApiModel area)
         {
             areaForDeletion = area;
             var message = $"Actually delete\"{area.Name}\" area ?";
             var parameters = new DialogParameters();
             parameters.Add("ContentText", message);
-            parameters.Add("ButtonText", "Delete");
-            parameters.Add("Color", Color.Error);
 
-            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteArea(area);
+            }
         }
-        private async void DeleteArea()
+        private async void DeleteArea(AreaApiModel area)
         {
-            await HttpClient.DeleteAsync($"api/Area/{areaForDeletion.Id}");
+            await HttpClient.DeleteAsync($"api/Area/{area.Id}");
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
             StateHasChanged();
         }
