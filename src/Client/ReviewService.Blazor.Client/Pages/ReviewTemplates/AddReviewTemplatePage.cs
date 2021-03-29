@@ -40,14 +40,18 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Review Template Add");
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
-            if (Id != null)
+            if (Id is null)
             {
-                //header.SetTitle("Review Template Edit");
+                ApplicationState.SetHeaderTitle("Review Template Add");
+            }
+            else
+            {
+                ApplicationState.SetHeaderTitle("Review Template Edit");
                 reviewTemplate = await HttpClient.GetFromJsonAsync<ReviewTemplateApiModel>($"api/ReviewTemplate/{Id}");
                 evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == reviewTemplate.EvaluationPointsTemplateId).EvaluationPoints;
             }
+            
         }
        
         private void AddAreaRow(AreaApiModel area)
