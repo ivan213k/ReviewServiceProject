@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
@@ -12,9 +13,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
     public partial class AreasPage
     {
         private List<AreaApiModel> areas;
-        private DeleteConfirmation deleteConfirmationDialog;
-        private AreaApiModel areaForDeletion;
-
+        
         [Inject]
         public ApplicationState ApplicationState { get; set; }
         
@@ -24,6 +23,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IDialogService DialogService { get; set; }
+         
         protected override async Task OnInitializedAsync()
         {
             ApplicationState.SetHeaderTitle("Areas");
@@ -34,14 +36,27 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             NavigationManager.NavigateTo("/addArea");
         }
-        private void OnDeleteClicked(AreaApiModel area)
+
+        private void OnEditClicked(int areaId)
         {
-            areaForDeletion = area;
-            deleteConfirmationDialog.Show($"Actually delete\"{area.Name}\" area ?");
+            NavigationManager.NavigateTo($"/editArea/{areaId}");
         }
-        private async void DeleteArea()
+        private async void OnDeleteClicked(AreaApiModel area)
         {
-            await HttpClient.DeleteAsync($"api/Area/{areaForDeletion.Id}");
+            var message = $"Actually delete\"{area.Name}\" area ?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteArea(area);
+            }
+        }
+        private async void DeleteArea(AreaApiModel area)
+        {
+            await HttpClient.DeleteAsync($"api/Area/{area.Id}");
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
             StateHasChanged();
         }

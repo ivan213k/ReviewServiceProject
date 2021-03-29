@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -13,9 +14,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
     partial class EditAreaPage
     {
         private AreaApiModel area;
-        private AddAreaItemDialog addAreaItemDialog;
         private EditForm editForm;
         private ErrorMessage errorMessage;
+        private AreaItemApiModel areaItem;
 
         [Parameter]
         public int AreaId { get; set; }
@@ -32,15 +33,19 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         {
             ApplicationState.SetHeaderTitle("Edit Area");
             area = await HttpClient.GetFromJsonAsync<AreaApiModel>($"api/Area/{AreaId}");
+            areaItem = new AreaItemApiModel();
         }
         private void AddRowClicked()
         {
-            addAreaItemDialog.Show();
-        }
-        private void AddAreaItemClicked()
-        {
-            area.AreaItems.Add(addAreaItemDialog.AreaItem);
-            StateHasChanged();
+            if (area.AreaItems.Any(a => a.Name == areaItem.Name))
+            {
+                return;
+            }
+            area.AreaItems.Add(new AreaItemApiModel
+            {
+                Name = areaItem.Name,
+                Description = areaItem.Description
+            });
         }
         private void DeleteRow(AreaItemApiModel areaItem)
         {
@@ -62,7 +67,6 @@ namespace ReviewService.Blazor.Client.Pages.Areas
                 else
                 {
                     var error = await responseMessage.Content.ReadFromJsonAsync<ProblemDetails>();
-
                     errorMessage.Show($"{responseMessage.ReasonPhrase}: {error.Title} {error.Detail}");
                 }
             }
