@@ -7,13 +7,17 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using ReviewService.Shared.ApiModels;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
-    public partial class Create
+    public partial class EvaluationPointsCreate
     {
         private EvaluationPointsTemplateApiModel _evaluationPointsTemplate;
         private EvaluationPointApiModel _evaluationPoint;
+
+        [Inject]
+        public ApplicationState ApplicationState { get; set; } 
 
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -21,11 +25,16 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        public Create()
+        public EvaluationPointsCreate()
         {
             _evaluationPoint = new EvaluationPointApiModel();
             _evaluationPointsTemplate = new EvaluationPointsTemplateApiModel();
             _evaluationPointsTemplate.EvaluationPoints = new List<EvaluationPointApiModel>();
+        }
+
+        protected override void OnInitialized()
+        {
+            ApplicationState.SetHeaderTitle("Evaluation Point Add");
         }
 
         private void OnAddRowClicked()

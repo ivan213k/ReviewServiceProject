@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Linq;
 using System.Net.Http;
@@ -21,12 +22,16 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         public int AreaId { get; set; }
 
         [Inject]
+        public ApplicationState ApplicationState { get; set; }
+
+        [Inject]
         public HttpClient HttpClient { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Edit Area");
             area = await HttpClient.GetFromJsonAsync<AreaApiModel>($"api/Area/{AreaId}");
             areaItem = new AreaItemApiModel();
         }

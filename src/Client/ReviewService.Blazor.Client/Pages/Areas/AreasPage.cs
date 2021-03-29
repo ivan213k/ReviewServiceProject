@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,6 +15,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         private List<AreaApiModel> areas;
         
         [Inject]
+        public ApplicationState ApplicationState { get; set; }
+        
+        [Inject]
         public HttpClient HttpClient { get; set; }
         
         [Inject]
@@ -24,6 +28,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
          
         protected override async Task OnInitializedAsync()
         {
+            ApplicationState.SetHeaderTitle("Areas");
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
         }
 
