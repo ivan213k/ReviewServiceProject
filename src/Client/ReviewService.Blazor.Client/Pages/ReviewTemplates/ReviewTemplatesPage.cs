@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
@@ -11,14 +12,15 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
     public partial class ReviewTemplatesPage
     {
         private List<ReviewTemplateApiModel> reviewTemplates;
-        private DeleteConfirmation deleteConfirmationDialog;
-        private ReviewTemplateApiModel reviewTemplateForDeletion;
 
         [Inject]
         public HttpClient HttpClient { get; set; }
         
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        
+        [Inject]
+        public IDialogService DialogService { get; set; }
         protected override async Task OnInitializedAsync()
         {
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
@@ -27,15 +29,26 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         {
             NavigationManager.NavigateTo("/addReviewTemplate");
         }
-
-        private void OnDeleteClicked(ReviewTemplateApiModel reviewTemplate)
+        private void OnEditClicked(int reviewTemplateId)
         {
-            reviewTemplateForDeletion = reviewTemplate;
-            deleteConfirmationDialog.Show($"Actually delete\"{reviewTemplate.Name}\" area ?");
+            NavigationManager.NavigateTo($"/editReviewTemplate/{reviewTemplateId}");
         }
-        private async void DeleteReviewTemplate()
+        private async void OnDeleteClicked(ReviewTemplateApiModel reviewTemplate)
         {
-            await HttpClient.DeleteAsync($"api/ReviewTemplate/{reviewTemplateForDeletion.Id}");
+            var message = $"Actually delete\"{reviewTemplate.Name}\" template ?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteReviewTemplate(reviewTemplate);
+            }
+        }
+        private async void DeleteReviewTemplate(ReviewTemplateApiModel reviewTemplate)
+        {
+            await HttpClient.DeleteAsync($"api/ReviewTemplate/{reviewTemplate.Id}");
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
             StateHasChanged();
         }

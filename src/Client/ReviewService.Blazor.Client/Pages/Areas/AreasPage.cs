@@ -12,7 +12,6 @@ namespace ReviewService.Blazor.Client.Pages.Areas
     public partial class AreasPage
     {
         private List<AreaApiModel> areas;
-        private AreaApiModel areaForDeletion;
         
         [Inject]
         public HttpClient HttpClient { get; set; }
@@ -39,7 +38,6 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         }
         private async void OnDeleteClicked(AreaApiModel area)
         {
-            areaForDeletion = area;
             var message = $"Actually delete\"{area.Name}\" area ?";
             var parameters = new DialogParameters();
             parameters.Add("ContentText", message);
