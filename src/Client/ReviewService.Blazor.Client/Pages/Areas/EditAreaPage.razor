@@ -5,49 +5,48 @@
 }
 else
 {
-    <div class="content">
-        <EditForm @ref="@editForm" Model="@area">
-            <FluentValidationValidator />
-            <div class="row text-center">
-                <div class="col-md-5">
-                    <label class="float-left" for="inputName">Name: </label>
-                    <InputText @bind-Value="@area.Name" id="inputName" class="form-control" placeholder="area name"></InputText>
-                    <ValidationMessage For="@(()=>area.Name)" />
-                </div>
-                <div class="col-md-5">
-                    <label class="float-left" for="inputDescription">Description: </label>
-                    <InputTextArea @bind-Value="@area.Description" id="inputDescription" class="form-control" placeholder="area description"></InputTextArea>
-                </div>
-            </div>
-            <br />
-        </EditForm>
-        <div class="row">
-            <div class="col-md-5">
-                <h4 class="float-left">Area items: </h4>
-            </div>
-            <div class="col-md-5">
-                <button class="btn-primary float-right" @onclick="@AddRowClicked">Add Row</button>
-            </div>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col" class="table-light text-center">Name</th>
-                    <th scope="col" class="table-light"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var areaItem in area.AreaItems)
-                {
-                    <tr>
-                        <td class="text-center">@areaItem.Name</td>
-                        <td class="text-center"><button class="btn-danger" @onclick="() => DeleteRow(areaItem)">Delete</button></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <ErrorMessage @ref="@errorMessage"/>
-    <AddAreaItemDialog Title="Enter area item" @ref="@addAreaItemDialog" OnPrimaryButtonClicked="@AddAreaItemClicked"></AddAreaItemDialog>
-    @*<Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>*@
+    <MudContainer MaxWidth="MaxWidth.False">
+        <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
+            <EditForm @ref="@editForm" Model="@area">
+                <FluentValidationValidator />
+                <MudGrid>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Name: " @bind-Value="@area.Name" For="@(()=>area.Name)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Description" @bind-Value="@area.Description" For="@(() => area.Description)" />
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+
+        </MudPaper>
+        <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
+            <EditForm Model="@areaItem" OnValidSubmit="@AddRowClicked">
+                <FluentValidationValidator />
+                <MudGrid>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Area item name: " @bind-Value="@areaItem.Name" For="@(()=>areaItem.Name)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudTextField Label="Area item description" @bind-Value="@areaItem.Description" For="@(() => areaItem.Description)" />
+                    </MudItem>
+                    <MudButton ButtonType="ButtonType.Submit" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2">Add area item row</MudButton>
+                </MudGrid>
+            </EditForm>
+        </MudPaper>
+        <MudTable Items="@area.AreaItems" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Action">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => DeleteRow(context)">Delete</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudContainer>
+    <ErrorMessage @ref="@errorMessage" />
+    <Footer OnPrimaryButtonClicked="@OnSaveClicked" OnSecondaryButtonClicked="@OnCancelClicked"></Footer>
 }

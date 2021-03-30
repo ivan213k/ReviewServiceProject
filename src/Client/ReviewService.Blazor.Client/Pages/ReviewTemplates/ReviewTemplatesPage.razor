@@ -5,31 +5,23 @@
 }
 else
 {
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-bordered m-2">
-                <thead>
-                    <tr>
-                        <th scope="col" class="table-light">Name</th>
-                        <th scope="col" class="table-light">Areas</th>
-                        <th>Actions</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var reviewTemplate in reviewTemplates)
-                    {
-                        <tr>
-                            <td>@reviewTemplate.Name</td>
-                            <td>@reviewTemplate.Areas.Count</td>
-                            <td><a href="/editReviewTemplate/@reviewTemplate.Id" class="oi text-center">Edit</a></td>
-                            <td><button @onclick="() => OnDeleteClicked(reviewTemplate)" class="btn-danger">Delete</button></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @*<Footer IsSecondaryButtonVisible="false" PrimaryButtonText="Add new template" OnPrimaryButtonClicked="@OnAddReviewTemlateClicked"></Footer>*@
-    <DeleteConfirmation @ref="@deleteConfirmationDialog" OnPrimaryButtonClicked="DeleteReviewTemplate"></DeleteConfirmation>
+    <MudTable Items="@reviewTemplates" Breakpoint="Breakpoint.None" Hover="true" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Areas</MudTh>
+            <MudTh>Action</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Areas">@context.Areas.Count</MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton Variant="Variant.Text" OnClick="()=> OnEditClicked(context.Id)">Edit</MudButton>
+            </MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" OnClick="() => OnDeleteClicked(context)" Class="ml-auto">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <Footer IsSecondaryButtonVisible="false" PrimaryButtonText="Add new template" OnPrimaryButtonClicked="@OnAddReviewTemlateClicked"></Footer>
 }

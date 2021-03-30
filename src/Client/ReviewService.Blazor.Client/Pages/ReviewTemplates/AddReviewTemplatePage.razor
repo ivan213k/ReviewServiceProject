@@ -6,68 +6,51 @@
 }
 else
 {
-    <div class="content">
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
         <EditForm @ref="@editForm" Model="@reviewTemplate">
             <FluentValidationValidator />
-            <div class="row text-center">
-                <div class="col-md-4">
-                    <label class="float-left" for="inputName">Name: </label>
-                    <InputText @bind-Value="@reviewTemplate.Name" id="inputName" class="form-control" placeholder="template name"></InputText>
-                    <ValidationMessage For="@(() => reviewTemplate.Name)" />
-                </div>
-                <div class="col-md-4">
-                    <label class="float-left" for="inputDescription">Description: </label>
-                    <InputTextArea @bind-Value="@reviewTemplate.Description" id="inputDescription" class="form-control" placeholder="template description"></InputTextArea>
-                </div>
-                <div class="col-md-3">
-                    <label class="float-left" for="inputEvPoints">Evaluation Points: </label>
-                    <InputSelect @bind-Value="@reviewTemplate.EvaluationPointsTemplateId" @oninput="@OnEvaluationPointTemplateSelectionChanged" id="inputEvPoints" class="form-control">
+            <MudGrid>
+                <MudItem xs="12" sm="4">
+                    <MudTextField Label="Name: " @bind-Value="@reviewTemplate.Name" For="@(()=>reviewTemplate.Name)" />
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudTextField Label="Description" @bind-Value="@reviewTemplate.Description" For="@(() => reviewTemplate.Description)" />
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudSelect Value="reviewTemplate.EvaluationPointsTemplateId" ValueChanged="@((int id)=>OnEvaluationPointTemplateSelectionChanged(id))" For="@(()=> reviewTemplate.EvaluationPointsTemplateId)" Label="Evaluation Points">
                         @foreach (var evaluationPointsTemplate in evaluationPointsTemplates)
-                            {
-                            <option class="dropdown-item" value="@evaluationPointsTemplate.Id">@evaluationPointsTemplate.Name</option>
-                            }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => reviewTemplate.EvaluationPointsTemplateId)" />
-                    <label class="float-left" for="inputForMidPoint">Mid Evaluation Point: </label>
-                    <InputSelect @bind-Value="@reviewTemplate.MidEvaluationPointId" id="inputForMidPoint" class="form-control">
+                        {
+                            <MudSelectItem Value="@evaluationPointsTemplate.Id">@evaluationPointsTemplate.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect @bind-Value="reviewTemplate.MidEvaluationPointId" Label="Mid Evaluation Point" For="@(()=> reviewTemplate.MidEvaluationPointId)">
                         @foreach (var evaluationPoint in evaluationPoints)
-                            {
-                            <option class="dropdown-item" value="@evaluationPoint.Id">@evaluationPoint.Name</option>
-                            }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => reviewTemplate.MidEvaluationPointId)" />
-                </div>
-            </div>
-            <br />
+                        {
+                            <MudSelectItem Value="@evaluationPoint.Id">@evaluationPoint.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
         </EditForm>
-        <div class="row">
-            <div class="col-md-8">
-                <SearchArea OnAddAreaClicked="@AddAreaRow"></SearchArea>
-            </div>           
-        </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="table-light text-center">Name</th>
-                                <th scope="col" class="table-light">Area items</th>
-                                <th scope="col" class="table-light"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var area in reviewTemplate.Areas)
-                            {
-                                <tr>
-                                    <td class="text-center">@area.Name</td>
-                                    <td class="text-center">@area.AreaItems.Count</td>
-                                    <td class="text-center"><button class="btn-danger" @onclick="() => DeleteAreaRow(area)">Delete</button></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>     
-    </div>
-    @*<Footer OnSecondaryButtonClicked="@OnCancelClicked" OnPrimaryButtonClicked="OnSaveClicked"></Footer>*@
+        <MudAutocomplete T="string" ValueChanged="SearchAreaValueChanged" ResetValueOnEmptyText="true" 
+                         DebounceInterval="200" SearchFunc="@SearchAreas" Label="Search areas" MaxItems="5" Margin="Margin.Normal">
+        </MudAutocomplete>
+    </MudPaper>
+    <MudTable Items="@reviewTemplate.Areas" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Area items</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Area items">@context.AreaItems.Count</MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => DeleteAreaRow(context)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+<Footer OnSecondaryButtonClicked="@OnCancelClicked" OnPrimaryButtonClicked="OnSaveClicked"></Footer>
 }
