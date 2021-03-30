@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using ReviewService.Blazor.Client.Components;
-using ReviewService.Blazor.Client.Layout;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -40,9 +38,17 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Importance Levels");
+            ApplicationState.Set("Importance Levels", Button());
             _previousLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
             _importanceLevels.AddRange(_previousLevels);
+        }
+
+        private List<FooterButton> Button()
+        {
+            List<FooterButton> buttons = new List<FooterButton>();
+            buttons.Add(new FooterButton("Save", OnSaveClicked));
+            buttons.Add(new FooterButton("Cancel", OnCancelClicked));
+            return buttons;
         }
 
         private void AddRowClicked()
@@ -66,7 +72,10 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         private void OnCancelClicked()
         {
-            NavigationManager.NavigateTo("/");
+            _importanceLevels.Clear();
+            _importanceLevels.AddRange(_previousLevels);
+            StateHasChanged();
+            NavigationManager.NavigateTo("/importancelevels");
         }
 
         private async void OnSaveClicked()

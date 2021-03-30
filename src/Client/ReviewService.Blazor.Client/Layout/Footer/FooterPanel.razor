@@ -1,0 +1,43 @@
+﻿@inherits FooterModel
+
+@if (ApplicationState.FooterButtons != null)
+{
+    @foreach (var button in ApplicationState.FooterButtons)
+    {
+        <MudButton ButtonType="ButtonType.Submit" Class="mb-2 ml-2 mt-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@button.OnClick">@button.Title</MudButton>
+    }
+}
+
+@*<MudContainer Fixed="true" Class="d-flex flex-row-reverse px-4 mt-8">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@PrimaryButtonClicked" Class="mr-2">@PrimaryButtonText</MudButton>
+        @if (IsSecondaryButtonVisible)
+        {
+            <MudButton Variant="Variant.Filled" @onclick="@SecondaryButtonClicked" Class="mr-2">@SecondaryButtonText</MudButton>
+        }
+    </MudContainer>*@
+
+@*@code {
+        [Parameter]
+        public string PrimaryButtonText { get; set; } = "Save";
+
+        [Parameter]
+        public string SecondaryButtonText { get; set; } = "Cancel";
+
+        [Parameter]
+        public bool IsSecondaryButtonVisible { get; set; } = true;
+
+        [Parameter]
+        public Action OnPrimaryButtonClicked { get; set; }
+
+        [Parameter]
+        public Action OnSecondaryButtonClicked { get; set; }
+
+        private void PrimaryButtonClicked()
+        {
+            OnPrimaryButtonClicked?.Invoke();
+        }
+        private void SecondaryButtonClicked()
+        {
+            OnSecondaryButtonClicked?.Invoke();
+        }
+    }*@

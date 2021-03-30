@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using ReviewService.Shared.ApiModels;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.State;
+using ReviewService.Blazor.Client.Layout.Footer;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
@@ -15,6 +16,7 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
     {
         private EvaluationPointsTemplateApiModel _evaluationPointsTemplate;
         private EvaluationPointApiModel _evaluationPoint;
+        private List<FooterButton> _buttons;
 
         [Inject]
         public ApplicationState ApplicationState { get; set; } 
@@ -30,11 +32,20 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
             _evaluationPoint = new EvaluationPointApiModel();
             _evaluationPointsTemplate = new EvaluationPointsTemplateApiModel();
             _evaluationPointsTemplate.EvaluationPoints = new List<EvaluationPointApiModel>();
+            _buttons = new List<FooterButton>();
         }
 
         protected override void OnInitialized()
         {
-            ApplicationState.SetHeaderTitle("Evaluation Point Add");
+            ApplicationState.Set("Evaluation Point Add", Button());
+        }
+
+        private List<FooterButton> Button()
+        {
+            List<FooterButton> buttons = new List<FooterButton>();
+            buttons.Add(new FooterButton("Save", OnSaveClicked));
+            buttons.Add(new FooterButton("Cancel", OnCancelClicked));
+            return buttons;
         }
 
         private void OnAddRowClicked()
