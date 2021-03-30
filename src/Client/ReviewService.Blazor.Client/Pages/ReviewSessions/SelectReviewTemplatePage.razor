@@ -1,0 +1,24 @@
+﻿@page "/selectReviewTemplate";
+@if (reviewTemplates is null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <MudTable RowStyleFunc="GetSelectedRowStyle" @bind-SelectedItem="@selectedReviewTemplate" Filter="FilterFunc" Elevation="14" Class="px-4 mt-8 ml-8 mr-8" Items="@reviewTemplates" Breakpoint="Breakpoint.None" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Review Templates:</MudText>
+            <MudToolBarSpacer />
+            <MudTextField @bind-Value="searchTerm" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+        </RowTemplate>
+    </MudTable>
+    <Footer IsSecondaryButtonVisible="true" OnSecondaryButtonClicked="@OnCancelClicked" PrimaryButtonText="Select"></Footer>
+}
