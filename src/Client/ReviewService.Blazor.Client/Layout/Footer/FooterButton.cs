@@ -15,15 +15,5 @@ namespace ReviewService.Blazor.Client.Layout.Footer
             Title = title;
             OnClick = action;
         }
-
-        public FooterButton()
-        {
-
-        }
-
-        //public void SetButton(string title)
-        //{
-        //    Title = title;
-        //}
     }
 }
