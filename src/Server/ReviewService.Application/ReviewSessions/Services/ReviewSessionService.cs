@@ -17,14 +17,12 @@ namespace ReviewService.Application.ReviewSessions.Services
         }
         public async Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession)
         {
-            string areas_json = JsonSerializer.Serialize(template.Areas);
-            reviewSession.Session_json = areas_json;
             await _reviewSessionRepository.CreateAsync(reviewSession);
         }
 
         public async Task DeleteReviewSessionAsync(ReviewSession reviewSession)
         {
-           await _reviewSessionRepository.DeleteAsync(reviewSession);
+            await _reviewSessionRepository.DeleteAsync(reviewSession);
         }
 
         public async Task<List<ReviewSession>> GetReviewSessionsAsync()

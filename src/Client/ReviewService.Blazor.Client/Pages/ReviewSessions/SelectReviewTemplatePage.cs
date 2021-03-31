@@ -45,6 +45,13 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             }
             return "";
         }
+        private void OnSelectClicked()
+        {
+            if (selectedReviewTemplate != null)
+            {
+                NavigationManager.NavigateTo($"/reviewSessionGeneral/{selectedReviewTemplate.Id}");
+            }
+        }
         private void OnCancelClicked()
         {
             NavigationManager.NavigateTo("/reviewSessions");
