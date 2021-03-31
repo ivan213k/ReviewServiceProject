@@ -28,7 +28,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
          
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Areas");
+            //ApplicationState.SetHeaderTitle("Areas");
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
         }
 

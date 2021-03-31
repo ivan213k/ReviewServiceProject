@@ -38,12 +38,12 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.Set("Importance Levels", Button());
+            ApplicationState.SetState("Importance Levels", SetButtons());
             _previousLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
             _importanceLevels.AddRange(_previousLevels);
         }
 
-        private List<FooterButton> Button()
+        private List<FooterButton> SetButtons()
         {
             List<FooterButton> buttons = new List<FooterButton>();
             buttons.Add(new FooterButton("Save", OnSaveClicked));

@@ -37,10 +37,10 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         protected override void OnInitialized()
         {
-            ApplicationState.Set("Evaluation Point Add", Button());
+            ApplicationState.SetState("Evaluation Point Add", SetButtons());
         }
 
-        private List<FooterButton> Button()
+        private List<FooterButton> SetButtons()
         {
             List<FooterButton> buttons = new List<FooterButton>();
             buttons.Add(new FooterButton("Save", OnSaveClicked));

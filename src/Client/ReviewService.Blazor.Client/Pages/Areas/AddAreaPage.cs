@@ -35,10 +35,10 @@ namespace ReviewService.Blazor.Client.Pages.Areas
             areaItem = new AreaItemApiModel();
         }
 
-        protected override void OnInitialized()
-        {
-            ApplicationState.SetHeaderTitle("Area Add");
-        }
+        //protected override void OnInitialized()
+        //{
+        //    ApplicationState.SetHeaderTitle("Area Add");
+        //}
 
         private void AddRowClicked()
         {

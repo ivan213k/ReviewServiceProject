@@ -27,11 +27,11 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.Set("Evaluation Points", Button());
+            ApplicationState.SetState("Evaluation Points", SetButtons());
             _evaluationpoints = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
         }
 
-        private List<FooterButton> Button()
+        private List<FooterButton> SetButtons()
         {
             List<FooterButton> buttons = new List<FooterButton>();
             buttons.Add(new FooterButton("Add Evaluation", OnAddEvaluationClicked));
