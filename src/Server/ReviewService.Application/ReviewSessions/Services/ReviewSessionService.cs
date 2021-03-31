@@ -50,5 +50,10 @@ namespace ReviewService.Application.ReviewSessions.Services
         {
             return await _reviewSessionRepository.GetByIdAsync(id);
         }
+
+        public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
+        {
+            await _reviewSessionRepository.UpdateAsync(reviewSession);
+        }
     }
 }

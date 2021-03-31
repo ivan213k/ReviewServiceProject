@@ -35,6 +35,10 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         {
             NavigationManager.NavigateTo("/selectReviewTemplate");
         }
+        private void OnViewClicked(int reviewSessionId)
+        {
+            NavigationManager.NavigateTo($"/reviewSessionEdit/{reviewSessionId}");
+        }
         private async void DeleteSessionClicked(ReviewSessionApiModel reviewSession)
         {
             var message = $"Actually delete\"{reviewSession.Name}\" session ?";

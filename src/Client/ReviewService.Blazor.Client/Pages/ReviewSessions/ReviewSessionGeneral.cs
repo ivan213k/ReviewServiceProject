@@ -4,6 +4,7 @@ using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
@@ -16,6 +17,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         [Parameter]
         public int TemplateId { get; set; }
 
+        [Parameter]
+        public int? ReviewSessionId { get; set; }
+       
         [Inject]
         public HttpClient HttpClient { get; set; }
 
@@ -27,11 +31,25 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             reviewSession = new ReviewSessionApiModel();
             reviewEvaluations = new List<ReviewEvaluationApiModel>();
         }
+        protected override async Task OnInitializedAsync()
+        {
+            if (ReviewSessionId != null)
+            {
+                reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{ReviewSessionId}");
+            }
+        }
         private async void SaveClicked()
         {
             if (editForm.EditContext.Validate())
             {
-                var response = await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                if (ReviewSessionId is null)
+                {
+                    await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                }
+                else
+                {
+                    await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
+                }
                 NavigationManager.NavigateTo("/reviewSessions");
             }   
         }

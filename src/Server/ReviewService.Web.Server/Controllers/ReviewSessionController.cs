@@ -30,6 +30,13 @@ namespace ReviewService.Web.Server.Controllers
             return _mapper.Map<List<ReviewSessionApiModel>>(reviewSessions);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ReviewSessionApiModel> GetReviewSessionById(int id) 
+        {
+            var reviewSession = await _reviewSessionService.GetByIdAsync(id);
+            return _mapper.Map<ReviewSessionApiModel>(reviewSession);
+        }
+
         [HttpPost("{templateId}")]
         public async Task CreateReviewSession(int templateId, [FromBody] ReviewSessionApiModel reviewSessionApiModel) 
         {
@@ -39,14 +46,16 @@ namespace ReviewService.Web.Server.Controllers
         }
 
         [HttpPut]
-        public async Task PublishReviewSession([FromBody] ReviewSessionApiModel reviewSessionApiModel)
+        public async Task UpdateReviewSession([FromBody] ReviewSessionApiModel reviewSessionApiModel)
         {
             var reviewSession = await _reviewSessionService.GetByIdAsync(reviewSessionApiModel.Id);
             if (reviewSession is null)
             {
                 return;
             }
-            await _reviewSessionService.PublishReviewSessionAsync(reviewSession);
+            reviewSessionApiModel.Session_json = reviewSession.Session_json;
+            _mapper.Map(reviewSessionApiModel, reviewSession);
+            await _reviewSessionService.UpdateReviewSessionAsync(reviewSession);
         }
 
         [HttpDelete("{Id}")]

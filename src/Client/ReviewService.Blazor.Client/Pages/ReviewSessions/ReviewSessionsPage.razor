@@ -22,7 +22,7 @@ else
             <MudTd DataLabel="Reviews">0/2</MudTd>
             <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Text" >View</MudButton>
+                <MudButton Variant="Variant.Text" OnClick="()=>OnViewClicked(context.Id)" >View</MudButton>
             </MudTd>
             <MudTd>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" OnClick="()=>DeleteSessionClicked(context)" Color="Color.Error" Class="ml-auto">Delete</MudButton>
