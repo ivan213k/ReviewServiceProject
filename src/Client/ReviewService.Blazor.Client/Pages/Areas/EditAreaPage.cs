@@ -31,7 +31,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Edit Area");
+            //ApplicationState.SetHeaderTitle("Edit Area");
             area = await HttpClient.GetFromJsonAsync<AreaApiModel>($"api/Area/{AreaId}");
             areaItem = new AreaItemApiModel();
         }

@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using ReviewService.Blazor.Client.State;
+using ReviewService.Blazor.Client.Layout.Footer;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
@@ -26,8 +27,15 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Evaluation Points");
+            ApplicationState.SetState("Evaluation Points", SetButtons());
             _evaluationpoints = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
+        }
+
+        private List<FooterButton> SetButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>();
+            buttons.Add(new FooterButton("Add Evaluation", OnAddEvaluationClicked));
+            return buttons;
         }
 
         private void OnAddEvaluationClicked()
