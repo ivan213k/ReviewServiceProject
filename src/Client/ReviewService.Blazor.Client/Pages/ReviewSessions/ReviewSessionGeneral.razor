@@ -1,7 +1,8 @@
 ﻿@page "/reviewSessionGeneral/{TemplateId:int}";
 <MudTabs Class="px-4 mt-8 ml-8 mr-8" Elevation="14" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
     <MudTabPanel Text="General">
-        <EditForm Model="@reviewSession">
+        <EditForm @ref="@editForm" Model="@reviewSession">
+            <FluentValidationValidator></FluentValidationValidator>
             <MudGrid>
                 <MudItem xs="12" sm="4">
                     <MudTextField Variant="Variant.Outlined" Label="Name: " @bind-Value="@reviewSession.Name" For="@(()=>reviewSession.Name)" />

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,7 +10,8 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
     public partial class ReviewSessionGeneral
     {
         private ReviewSessionApiModel reviewSession;
-        private List<ReviewEvaluationApiModel> reviewEvaluations; 
+        private List<ReviewEvaluationApiModel> reviewEvaluations;
+        private EditForm editForm;
 
         [Parameter]
         public int TemplateId { get; set; }
@@ -27,8 +29,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         }
         private async void SaveClicked()
         {
-            var response = await  HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}",reviewSession);
-            NavigationManager.NavigateTo("/reviewSessions");
+            if (editForm.EditContext.Validate())
+            {
+                var response = await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                NavigationManager.NavigateTo("/reviewSessions");
+            }   
         }
     }
 }
