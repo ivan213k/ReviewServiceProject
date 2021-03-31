@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
@@ -21,6 +23,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             ApplicationState.SetHeaderTitle("Review Sessions");
@@ -29,6 +34,25 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         private void AddNewSessionClicked()
         {
             NavigationManager.NavigateTo("/selectReviewTemplate");
+        }
+        private async void DeleteSessionClicked(ReviewSessionApiModel reviewSession)
+        {
+            var message = $"Actually delete\"{reviewSession.Name}\" session ?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteReviewSession(reviewSession);
+            }
+        }
+        private async void DeleteReviewSession(ReviewSessionApiModel reviewSession)
+        {
+            await HttpClient.DeleteAsync($"api/ReviewSession/{reviewSession.Id}");
+            reviewSessions = await HttpClient.GetFromJsonAsync<List<ReviewSessionApiModel>>("api/ReviewSession");
+            StateHasChanged();
         }
     }
 }

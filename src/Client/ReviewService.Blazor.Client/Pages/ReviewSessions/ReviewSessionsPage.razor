@@ -20,12 +20,12 @@ else
             <MudTd DataLabel="Person under review">@context.PersonUnderReview</MudTd>
             <MudTd DataLabel="Review Master">@context.ReviewMaster</MudTd>
             <MudTd DataLabel="Reviews">0/2</MudTd>
-            <MudTd DataLabel="Due Date">@context.DueDate</MudTd>
+            <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Text" >View</MudButton>
             </MudTd>
             <MudTd>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" OnClick="()=>DeleteSessionClicked(context)" Color="Color.Error" Class="ml-auto">Delete</MudButton>
             </MudTd>
         </RowTemplate>
     </MudTable>

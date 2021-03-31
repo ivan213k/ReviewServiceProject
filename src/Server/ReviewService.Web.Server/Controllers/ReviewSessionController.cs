@@ -49,7 +49,7 @@ namespace ReviewService.Web.Server.Controllers
             await _reviewSessionService.PublishReviewSessionAsync(reviewSession);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task DeleteReviewSession(int id)
         {
             var reviewSession = await _reviewSessionService.GetByIdAsync(id);
