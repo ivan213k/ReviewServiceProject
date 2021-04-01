@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
@@ -28,9 +29,19 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Review Sessions");
+            ApplicationState.SetState("Review Sessions", CreateFooterButtons());
             reviewSessions = await HttpClient.GetFromJsonAsync<List<ReviewSessionApiModel>>("api/ReviewSession");
         }
+
+        private List<FooterButton> CreateFooterButtons()
+        {
+            var buttons = new List<FooterButton>
+            {
+                new FooterButton("Add new", AddNewSessionClicked)
+            };
+            return buttons;
+        }
+
         private void AddNewSessionClicked()
         {
             NavigationManager.NavigateTo("/selectReviewTemplate");

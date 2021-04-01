@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
@@ -28,8 +29,16 @@ namespace ReviewService.Blazor.Client.Pages.Areas
          
         protected override async Task OnInitializedAsync()
         {
-            //ApplicationState.SetHeaderTitle("Areas");
+            ApplicationState.SetState("Areas", CreateFooterButtons());
             areas = await HttpClient.GetFromJsonAsync<List<AreaApiModel>>("api/Area");
+        }
+        private List<FooterButton> CreateFooterButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>() 
+            {
+                new FooterButton("Add new area", OnAddNewAreaClicked)
+            };
+            return buttons;
         }
 
         private void OnAddNewAreaClicked() 

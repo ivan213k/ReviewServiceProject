@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
@@ -27,9 +28,19 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         public IDialogService DialogService { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            //ApplicationState.SetHeaderTitle("Review Templates");
+            ApplicationState.SetState("Review Templates", CreateFooterButtons());
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
         }
+
+        private List<FooterButton> CreateFooterButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>()
+            {
+                new FooterButton("Add new template", OnAddReviewTemlateClicked),
+            };
+            return buttons;
+        }
+
         private void OnAddReviewTemlateClicked()
         {
             NavigationManager.NavigateTo("/addReviewTemplate");

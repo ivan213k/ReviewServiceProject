@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -35,10 +37,20 @@ namespace ReviewService.Blazor.Client.Pages.Areas
             areaItem = new AreaItemApiModel();
         }
 
-        //protected override void OnInitialized()
-        //{
-        //    ApplicationState.SetHeaderTitle("Area Add");
-        //}
+        protected override void OnInitialized()
+        {
+            ApplicationState.SetState("Area Add", CreateFooterButtons());
+        }
+
+        private List<FooterButton> CreateFooterButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>()
+            {
+                new FooterButton("Cancel", OnCancelClicked),
+                new FooterButton("Save", OnSaveClicked)
+            };
+            return buttons;
+        }
 
         private void AddRowClicked()
         {

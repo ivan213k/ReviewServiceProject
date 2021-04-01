@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System;
@@ -26,9 +27,20 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Review Sessions Create");
+            ApplicationState.SetState("Review Sessions Create", CreateFooterButtons());
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
         }
+
+        private List<FooterButton> CreateFooterButtons()
+        {
+            var buttons = new List<FooterButton>
+            {
+                new FooterButton("Cancel", OnCancelClicked),
+                new FooterButton("Select", OnSelectClicked)
+            };
+            return buttons;
+        }
+
         private bool FilterFunc(ReviewTemplateApiModel reviewTemplate)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
