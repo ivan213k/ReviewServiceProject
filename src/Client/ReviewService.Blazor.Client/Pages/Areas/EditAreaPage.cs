@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Blazor.Client.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -31,9 +33,18 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            //ApplicationState.SetHeaderTitle("Edit Area");
+            ApplicationState.SetState("Edit Area",CreateFooterButtons());
             area = await HttpClient.GetFromJsonAsync<AreaApiModel>($"api/Area/{AreaId}");
             areaItem = new AreaItemApiModel();
+        }
+        private List<FooterButton> CreateFooterButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>()
+            {
+                new FooterButton("Cancel", OnCancelClicked),
+                new FooterButton("Save", OnSaveClicked)
+            };
+            return buttons;
         }
         private void AddRowClicked()
         {

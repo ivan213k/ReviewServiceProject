@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using ReviewService.Blazor.Client.Layout;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System;
@@ -43,17 +43,26 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
             if (Id is null)
             {
-                //ApplicationState.SetHeaderTitle("Review Template Add");
+                ApplicationState.SetState("Review Template Add", CreateFooterButtons());
             }
             else
             {
-                //ApplicationState.SetHeaderTitle("Review Template Edit");
+                ApplicationState.SetState("Review Template Edit", CreateFooterButtons());
                 reviewTemplate = await HttpClient.GetFromJsonAsync<ReviewTemplateApiModel>($"api/ReviewTemplate/{Id}");
                 evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == reviewTemplate.EvaluationPointsTemplateId).EvaluationPoints;
             }
             
         }
-       
+        private List<FooterButton> CreateFooterButtons()
+        {
+            List<FooterButton> buttons = new List<FooterButton>()
+            {
+                new FooterButton("Cancel", OnCancelClicked),
+                new FooterButton("Save", OnSaveClicked)
+            };
+            return buttons;
+        }
+
         private void AddAreaRow(AreaApiModel area)
         {
             if (reviewTemplate.Areas.Any(a => a.Name == area.Name))

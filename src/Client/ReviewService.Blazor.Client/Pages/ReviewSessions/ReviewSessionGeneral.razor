@@ -1,0 +1,43 @@
+﻿@page "/reviewSessionGeneral/{TemplateId:int}";
+@page "/reviewSessionEdit/{ReviewSessionId:int}";
+<MudTabs Class="px-4 mt-8 ml-8 mr-8" Elevation="14" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="General">
+        <EditForm @ref="@editForm" Model="@reviewSession">
+            <FluentValidationValidator></FluentValidationValidator>
+            <MudGrid>
+                <MudItem xs="12" sm="4">
+                    <MudTextField Variant="Variant.Outlined" Label="Name: " @bind-Value="@reviewSession.Name" For="@(()=>reviewSession.Name)" />
+                    <MudTextField Variant="Variant.Outlined" Lines="6" Label="Description: " @bind-Value="@reviewSession.Description" For="@(()=>reviewSession.Description)" />
+                    <MudDatePicker Label="Due Date" @bind-Date="@reviewSession.DueDate" For="@(()=>reviewSession.DueDate)"></MudDatePicker>
+                </MudItem>
+                <MudItem xs="12" sm="8">
+                    <MudTextField Variant="Variant.Outlined" Label="Person under review: " @bind-Value="@reviewSession.PersonUnderReview" For="@(()=>reviewSession.PersonUnderReview)" />
+                    <MudTextField Variant="Variant.Outlined" Label="Review master: " @bind-Value="@reviewSession.ReviewMaster" For="@(()=>reviewSession.ReviewMaster)" />
+                    <MudAutocomplete T="string" ResetValueOnEmptyText="true"
+                                     DebounceInterval="200" Label="Search reviewers" MaxItems="5" Margin="Margin.Normal">
+                    </MudAutocomplete>
+                    <MudTable Context="user" Items="reviewEvaluations" Hover="true" Breakpoint="Breakpoint.None">
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Reviewed</MudTh>
+                            <MudTh>Action</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">@user.Reviewer</MudTd>
+                            <MudTd DataLabel="Reviewed">@user.Status.ToString()</MudTd>
+                            <MudTd DataLabel="Action">
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    </MudTabPanel>
+    <MudTabPanel Text="View">
+        <MudText>View</MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="Delete">
+        <MudText>Delete</MudText>
+    </MudTabPanel>
+</MudTabs>

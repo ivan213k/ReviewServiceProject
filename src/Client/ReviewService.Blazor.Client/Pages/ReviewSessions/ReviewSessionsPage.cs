@@ -9,49 +9,50 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
+namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
-    public partial class ReviewTemplatesPage
+    public partial class ReviewSessionsPage
     {
-        private List<ReviewTemplateApiModel> reviewTemplates;
+        private List<ReviewSessionApiModel> reviewSessions;
 
         [Inject]
         public ApplicationState ApplicationState { get; set; }
 
         [Inject]
         public HttpClient HttpClient { get; set; }
-        
+
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        
+
         [Inject]
         public IDialogService DialogService { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetState("Review Templates", CreateFooterButtons());
-            reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
+            ApplicationState.SetState("Review Sessions", CreateFooterButtons());
+            reviewSessions = await HttpClient.GetFromJsonAsync<List<ReviewSessionApiModel>>("api/ReviewSession");
         }
 
         private List<FooterButton> CreateFooterButtons()
         {
-            List<FooterButton> buttons = new List<FooterButton>()
+            var buttons = new List<FooterButton>
             {
-                new FooterButton("Add new template", OnAddReviewTemlateClicked),
+                new FooterButton("Add new", AddNewSessionClicked)
             };
             return buttons;
         }
 
-        private void OnAddReviewTemlateClicked()
+        private void AddNewSessionClicked()
         {
-            NavigationManager.NavigateTo("/addReviewTemplate");
+            NavigationManager.NavigateTo("/selectReviewTemplate");
         }
-        private void OnEditClicked(int reviewTemplateId)
+        private void OnViewClicked(int reviewSessionId)
         {
-            NavigationManager.NavigateTo($"/editReviewTemplate/{reviewTemplateId}");
+            NavigationManager.NavigateTo($"/reviewSessionEdit/{reviewSessionId}");
         }
-        private async void OnDeleteClicked(ReviewTemplateApiModel reviewTemplate)
+        private async void DeleteSessionClicked(ReviewSessionApiModel reviewSession)
         {
-            var message = $"Actually delete\"{reviewTemplate.Name}\" template ?";
+            var message = $"Actually delete\"{reviewSession.Name}\" session ?";
             var parameters = new DialogParameters();
             parameters.Add("ContentText", message);
 
@@ -59,13 +60,13 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
             var result = await dialogResult.Result;
             if (!result.Cancelled)
             {
-                DeleteReviewTemplate(reviewTemplate);
+                DeleteReviewSession(reviewSession);
             }
         }
-        private async void DeleteReviewTemplate(ReviewTemplateApiModel reviewTemplate)
+        private async void DeleteReviewSession(ReviewSessionApiModel reviewSession)
         {
-            await HttpClient.DeleteAsync($"api/ReviewTemplate/{reviewTemplate.Id}");
-            reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
+            await HttpClient.DeleteAsync($"api/ReviewSession/{reviewSession.Id}");
+            reviewSessions = await HttpClient.GetFromJsonAsync<List<ReviewSessionApiModel>>("api/ReviewSession");
             StateHasChanged();
         }
     }

@@ -1,0 +1,32 @@
+﻿@page "/reviewSessions";
+@if (reviewSessions is null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <MudTable Items="@reviewSessions" Breakpoint="Breakpoint.None" Hover="true" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Person under review</MudTh>
+            <MudTh>Review Master</MudTh>
+            <MudTh>Reviews</MudTh>
+            <MudTh>Due Date</MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Person under review">@context.PersonUnderReview</MudTd>
+            <MudTd DataLabel="Review Master">@context.ReviewMaster</MudTd>
+            <MudTd DataLabel="Reviews">0/2</MudTd>
+            <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Text" OnClick="()=>OnViewClicked(context.Id)" >View</MudButton>
+            </MudTd>
+            <MudTd>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" OnClick="()=>DeleteSessionClicked(context)" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
