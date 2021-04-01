@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using ReviewService.Blazor.Client.State;
 
-namespace ReviewService.Blazor.Client.Layout
+namespace ReviewService.Blazor.Client.Layout.Header
 {
     public partial class HeaderModel: ComponentBase, IDisposable
     {

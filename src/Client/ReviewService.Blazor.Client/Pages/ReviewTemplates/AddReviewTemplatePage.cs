@@ -43,11 +43,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
             if (Id is null)
             {
-                ApplicationState.SetHeaderTitle("Review Template Add");
+                //ApplicationState.SetHeaderTitle("Review Template Add");
             }
             else
             {
-                ApplicationState.SetHeaderTitle("Review Template Edit");
+                //ApplicationState.SetHeaderTitle("Review Template Edit");
                 reviewTemplate = await HttpClient.GetFromJsonAsync<ReviewTemplateApiModel>($"api/ReviewTemplate/{Id}");
                 evaluationPoints = evaluationPointsTemplates.Find(r => r.Id == reviewTemplate.EvaluationPointsTemplateId).EvaluationPoints;
             }

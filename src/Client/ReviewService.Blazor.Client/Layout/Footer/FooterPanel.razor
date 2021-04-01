@@ -1,0 +1,9 @@
+﻿@inherits FooterModel
+
+@if (ApplicationState.FooterButtons != null)
+{
+    @foreach (var button in ApplicationState.FooterButtons)
+    {
+        <MudButton ButtonType="ButtonType.Submit" Class="mb-2 ml-2 mt-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@button.OnClick">@button.Title</MudButton>
+    }
+}

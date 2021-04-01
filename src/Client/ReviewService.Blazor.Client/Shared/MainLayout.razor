@@ -3,14 +3,19 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <Header/>
+        <HeaderPanel/>
         <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        @Body
+        <MudContainer Style="margin-bottom: 70px;">
+            @Body
+        </MudContainer>
+        <MudContainer Class="d-flex justify-end mt-10" MaxWidth="MaxWidth.False" Style="position: fixed; bottom: 0; left: 0; background-color: #f0f1ff;">
+            <FooterPanel />
+        </MudContainer>
     </MudMainContent>
 
 </MudLayout>

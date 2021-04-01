@@ -27,7 +27,7 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         public IDialogService DialogService { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetHeaderTitle("Review Templates");
+            //ApplicationState.SetHeaderTitle("Review Templates");
             reviewTemplates = await HttpClient.GetFromJsonAsync<List<ReviewTemplateApiModel>>("api/ReviewTemplate");
         }
         private void OnAddReviewTemlateClicked()

@@ -10,6 +10,8 @@ namespace ReviewService.Blazor.Client.Shared
     {
         private bool _drawerOpen = true;
 
+        
+
         private void DrawerToggle()
         {
             _drawerOpen = !_drawerOpen;
