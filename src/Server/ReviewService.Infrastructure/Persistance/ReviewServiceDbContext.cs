@@ -19,7 +19,7 @@ namespace ReviewService.Infrastructure.Persistance
         public ReviewServiceDbContext(DbContextOptions<ReviewServiceDbContext> options)
             : base(options)
         {
-            //Database.Migrate();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

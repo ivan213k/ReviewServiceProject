@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ReviewService.Application.Repository.Interfaces;
+using ReviewService.Application.Users.Interfaces;
 using ReviewService.Domain.Entites;
 using ReviewService.Infrastructure.Identity;
 using ReviewService.Infrastructure.Persistance;
@@ -28,7 +29,7 @@ namespace ReviewService.Infrastructure
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
             services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
             services.AddTransient<IReviewTemplateRepository, ReviewTemplateRepository>();
-            
+            services.AddTransient<IIdentityService, IdentityService>();
             return services;
         }
     }
