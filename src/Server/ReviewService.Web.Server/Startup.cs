@@ -1,27 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReviewService.Application.Areas.Interfaces;
-using ReviewService.Application.Areas.Services;
-using ReviewService.Application.EvaluationPoints.Interfaces;
-using ReviewService.Application.EvaluationPoints.Services;
-using ReviewService.Application.ImportanceLevels.Interfaces;
-using ReviewService.Application.ImportanceLevels.Services;
-using ReviewService.Application.Repository.Interfaces;
-using ReviewService.Application.ReviewSessions.Interfaces;
-using ReviewService.Application.ReviewSessions.Services;
-using ReviewService.Application.ReviewTemplates.Interfaces;
-using ReviewService.Application.ReviewTemplates.Services;
-using ReviewService.Domain.Entites;
-using ReviewService.Infrastructure.Persistance;
-using ReviewService.Infrastructure.Persistance.Repositories;
 using System.Reflection;
 using FluentValidation.AspNetCore;
 using ReviewService.Shared.FluentValidators;
 using ReviewService.Web.Server.Filters;
+using ReviewService.Infrastructure;
+using ReviewService.Application;
 
 namespace ReviewService.Web.Server
 {
@@ -38,29 +25,15 @@ namespace ReviewService.Web.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ReviewServiceDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("LocalConnection")));
+            services.AddInfrastructure(Configuration);
+            services.AddApplication();
+            
             services.AddControllersWithViews(options =>
                 options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(
                 fv => fv.RegisterValidatorsFromAssemblyContaining<AreaValidator>());
             services.AddRazorPages();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-            services.AddTransient<IAreaRepository, AreaRepository>();
-            services.AddTransient<IEvaluationPointTemplateRepository, EvaluationPointTemplateRepository>();
-            services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
-            services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
-            services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
-            services.AddTransient<IReviewTemplateRepository, ReviewTemplateRepository>();
-
-            services.AddTransient<IAreaService, AreaService>();
-            services.AddTransient<IEvaluationPointService, EvaluationPointService>();
-            services.AddTransient<IImportanceLevelService, ImportanceLevelService>();
-            services.AddTransient<IReviewSessionService, ReviewSessionService>();
-            services.AddTransient<IReviewTemplateService, ReviewTemplateService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +56,9 @@ namespace ReviewService.Web.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
