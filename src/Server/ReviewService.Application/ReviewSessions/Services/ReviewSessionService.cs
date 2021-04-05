@@ -11,8 +11,8 @@ namespace ReviewService.Application.ReviewSessions.Services
 {
     public class ReviewSessionService : IReviewSessionService
     {
-        private readonly IRepository<ReviewSession> _reviewSessionRepository;
-        public ReviewSessionService(IRepository<ReviewSession> reviewSessionRepository)
+        private readonly IReviewSessionRepository _reviewSessionRepository;
+        public ReviewSessionService(IReviewSessionRepository reviewSessionRepository)
         {
             _reviewSessionRepository = reviewSessionRepository;
         }
@@ -29,7 +29,7 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         public async Task<List<ReviewSession>> GetReviewSessionsAsync()
         {
-            return await _reviewSessionRepository.GetAllAsync();
+            return await _reviewSessionRepository.GetAllReviewSessionsAsync();
         }
         public async Task PublishReviewSessionAsync(ReviewSession reviewSession)
         {
@@ -50,7 +50,7 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         public async Task<ReviewSession> GetByIdAsync(int id)
         {
-            return await _reviewSessionRepository.GetByIdAsync(id);
+            return await _reviewSessionRepository.GetReviewSessionByIdAsync(id);
         }
 
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)

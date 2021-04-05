@@ -13,10 +13,10 @@
                 <MudItem xs="12" sm="8">
                     <MudTextField Variant="Variant.Outlined" Label="Person under review: " @bind-Value="@reviewSession.PersonUnderReview" For="@(()=>reviewSession.PersonUnderReview)" />
                     <MudTextField Variant="Variant.Outlined" Label="Review master: " @bind-Value="@reviewSession.ReviewMaster" For="@(()=>reviewSession.ReviewMaster)" />
-                    <MudAutocomplete T="string" ResetValueOnEmptyText="true"
-                                     DebounceInterval="200" Label="Search reviewers" MaxItems="5" Margin="Margin.Normal">
+                    <MudAutocomplete T="string" ResetValueOnEmptyText="true" ValueChanged="@SearchUserValueChanged"
+                                     DebounceInterval="200" SearchFunc="@SearchUsers" Label="Search reviewers" MaxItems="5" Margin="Margin.Normal">
                     </MudAutocomplete>
-                    <MudTable Context="user" Items="reviewEvaluations" Hover="true" Breakpoint="Breakpoint.None">
+                    <MudTable Context="user" Items="reviewSession.ReviewEvaluations" Hover="true" Breakpoint="Breakpoint.None">
                         <HeaderContent>
                             <MudTh>Name</MudTh>
                             <MudTh>Reviewed</MudTh>
@@ -26,7 +26,7 @@
                             <MudTd DataLabel="Name">@user.Reviewer</MudTd>
                             <MudTd DataLabel="Reviewed">@user.Status.ToString()</MudTd>
                             <MudTd DataLabel="Action">
-                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+                                <MudButton @onclick="()=>DeleteReviewerRow(user)" ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
                             </MudTd>
                         </RowTemplate>
                     </MudTable>
