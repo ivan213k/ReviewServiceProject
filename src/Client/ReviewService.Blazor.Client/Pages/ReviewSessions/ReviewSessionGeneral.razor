@@ -34,10 +34,16 @@
             </MudGrid>
         </EditForm>
     </MudTabPanel>
-    <MudTabPanel Text="View">
+    <MudTabPanel Disabled="@(ReviewSessionId == null)" Text="View">
         <MudText>View</MudText>
     </MudTabPanel>
-    <MudTabPanel Text="Delete">
-        <MudText>Delete</MudText>
+    <MudTabPanel Disabled="@(ReviewSessionId == null)" Text="Delete">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+                        <MudButton OnClick="DeleteSessionClicked" Variant="Variant.Filled" Color="Color.Error">Delete</MudButton>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>  
     </MudTabPanel>
 </MudTabs>

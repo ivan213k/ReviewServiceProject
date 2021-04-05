@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
+using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
@@ -32,6 +34,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         [Inject]
         public ApplicationState ApplicationState { get; set; }
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
         public ReviewSessionGeneral()
         {
@@ -68,7 +73,7 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         private void CancelClicked()
         {
-            NavigationManager.NavigateTo("/reviewSessions");
+            NavigateToReviewSessions();
         }
 
         private async void SaveClicked()
@@ -83,8 +88,13 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 {
                     await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
                 }
-                NavigationManager.NavigateTo("/reviewSessions");
-            }   
+                NavigateToReviewSessions();
+            }
+        }
+
+        private void NavigateToReviewSessions()
+        {
+            NavigationManager.NavigateTo("/reviewSessions");
         }
 
         private async Task<IEnumerable<string>> SearchUsers(string value)
@@ -115,6 +125,24 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         private void DeleteReviewerRow(ReviewEvaluationApiModel reviewEvaluation)
         {
             reviewSession.ReviewEvaluations.Remove(reviewEvaluation);
+        }
+        private async void DeleteSessionClicked()
+        {
+            var message = $"Actually delete\"{reviewSession.Name}\" session ?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteReviewSession(reviewSession.Id);
+                NavigateToReviewSessions();
+            }
+        }
+        private async void DeleteReviewSession(int reviewSessionId)
+        {
+            await HttpClient.DeleteAsync($"api/ReviewSession/{reviewSessionId}");
         }
     }
 }
