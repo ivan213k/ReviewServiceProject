@@ -27,7 +27,14 @@ namespace ReviewService.Web.Server.Controllers
             var evaluationPointTemplates = await _evaluationPointService.GetEvaluationPointTemplatesAsync();
             return _mapper.Map<List<EvaluationPointsTemplateApiModel>>(evaluationPointTemplates);
         }
-        
+
+        [HttpGet("{id}")]
+        public async Task<EvaluationPointsTemplateApiModel> GetEvaluationPointTemplatesById(int id)
+        {
+            var evaluationPoint = await _evaluationPointService.GetByIdAsync(id);
+            return _mapper.Map<EvaluationPointsTemplateApiModel>(evaluationPoint);
+        }
+
         [HttpPost]
         public async Task AddEvaluationPointTemplate([FromBody] EvaluationPointsTemplateApiModel evaluationPointsTemplateApiModel)
         {

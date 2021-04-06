@@ -1,0 +1,47 @@
+﻿@page "/evaluationpoints/edit/{Id:int}"
+@if (_evaluationPointsTemplate != null)
+{
+    <MudContainer>
+        <EditForm Model="@_evaluationPointsTemplate">
+            <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField Label="Name evaluation point" @bind-Value="@_evaluationPointsTemplate.Name" For="@(() =>@_evaluationPointsTemplate.Name)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField Label="Description evaluation point" @bind-Value="@_evaluationPointsTemplate.Description" For="@(() => @_evaluationPointsTemplate.Description)" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+            <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudTextField Label="Name evaluation point item" @bind-Value="@_evaluationPoint.Name" For="@(() => @_evaluationPoint.Name)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2 justify-content-end" OnClick="OnAddRowClicked">AddRow</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </EditForm>
+
+        <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+            <HeaderContent>
+                <MudTh>Order</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Order"></MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Action">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudContainer>
+}
+else
+{
+    <Loading/>
+}
