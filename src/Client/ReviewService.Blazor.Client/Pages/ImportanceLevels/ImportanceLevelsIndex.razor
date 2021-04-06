@@ -9,7 +9,7 @@ else
 {
 
 <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
-    <EditForm Model="@_importanceLevel">
+    <EditForm Model="@_importanceLevel" @ref="@_editForm">
         <FluentValidationValidator />
         <MudGrid>
             <MudItem xs="12" sm="5">
@@ -22,6 +22,7 @@ else
                 <MudButton Class="mt-4" OnClick="OpenModal" Style=@ColorField(_importanceLevel.Color)>
                     Select Color
                 </MudButton>
+                <ValidationMessage For="@(() => _importanceLevel.Description)"></ValidationMessage>
                 <ColorPicker IsOpened="IsOpened" Closed="ClosedEvent" MyColor="@_importanceLevel.Color"></ColorPicker>
             </MudItem>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="AddRowClicked">AddRow</MudButton>

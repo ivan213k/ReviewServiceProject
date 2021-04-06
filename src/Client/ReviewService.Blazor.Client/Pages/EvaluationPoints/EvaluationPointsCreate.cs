@@ -9,6 +9,8 @@ using ReviewService.Shared.ApiModels;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Blazor.Client.Layout.Footer;
+using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
@@ -17,6 +19,11 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
         private EvaluationPointsTemplateApiModel _evaluationPointsTemplate;
         private EvaluationPointApiModel _evaluationPoint;
         private List<FooterButton> _buttons;
+        private EditForm _editForm;
+        private EditForm _editFormItem;
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
         [Inject]
         public ApplicationState ApplicationState { get; set; } 
@@ -50,20 +57,41 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         private void OnAddRowClicked()
         {
-            _evaluationPointsTemplate.EvaluationPoints.Add(_evaluationPoint);
-            _evaluationPoint = new EvaluationPointApiModel();
-            StateHasChanged();
+            if(_editFormItem.EditContext.Validate())
+            {
+                _evaluationPointsTemplate.EvaluationPoints.Add(_evaluationPoint);
+                _evaluationPoint = new EvaluationPointApiModel();
+                StateHasChanged();
+            }
         }
 
-        private void OnDeleteClicked(EvaluationPointApiModel point)
+        private async void OnDeleteClicked(EvaluationPointApiModel point)
+        {
+            var message = $"Actually delete \"{point.Name}\" evaluation point item?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteEvaluationPointItem(point);
+            }
+        }
+
+        private void DeleteEvaluationPointItem(EvaluationPointApiModel point)
         {
             _evaluationPointsTemplate.EvaluationPoints.Remove(point);
+            StateHasChanged();
         }
 
         private async void OnSaveClicked()
         {
-            await HttpClient.PostAsJsonAsync("api/EvaluationPoint", _evaluationPointsTemplate);
-            NavigationManager.NavigateTo("/evaluationpoints");
+            if(_editForm.EditContext.Validate())
+            {
+                await HttpClient.PostAsJsonAsync("api/EvaluationPoint", _evaluationPointsTemplate);
+                NavigationManager.NavigateTo("/evaluationpoints");
+            }
         }
 
         private void OnCancelClicked()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
@@ -17,6 +18,7 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
         private ImportanceLevelApiModel _importanceLevel;
         private List<ImportanceLevelApiModel> _importanceLevels;
         private List<ImportanceLevelApiModel> _previousLevels;
+        private EditForm _editForm;
 
         [Inject]
         public IDialogService DialogService { get; set; }
@@ -74,9 +76,12 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         private void AddRowClicked()
         {
-            _importanceLevels.Add(_importanceLevel);
-            _importanceLevel = new ImportanceLevelApiModel();
-            StateHasChanged();
+            if(_editForm.EditContext.Validate())
+            {
+                _importanceLevels.Add(_importanceLevel);
+                _importanceLevel = new ImportanceLevelApiModel();
+                StateHasChanged();
+            }
         }
 
         private async void OnDeleteClicked(ImportanceLevelApiModel level)
