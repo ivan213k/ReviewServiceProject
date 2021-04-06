@@ -16,10 +16,10 @@ else
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Description">@context.Description</MudTd>
             <MudTd DataLabel="Action">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Edit</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Primary" Class="ml-auto" OnClick="() => OnEditClicked(context.Id)">Edit</MudButton>
             </MudTd>
             <MudTd DataLabel="Action">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
             </MudTd>
         </RowTemplate>
     </MudTable>

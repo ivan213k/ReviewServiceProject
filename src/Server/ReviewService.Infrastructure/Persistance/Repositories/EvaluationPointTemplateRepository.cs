@@ -14,9 +14,17 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<EvaluationPointsTemplate> GetEvaluationPointsTemplateByIdAsync(int id)
+        {
+            return await _dbContext.EvaluationPointsTemplates.Include(e => e.EvaluationPoints).FirstOrDefaultAsync(x=>x.Id == id);
+        }
+
         public async Task<List<EvaluationPointsTemplate>> GetEvaluationPointsTemplates()
         {
             return await _dbContext.EvaluationPointsTemplates.Include(e => e.EvaluationPoints).ToListAsync();
         }
+
+        
     }
 }
