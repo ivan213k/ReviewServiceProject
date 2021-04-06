@@ -5,7 +5,13 @@
         <EditForm @ref="@editForm" Model="@reviewSession">
             <FluentValidationValidator></FluentValidationValidator>
             <MudGrid>
-                <MudItem xs="12" sm="4">
+                <MudItem xs="12" sm="12">
+                    @if (ReviewSessionId != null)
+                    {
+                        <MudText Typo="Typo.h6">Status: @reviewSession.Status.ToUserFriendlyString()</MudText>
+                    }
+                </MudItem>
+                <MudItem xs="12" sm="4">    
                     <MudTextField Variant="Variant.Outlined" Label="Name: " @bind-Value="@reviewSession.Name" For="@(()=>reviewSession.Name)" />
                     <MudTextField Variant="Variant.Outlined" Lines="6" Label="Description: " @bind-Value="@reviewSession.Description" For="@(()=>reviewSession.Description)" />
                     <MudDatePicker Label="Due Date" @bind-Date="@reviewSession.DueDate" For="@(()=>reviewSession.DueDate)"></MudDatePicker>
@@ -24,7 +30,7 @@
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Name">@user.Reviewer</MudTd>
-                            <MudTd DataLabel="Reviewed">@user.Status.ToString()</MudTd>
+                            <MudTd DataLabel="Reviewed">@user.Status.ToUserFriendlyString()</MudTd>
                             <MudTd DataLabel="Action">
                                 <MudButton @onclick="()=>DeleteReviewerRow(user)" ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto">Delete</MudButton>
                             </MudTd>
