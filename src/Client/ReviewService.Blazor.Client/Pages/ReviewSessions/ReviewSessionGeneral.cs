@@ -120,7 +120,12 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             {
                 return;
             }
-            reviewSession.ReviewEvaluations.Add(new ReviewEvaluationApiModel() {Reviewer = user.FullName });
+            string personalReviewLink = NavigationManager.ToAbsoluteUri($"/reviewPage/reviewEvaluationId/{user.Id}").AbsoluteUri;
+            reviewSession.ReviewEvaluations.Add(new ReviewEvaluationApiModel() 
+            {
+                Reviewer = user.FullName,
+                PersonalReviewLink = personalReviewLink
+            });
         }
         private void DeleteReviewerRow(ReviewEvaluationApiModel reviewEvaluation)
         {
