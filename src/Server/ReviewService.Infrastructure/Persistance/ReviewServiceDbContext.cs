@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ReviewService.Domain.Entites;
+using ReviewService.Infrastructure.Identity;
 using ReviewService.Infrastructure.Persistance.Configurations;
 
 namespace ReviewService.Infrastructure.Persistance
 {
-    public class ReviewServiceDbContext : DbContext
+    public class ReviewServiceDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<ReviewSession> ReviewSessions { get; set; }
         public virtual DbSet<ReviewEvaluation> ReviewEvaluations { get; set; }
@@ -30,6 +32,8 @@ namespace ReviewService.Infrastructure.Persistance
             modelBuilder.ApplyConfiguration(new EvaluationPointsTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewEvaluationConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewSessionConfiguration());
+
+            base.OnModelCreating(modelBuilder);
         }
         
     }
