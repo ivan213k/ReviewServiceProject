@@ -116,15 +116,15 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         }
         private void AddReviewerRow(UserApiModel user) 
         {
-            if (reviewSession.ReviewEvaluations.Any(a => a.Reviewer == user.FullName))
+            if (reviewSession.ReviewEvaluations.Any(a => a.UserId == user.Id))
             {
                 return;
             }
-            string personalReviewLink = NavigationManager.ToAbsoluteUri($"/reviewPage/reviewEvaluationId/{user.Id}").AbsoluteUri;
             reviewSession.ReviewEvaluations.Add(new ReviewEvaluationApiModel() 
             {
                 Reviewer = user.FullName,
-                PersonalReviewLink = personalReviewLink
+                UserId = user.Id,
+                Guid = Guid.NewGuid()
             });
         }
         private void DeleteReviewerRow(ReviewEvaluationApiModel reviewEvaluation)

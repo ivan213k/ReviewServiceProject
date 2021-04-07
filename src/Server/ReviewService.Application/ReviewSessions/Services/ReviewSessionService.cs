@@ -21,8 +21,6 @@ namespace ReviewService.Application.ReviewSessions.Services
             reviewSession.Session_json = SerializeAreasToJson(template.Areas);
             await _reviewSessionRepository.CreateAsync(reviewSession);
            
-            FillReviewEvaluationIdInPersonalLinks(reviewSession.ReviewEvaluations);
-            await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
         public async Task DeleteReviewSessionAsync(ReviewSession reviewSession)
@@ -59,8 +57,6 @@ namespace ReviewService.Application.ReviewSessions.Services
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
         {
             await _reviewSessionRepository.UpdateAsync(reviewSession);
-            FillReviewEvaluationIdInPersonalLinks(reviewSession.ReviewEvaluations);
-            await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
         private string SerializeAreasToJson(List<Area> areas)
@@ -72,13 +68,6 @@ namespace ReviewService.Application.ReviewSessions.Services
             serializerSettings.ContractResolver = jsonResolver;
             return JsonConvert.SerializeObject(areas, serializerSettings);
         }
-        private void FillReviewEvaluationIdInPersonalLinks(List<ReviewEvaluation> reviewEvaluations)
-        {
-            foreach (var reviewEvaluation in reviewEvaluations)
-            {
-                var patternLink = reviewEvaluation.PersonalReviewLink;
-                reviewEvaluation.PersonalReviewLink = patternLink.Replace("reviewEvaluationId", reviewEvaluation.Id.ToString());
-            }
-        }
+       
     }
 }
