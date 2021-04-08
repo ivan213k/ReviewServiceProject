@@ -19,6 +19,8 @@ namespace ReviewService.Application.ReviewSessions.Services
         public async Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession)
         {
             reviewSession.Session_json = SerializeAreasToJson(template.Areas);
+            reviewSession.EvaluationPointsTemplateId = template.EvaluationPointsTemplateId;
+            reviewSession.MidEvaluationPointId = template.MidEvaluationPointId;
             await _reviewSessionRepository.CreateAsync(reviewSession);
            
         }

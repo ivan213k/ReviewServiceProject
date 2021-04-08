@@ -15,5 +15,8 @@ namespace ReviewService.Domain.Entites
         public DateTime DueDate { get; set; }
         public string Session_json { get; set; }
         public List<ReviewEvaluation> ReviewEvaluations { get; set; }
+
+        public int EvaluationPointsTemplateId { get; set; }
+        public int MidEvaluationPointId { get; set; }
     }
 }
