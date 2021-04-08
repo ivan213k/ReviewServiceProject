@@ -3,8 +3,10 @@ using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
+using ReviewService.Shared.ApiEnums;
 using ReviewService.Shared.ApiModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -40,6 +42,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 new FooterButton("Add new", AddNewSessionClicked)
             };
             return buttons;
+        }
+
+        private int GetFinishedReviwersCount(ReviewSessionApiModel session) 
+        {
+            return session.ReviewEvaluations.Where(e => e.Status == ReviewEvaluationStatusApiEnum.Finished).Count();
         }
 
         private void AddNewSessionClicked()
