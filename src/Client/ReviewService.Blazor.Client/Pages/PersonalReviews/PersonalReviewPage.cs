@@ -26,7 +26,7 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
 
         private EvaluationArea currentEvaluationArea;
         private int currentAreaIndex = 1;
-
+        private EvaluationAreaItem selectedAreaItemRow;
         public PersonalReviewPage()
         {
             evaluationJson = new EvaluationJson();
@@ -83,13 +83,14 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
             {
                 var areas = JsonConvert.DeserializeObject<List<AreaApiModel>>(reviewSession.Session_json);
                 evaluationJson.Areas = areas.ConvertToEvaluationAreas();
-                evaluationJson.MidEvaluationPoint = midEvaluationPoint.Name;
+                evaluationJson.Areas.ForEach(a => a.AreaItems.ForEach(i => i.MidEvaluationPoint = midEvaluationPoint.Name));
             }
             else
             {
                 evaluationJson = JsonConvert.DeserializeObject<EvaluationJson>(reviewEvaluation.Evaluation_json);
             }
             currentEvaluationArea = evaluationJson.Areas.FirstOrDefault();
+            selectedAreaItemRow = currentEvaluationArea.AreaItems.FirstOrDefault();
         }
 
         private void NextPage()
@@ -107,6 +108,10 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
                 currentAreaIndex--;
                 currentEvaluationArea = evaluationJson.Areas[currentAreaIndex - 1];
             }
+        }
+        private void SelectedAreaChanged(HashSet<EvaluationArea> sectedAreas)
+        {
+            currentAreaIndex = evaluationJson.Areas.IndexOf(currentEvaluationArea) + 1;
         }
     }
 }

@@ -3,6 +3,7 @@
     public class EvaluationAreaItem
     {
         public string Name { get; set; }
+        public string MidEvaluationPoint { get; set; }
         public string EvaluationPoint { get; set; }
         public string Comment { get; set; }
     }
