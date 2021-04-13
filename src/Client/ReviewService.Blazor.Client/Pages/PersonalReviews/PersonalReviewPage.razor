@@ -11,7 +11,7 @@ else
                 <MudText Class="mt-7" Typo="Typo.h6">Area(@currentAreaIndex of @evaluationJson.Areas.Count) :</MudText>
             </MudItem>
             <MudItem xs="12" sm="10">
-                <MudSelect @bind-Value="currentEvaluationArea" SelectedValuesChanged="@((HashSet<EvaluationArea> r)=> SelectedAreaChanged(r))">
+                <MudSelect @bind-Value="currentEvaluationArea" SelectedValuesChanged="@((HashSet<EvaluationAreaApiModel> r)=> SelectedAreaChanged(r))">
                     @foreach (var area in evaluationJson.Areas)
                         {
                         <MudSelectItem Value="area">
@@ -31,14 +31,18 @@ else
             <RowTemplate>
                     <MudTd DataLabel="Area item">@context.Name</MudTd>
                     <MudTd DataLabel="Middle">@context.MidEvaluationPoint</MudTd>
-                    <MudTd DataLabel="Point">@context.EvaluationPoint</MudTd>
-                    <MudTd DataLabel="Comment">@context.Comment</MudTd>
+                    <MudTd DataLabel="Point">
+                        <MudTextField @bind-Value="@context.EvaluationPoint" ReadOnly="true"></MudTextField>
+                    </MudTd>
+                    <MudTd DataLabel="Comment">
+                        <MudTextField @bind-Value="@context.Comment" ReadOnly="true"/>
+                    </MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Area item">@context.Name</MudTd>
                 <MudTd DataLabel="Middle">@context.MidEvaluationPoint</MudTd>
                 <MudTd DataLabel="Point">
-                    <MudSelect Variant="Variant.Filled" AutoFocus="true" @bind-Value="@context.EvaluationPoint">
+                    <MudSelect AutoFocus="true" @bind-Value="@context.EvaluationPoint">
                         @foreach (var evaluationPoint in evaluationPointsTemplate.EvaluationPoints)
                             {
                             <MudSelectItem Value="@evaluationPoint.Name"></MudSelectItem>
@@ -46,7 +50,7 @@ else
                     </MudSelect>
                 </MudTd>
                 <MudTd DataLabel="Comment">
-                    <MudTextField Variant="Variant.Filled" Required="@(!string.IsNullOrEmpty(context.EvaluationPoint) && context.EvaluationPoint!=context.MidEvaluationPoint)" RequiredError="comment required" @bind-Value="@context.Comment" />
+                    <MudTextField Required="@(!string.IsNullOrEmpty(context.EvaluationPoint) && context.EvaluationPoint!=context.MidEvaluationPoint)" RequiredError="comment required" @bind-Value="@context.Comment" />
                 </MudTd>
             </RowEditingTemplate>
         </MudTable>

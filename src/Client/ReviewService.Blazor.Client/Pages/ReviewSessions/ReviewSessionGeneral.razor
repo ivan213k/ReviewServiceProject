@@ -41,7 +41,9 @@
         </EditForm>
     </MudTabPanel>
     <MudTabPanel Disabled="@(ReviewSessionId == null)" Text="View">
-        <MudText>View</MudText>
+        <ReviewViewTable SessionId="ReviewSessionId.Value">
+
+        </ReviewViewTable>
     </MudTabPanel>
     <MudTabPanel Disabled="@(ReviewSessionId == null)" Text="Delete">
             <MudGrid>

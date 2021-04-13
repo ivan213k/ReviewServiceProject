@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Newtonsoft.Json;
-using ReviewService.Blazor.Client.ApiModelsExtensions;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiEnums;
@@ -19,20 +18,20 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
     public partial class PersonalReviewPage
     {
         private ReviewEvaluationApiModel reviewEvaluation;
-        private EvaluationJson evaluationJson;
+        private EvaluationJsonApiModel evaluationJson;
         private ReviewSessionApiModel reviewSession;
         private EvaluationPointApiModel midEvaluationPoint;
         private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
 
-        private EvaluationArea currentEvaluationArea;
+        private EvaluationAreaApiModel currentEvaluationArea;
         private int currentAreaIndex = 1;
-        private EvaluationAreaItem selectedAreaItemRow;
+        private EvaluationAreaItemApiModel selectedAreaItemRow;
         public PersonalReviewPage()
         {
-            evaluationJson = new EvaluationJson();
-            evaluationJson.Areas = new List<EvaluationArea>();
-            currentEvaluationArea = new EvaluationArea();
-            currentEvaluationArea.AreaItems = new List<EvaluationAreaItem>();
+            evaluationJson = new EvaluationJsonApiModel();
+            evaluationJson.Areas = new List<EvaluationAreaApiModel>();
+            currentEvaluationArea = new EvaluationAreaApiModel();
+            currentEvaluationArea.AreaItems = new List<EvaluationAreaItemApiModel>();
         }
         [Parameter]
         public Guid ReviewEvaluationGuid { get; set; }
@@ -65,29 +64,33 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
         }
         private async void OnSaveClicked()
         {
-            reviewEvaluation.Evaluation_json = evaluationJson.ConvertToJsonString();
+            if (reviewEvaluation.Status == ReviewEvaluationStatusApiEnum.Finished)
+            {
+                await DialogService.ShowMessageBox("Information", "Review already published!");
+                return;
+            }
+            reviewEvaluation.Evaluation_json = JsonConvert.SerializeObject(evaluationJson);
             reviewEvaluation.Status = ReviewEvaluationStatusApiEnum.InProgress;
             await HttpClient.PutAsJsonAsync("/api/PersonalReview", reviewEvaluation);
             await DialogService.ShowMessageBox("Information", "Review saved successfully!");
         }
         private async void OnPublishClicked()
         {
-            reviewEvaluation.Evaluation_json = evaluationJson.ConvertToJsonString();
+            if (reviewEvaluation.Status == ReviewEvaluationStatusApiEnum.Finished)
+            {
+                await DialogService.ShowMessageBox("Information", "Review already published!");
+                return;
+            }
+            reviewEvaluation.Evaluation_json = JsonConvert.SerializeObject(evaluationJson);
             reviewEvaluation.Status = ReviewEvaluationStatusApiEnum.Finished;
             await HttpClient.PutAsJsonAsync("/api/PersonalReview", reviewEvaluation);
             await DialogService.ShowMessageBox("Information", "Review published successfully!");
         }
         private void InitializeEvaluationJson()
         {
-            if (string.IsNullOrEmpty(reviewEvaluation.Evaluation_json))
+            if (!string.IsNullOrEmpty(reviewEvaluation.Evaluation_json))
             {
-                var areas = JsonConvert.DeserializeObject<List<AreaApiModel>>(reviewSession.Session_json);
-                evaluationJson.Areas = areas.ConvertToEvaluationAreas();
-                evaluationJson.Areas.ForEach(a => a.AreaItems.ForEach(i => i.MidEvaluationPoint = midEvaluationPoint.Name));
-            }
-            else
-            {
-                evaluationJson = JsonConvert.DeserializeObject<EvaluationJson>(reviewEvaluation.Evaluation_json);
+                evaluationJson = JsonConvert.DeserializeObject<EvaluationJsonApiModel>(reviewEvaluation.Evaluation_json);
             }
             currentEvaluationArea = evaluationJson.Areas.FirstOrDefault();
             selectedAreaItemRow = currentEvaluationArea.AreaItems.FirstOrDefault();
@@ -109,7 +112,7 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
                 currentEvaluationArea = evaluationJson.Areas[currentAreaIndex - 1];
             }
         }
-        private void SelectedAreaChanged(HashSet<EvaluationArea> sectedAreas)
+        private void SelectedAreaChanged(HashSet<EvaluationAreaApiModel> sectedAreas)
         {
             currentAreaIndex = evaluationJson.Areas.IndexOf(currentEvaluationArea) + 1;
         }

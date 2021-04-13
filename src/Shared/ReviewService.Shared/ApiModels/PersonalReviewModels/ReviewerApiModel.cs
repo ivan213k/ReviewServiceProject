@@ -1,10 +1,9 @@
 ﻿namespace ReviewService.Shared.ApiModels.PersonalReviewModels
 {
-    public class EvaluationAreaItem
+    public class ReviewerApiModel
     {
         public string Name { get; set; }
-        public string MidEvaluationPoint { get; set; }
-        public string EvaluationPoint { get; set; }
+        public string Point { get; set; }
         public string Comment { get; set; }
     }
 }
