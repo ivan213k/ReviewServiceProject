@@ -27,7 +27,7 @@ namespace ReviewService.Application.EvaluationPoints.Services
 
         public async Task<EvaluationPointsTemplate> GetByIdAsync(int id)
         {
-            return await _evaluationPointTemplateRepository.GetEvaluationPointTemplateById(id);
+            return await _evaluationPointTemplateRepository.GetEvaluationPointsTemplateByIdAsync(id);
         }
 
         public async Task UpdateEvaluationPointTemplateAsync(EvaluationPointsTemplate evaluationPointsTemplate)

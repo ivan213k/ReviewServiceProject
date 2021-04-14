@@ -82,7 +82,7 @@ namespace ReviewService.Application.ReviewSessions.Services
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
         {
             var areas = JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
-            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointTemplateById(reviewSession.EvaluationPointsTemplateId);
+            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointsTemplateByIdAsync(reviewSession.EvaluationPointsTemplateId);
             string midPoint = evaluationPointsTemplate.EvaluationPoints.Where(r => r.Id == reviewSession.MidEvaluationPointId).First().Name;
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, areas, midPoint);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
