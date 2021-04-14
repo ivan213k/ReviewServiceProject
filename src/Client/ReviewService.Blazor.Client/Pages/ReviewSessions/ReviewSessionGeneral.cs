@@ -91,6 +91,10 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 NavigateToReviewSessions();
             }
         }
+        private void OnFullScreanClicked() 
+        {
+            NavigationManager.NavigateTo($"/reviewViewTableFullScrean/{ReviewSessionId}");
+        }
 
         private void NavigateToReviewSessions()
         {
