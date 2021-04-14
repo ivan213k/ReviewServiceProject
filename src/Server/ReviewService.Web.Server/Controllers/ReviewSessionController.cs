@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.ReviewSessions.Interfaces;
 using ReviewService.Application.ReviewTemplates.Interfaces;
@@ -11,6 +12,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReviewSessionController : ControllerBase
     {
         private readonly IReviewSessionService _reviewSessionService;

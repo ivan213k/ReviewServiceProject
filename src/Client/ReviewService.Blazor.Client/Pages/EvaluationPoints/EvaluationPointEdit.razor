@@ -1,7 +1,7 @@
-﻿@page "/evaluationpoints/add"
-
-
-<MudContainer>
+﻿@page "/evaluationpoints/edit/{Id:int}"
+@if (_evaluationPointsTemplate != null)
+{
+    <MudContainer>
         <MudPaper Elevation="14" Class="px-4 mt-8  ml-8 mr-8">
             <EditForm Model="@_evaluationPointsTemplate" @ref="@_editForm">
                 <FluentValidationValidator />
@@ -28,19 +28,24 @@
                 </MudGrid>
             </EditForm>
         </MudPaper>
-              
-    <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
-        <HeaderContent>
-            <MudTh>Order</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Action</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Order"></MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Action">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
-</MudContainer>
+
+        <MudTable Items="@_evaluationPointsTemplate.EvaluationPoints" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+            <HeaderContent>
+                <MudTh>Order</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Order"></MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Action">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudContainer>
+}
+else
+{
+    <Loading/>
+}

@@ -9,6 +9,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Blazor.Client.Layout.Footer;
+using MudBlazor;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
@@ -24,6 +25,9 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -41,6 +45,31 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
         private void OnAddEvaluationClicked()
         {
             NavigationManager.NavigateTo("/evaluationpoints/add");
+        }
+
+        private void OnEditClicked(int id)
+        {
+            NavigationManager.NavigateTo($"/evaluationpoints/edit/{id}");
+        }
+
+        private async void OnDeleteClicked(EvaluationPointsTemplateApiModel template)
+        {
+            var message = $"Actually delete\"{template.Name}\" evaluation points template?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteEvaluationPointsTemplate(template);
+            }
+        }
+        private async void DeleteEvaluationPointsTemplate(EvaluationPointsTemplateApiModel template)
+        {
+            await HttpClient.DeleteAsync($"api/EvaluationPoint/{template.Id}");
+            _evaluationpoints = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
+            StateHasChanged();
         }
 
     }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
@@ -14,10 +16,15 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
     public partial class ImportanceLevelsIndex
     {
         private ImportanceLevelApiModel _importanceLevel;
-        private ImportanceLevelApiModel _deleteImportanceLevel;
-        private DeleteConfirmation _deleteConfirmation;
         private List<ImportanceLevelApiModel> _importanceLevels;
         private List<ImportanceLevelApiModel> _previousLevels;
+        private EditForm _editForm;
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
+        public bool IsOpened { get; set; } = false;
+        //public string ColorField { get; set; }
 
         [Inject]
         public ApplicationState ApplicationState{ get; set; }
@@ -31,9 +38,9 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
         public ImportanceLevelsIndex()
         {
             _importanceLevel = new ImportanceLevelApiModel();
+            _importanceLevel.Color = "#FFFFFF";
             _previousLevels = new List<ImportanceLevelApiModel>();
             _importanceLevels = new List<ImportanceLevelApiModel>();
-            _deleteImportanceLevel = new ImportanceLevelApiModel();
         }
 
         protected override async Task OnInitializedAsync()
@@ -41,6 +48,22 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
             ApplicationState.SetState("Importance Levels", SetButtons());
             _previousLevels = await HttpClient.GetFromJsonAsync<List<ImportanceLevelApiModel>>("api/ImportanceLevel");
             _importanceLevels.AddRange(_previousLevels);
+        }
+
+        public void OpenModal()
+        {
+            IsOpened = true;
+        }
+
+        public void ClosedEvent(string value)
+        {
+            _importanceLevel.Color = value;
+            IsOpened = false;
+        }
+
+        public string ColorField(string color)
+        {
+            return "background-color:" + color;
         }
 
         private List<FooterButton> SetButtons()
@@ -53,20 +76,31 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
 
         private void AddRowClicked()
         {
-            _importanceLevels.Add(_importanceLevel);
-            _importanceLevel = new ImportanceLevelApiModel();
-            StateHasChanged();
+            if(_editForm.EditContext.Validate())
+            {
+                _importanceLevels.Add(_importanceLevel);
+                _importanceLevel = new ImportanceLevelApiModel();
+                StateHasChanged();
+            }
         }
 
-        private void OnDeleteClicked(ImportanceLevelApiModel level)
+        private async void OnDeleteClicked(ImportanceLevelApiModel level)
         {
-            _deleteImportanceLevel = level;
-            _deleteConfirmation.Show($"Actually delete\"{level.Name}\" importance level?");
+            var message = $"Actually delete\"{level.Name}\" importance level?";
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+
+            var dialogResult = DialogService.Show<DeleteConfirmationDialog>("Delete", parameters);
+            var result = await dialogResult.Result;
+            if (!result.Cancelled)
+            {
+                DeleteLevel(level);
+            }
         }
 
-        public void DeleteLevel()
+        public void DeleteLevel(ImportanceLevelApiModel level)
         {
-            _importanceLevels.Remove(_deleteImportanceLevel);
+            _importanceLevels.Remove(level);
             StateHasChanged();
         }
 
