@@ -1,4 +1,6 @@
 ﻿using ReviewService.Shared.ApiEnums;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace ReviewService.Blazor.Client.EnumExtensions
 {
@@ -6,21 +8,13 @@ namespace ReviewService.Blazor.Client.EnumExtensions
     {
         public static string ToUserFriendlyString(this ReviewSessionStatusApiEnum sessionStatus) 
         {
-            switch (sessionStatus)
+            var memberInfo = sessionStatus.GetType().GetMember(sessionStatus.ToString());
+            var attribute = memberInfo.FirstOrDefault()?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault();
+            if (attribute is null)
             {
-                case ReviewSessionStatusApiEnum.New:
-                    return "New Review Session";
-                case ReviewSessionStatusApiEnum.Published:
-                    return "Review Published";
-                case ReviewSessionStatusApiEnum.InProgress:
-                    return "In Progress";
-                case ReviewSessionStatusApiEnum.Submitted:
-                    return "Review Submitted";
-                case ReviewSessionStatusApiEnum.Canceled:
-                    return "Review Canceled";
-                default:
-                    return sessionStatus.ToString();
+                return sessionStatus.ToString();
             }
+            return attribute.Value;
         }
     }
 }
