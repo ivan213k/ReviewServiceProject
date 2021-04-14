@@ -1,0 +1,17 @@
+﻿@page "/login"
+<h3>Login</h3>
+
+<MudPaper>
+    @if (ShowAuthError)
+    {
+        <MudAlert Severity="Severity.Error">
+            @Error
+        </MudAlert>
+    }
+    <EditForm Model="_userForAuthentication">
+        <MudTextField Label="Email" Placeholder="email" @bind-Value="_userForAuthentication.Email"></MudTextField>
+        <MudTextField Label="Password" Placeholder="password" @bind-Value="_userForAuthentication.Password"></MudTextField>
+        <MudButton OnClick="@ExecuteLogin" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
+    </EditForm>
+</MudPaper>
+
