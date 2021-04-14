@@ -19,29 +19,6 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         protected override async Task OnInitializedAsync()
         {
             viewItems = await HttpClient.GetFromJsonAsync<List<PersonalReviewViewItemApiModel>>($"api/PersonalReviewView/{SessionId}");
-            //viewItems = new List<PersonalReviewViewItemApiModel>()
-            //{
-            // new PersonalReviewViewItemApiModel()
-            //    {
-            //     AreaItem = "ef core test",
-            //     Middle = "normal",
-            //     Reviewers = new List<ReviewerApiModel>
-            //     {
-            //         new ReviewerApiModel() {Name = "Rev1",Point = "bad",Comment ="comment" },
-            //         new ReviewerApiModel() {Name = "Rev2",Point = "perfect",Comment ="comment p" }
-            //     }
-            //    },
-            // new PersonalReviewViewItemApiModel()
-            //    {
-            //     AreaItem = "OOP",
-            //     Middle = "normal",
-            //     Reviewers = new List<ReviewerApiModel>
-            //     {
-            //         new ReviewerApiModel() {Name = "Rev1",Point = "perfect",Comment ="comment" },
-            //         new ReviewerApiModel() {Name = "Rev2",Point = "normal",Comment ="comment p" }
-            //     }
-            //    },
-            //};
         }
     }
 }
