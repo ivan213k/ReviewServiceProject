@@ -27,7 +27,8 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<EvaluationAreaItem, EvaluationAreaItemApiModel>().ReverseMap();
             CreateMap<EvaluationArea, EvaluationAreaApiModel>().ReverseMap();
             CreateMap<EvaluationJsonModel, EvaluationJsonApiModel>().ReverseMap();
-            CreateMap<PersonalReviewViewItem, PersonalReviewViewItemApiModel>().ReverseMap();
+            CreateMap<FinalReviewAreaItem, FinalReviewAreaItemApiModel>().ReverseMap();
+            CreateMap<FinalReviewArea, FinalReviewAreaApiModel>().ReverseMap();
             CreateMap<Reviewer, ReviewerApiModel>().ReverseMap();
 
             CreateMap<ReviewSessionStatus, ReviewSessionStatusApiEnum>().ReverseMap();

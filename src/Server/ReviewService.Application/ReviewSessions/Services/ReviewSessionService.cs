@@ -98,45 +98,49 @@ namespace ReviewService.Application.ReviewSessions.Services
             return JsonConvert.SerializeObject(areas, serializerSettings);
         }
 
-        public async Task<List<PersonalReviewViewItem>> GetReviewViewItemsAsync(int sessionId)
+        public async Task<List<FinalReviewArea>> GetFinalReviewAreasAsync(int sessionId)
         {
-            List<PersonalReviewViewItem> personalReviews = new List<PersonalReviewViewItem>();
+            var personalReviewAreas = new List<FinalReviewArea>();
             var reviewSession = await _reviewSessionRepository.GetReviewSessionByIdAsync(sessionId);
 
             var reviewEvaluations = reviewSession.ReviewEvaluations;
             List<EvaluationJsonModel> evaluations = GetEvaluations(reviewEvaluations);
             var areas = GetAreasFromJson(reviewSession);
-            var areaItems = GetAreaItems(areas);
-
-            foreach (var areaItem in areaItems)
+            foreach (var area in areas)
             {
-                var areaItemEvaluations = new List<EvaluationAreaItem>();
-                var reviewers = new List<Reviewer>();
-                foreach (var evaluation in evaluations)
+                var finalReviewAreaItems = new List<FinalReviewAreaItem>();
+                foreach (var areaItem in area.AreaItems)
                 {
-                    var evaluationAreaItems = GetEvaluationAreaItems(evaluation.Areas);
-                    var evaluationAreaItem = evaluationAreaItems.Where(r => r.Id == areaItem.Id).FirstOrDefault();
-                    if (evaluationAreaItem != null)
+                    var areaItemEvaluations = new List<EvaluationAreaItem>();
+                    var reviewers = new List<Reviewer>();
+                    foreach (var evaluation in evaluations)
                     {
-                        var reviewerName = GetReviewerName(reviewSession, evaluation.ReviewEvaluationId);
-                        areaItemEvaluations.Add(evaluationAreaItem);
-                        reviewers.Add(new Reviewer()
+                        var evaluationAreaItems = GetEvaluationAreaItems(evaluation.Areas);
+                        var evaluationAreaItem = evaluationAreaItems.Where(r => r.Id == areaItem.Id).FirstOrDefault();
+                        if (evaluationAreaItem != null)
                         {
-                            Name = reviewerName,
-                            Comment = evaluationAreaItem.Comment,
-                            Point = evaluationAreaItem.EvaluationPoint
-                        });
+                            var reviewerName = GetReviewerName(reviewSession, evaluation.ReviewEvaluationId);
+                            areaItemEvaluations.Add(evaluationAreaItem);
+                            reviewers.Add(new Reviewer()
+                            {
+                                Name = reviewerName,
+                                Comment = evaluationAreaItem.Comment,
+                                Point = evaluationAreaItem.EvaluationPoint
+                            });
+                        }
                     }
+                    finalReviewAreaItems.Add(new FinalReviewAreaItem()
+                    {
+                        AreaItemId = areaItem.Id,
+                        Name = areaItem.Name,
+                        Middle = areaItemEvaluations.First().MidEvaluationPoint,
+                        Reviewers = reviewers
+                    });
                 }
-                personalReviews.Add(new PersonalReviewViewItem()
-                {
-                    AreaItem = areaItem.Name,
-                    Middle = areaItemEvaluations.First().MidEvaluationPoint,
-                    Reviewers = reviewers
-                });
+                personalReviewAreas.Add(new FinalReviewArea { Name = area.Name, ViewItems = finalReviewAreaItems });
             }
 
-            return personalReviews;
+            return personalReviewAreas;
         }
 
         private string GetReviewerName(ReviewSession reviewSession, int reviewEvaluationId)
@@ -160,13 +164,6 @@ namespace ReviewService.Application.ReviewSessions.Services
         {
             var areaItems = new List<EvaluationAreaItem>();
             evaluationAreas.ForEach(a => areaItems.AddRange(a.AreaItems));
-
-            return areaItems;
-        }
-        private List<AreaItem> GetAreaItems(List<Area> areas)
-        {
-            var areaItems = new List<AreaItem>();
-            areas.ForEach(a => areaItems.AddRange(a.AreaItems));
 
             return areaItems;
         }

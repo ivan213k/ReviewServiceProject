@@ -2,9 +2,10 @@
 
 namespace ReviewService.Domain.Entites
 {
-    public class PersonalReviewViewItem
+    public class FinalReviewAreaItem
     {
-        public string AreaItem { get; set; }
+        public int AreaItemId { get; set; }
+        public string Name { get; set; }
         public string Middle { get; set; }
         public List<Reviewer> Reviewers { get; set; }
         public string FinalReview { get; set; }

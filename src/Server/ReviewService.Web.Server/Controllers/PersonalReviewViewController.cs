@@ -21,10 +21,10 @@ namespace ReviewService.Web.Server.Controllers
         }
 
         [HttpGet("{sessionId}")]
-        public async Task<List<PersonalReviewViewItemApiModel>> GetReviewViewItems(int sessionId) 
+        public async Task<List<FinalReviewAreaApiModel>> GetReviewViewItems(int sessionId) 
         {
-            var reviewViewItems = await _reviewSessionService.GetReviewViewItemsAsync(sessionId);
-            return _mapper.Map<List<PersonalReviewViewItemApiModel>>(reviewViewItems);
+            var finalReviewAreas = await _reviewSessionService.GetFinalReviewAreasAsync(sessionId);
+            return _mapper.Map<List<FinalReviewAreaApiModel>>(finalReviewAreas);
         }
     }
 }
