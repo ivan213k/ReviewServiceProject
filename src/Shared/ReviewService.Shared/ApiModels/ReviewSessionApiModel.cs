@@ -15,5 +15,7 @@ namespace ReviewService.Shared.ApiModels
         public DateTime? DueDate { get; set; }
         public string Session_json { get; set; }
         public List<ReviewEvaluationApiModel> ReviewEvaluations { get; set; }
+        public int EvaluationPointsTemplateId { get; set; }
+        public int MidEvaluationPointId { get; set; }
     }
 }

@@ -8,6 +8,5 @@ namespace ReviewService.Application.Repository.Interfaces
     {
         Task<List<EvaluationPointsTemplate>> GetEvaluationPointsTemplates();
         Task<EvaluationPointsTemplate> GetEvaluationPointsTemplateByIdAsync(int id);
-
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReviewService.Infrastructure.Persistance;
 
 namespace ReviewService.Infrastructure.Migrations
 {
     [DbContext(typeof(ReviewServiceDbContext))]
-    partial class ReviewServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210407040423_AddedGuidToReviewEvaluations")]
+    partial class AddedGuidToReviewEvaluations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,12 +320,6 @@ namespace ReviewService.Infrastructure.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("EvaluationPointsTemplateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MidEvaluationPointId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()

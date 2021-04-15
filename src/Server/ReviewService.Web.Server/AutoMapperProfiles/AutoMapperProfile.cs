@@ -5,6 +5,7 @@ using ReviewService.Domain.Enums;
 using ReviewService.Shared.ApiEnums;
 using ReviewService.Shared.ApiModels;
 using ReviewService.Shared.AuthorizationDtos;
+using ReviewService.Shared.ApiModels.PersonalReviewModels;
 
 namespace ReviewService.Web.Server.AutoMapperProfiles
 {
@@ -22,6 +23,13 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<ReviewEvaluation, ReviewEvaluationApiModel>().ReverseMap();
             CreateMap<User, UserApiModel>().ReverseMap();
             CreateMap<AuthResult, AuthResponseDto>().ReverseMap();
+            
+            CreateMap<EvaluationAreaItem, EvaluationAreaItemApiModel>().ReverseMap();
+            CreateMap<EvaluationArea, EvaluationAreaApiModel>().ReverseMap();
+            CreateMap<EvaluationJsonModel, EvaluationJsonApiModel>().ReverseMap();
+            CreateMap<PersonalReviewViewItem, PersonalReviewViewItemApiModel>().ReverseMap();
+            CreateMap<Reviewer, ReviewerApiModel>().ReverseMap();
+
             CreateMap<ReviewSessionStatus, ReviewSessionStatusApiEnum>().ReverseMap();
             CreateMap<ReviewEvaluationStatus, ReviewEvaluationStatusApiEnum>().ReverseMap();
         }
