@@ -14,7 +14,7 @@ namespace ReviewService.Blazor.Client.Pages.Authorization
         protected override async Task OnInitializedAsync()
         {
             await AuthenticationService.Logout();
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/login");
         }
     }
 }

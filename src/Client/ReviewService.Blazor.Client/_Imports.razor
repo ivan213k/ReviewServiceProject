@@ -14,5 +14,7 @@
 @using ReviewService.Shared.ApiModels;
 @using Blazored.FluentValidation
 @using MudBlazor
-@using Microsoft.AspNetCore.Components.Authorization; 
-
+@using Microsoft.AspNetCore.Components.Authorization
+@using ReviewService.Blazor.Client.Pages.Authorization
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize];

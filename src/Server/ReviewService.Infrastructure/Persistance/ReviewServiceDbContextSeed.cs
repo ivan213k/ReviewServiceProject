@@ -12,7 +12,7 @@ namespace ReviewService.Infrastructure.Persistance
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
         {
-            var administrator = new ApplicationUser { FullName="Andrii", UserName = "Admin", Email = "admin@localhost.com" };
+            var administrator = new ApplicationUser { FullName="Andrii", UserName = "admin@localhost.com", Email = "admin@localhost.com" };
             if (userManager.Users.All(u => u.Email != administrator.Email))
             {
                 await userManager.CreateAsync(administrator, "Administrator1!");
@@ -20,8 +20,8 @@ namespace ReviewService.Infrastructure.Persistance
 
             var count = 0;
             var reviewers = new List<ApplicationUser>();
-            reviewers.Add(new ApplicationUser { FullName = "Rob", UserName = "reviewer1", Email = "reviewer1@localhost.com" });
-            reviewers.Add(new ApplicationUser { FullName = "Ihor", UserName = "reviewer2", Email = "reviewer2@localhost.com" });
+            reviewers.Add(new ApplicationUser { FullName = "Rob", UserName = "reviewer1@localhost.com", Email = "reviewer1@localhost.com" });
+            reviewers.Add(new ApplicationUser { FullName = "Ihor", UserName = "reviewer2@localhost.com", Email = "reviewer2@localhost.com" });
             foreach(var reviewer in reviewers)
             {
                 count++;
@@ -32,12 +32,12 @@ namespace ReviewService.Infrastructure.Persistance
             }
 
             var reviewees = new List<ApplicationUser>();
-            reviewees.Add(new ApplicationUser { FullName = "Pasha", UserName = "reviewee1", Email = "reviewee1@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "Bob", UserName = "reviewee2", Email = "reviewee2@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee3", Email = "reviewee3@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "Lilia", UserName = "reviewee4", Email = "reviewee4@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee5", Email = "reviewee5@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "liza", UserName = "reviewee6", Email = "reviewee6@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "Pasha", UserName = "reviewee1@localhost.com", Email = "reviewee1@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "Bob", UserName = "reviewee2@localhost.com", Email = "reviewee2@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee3@localhost.com", Email = "reviewee3@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "Lilia", UserName = "reviewee4@localhost.com", Email = "reviewee4@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee5@localhost.com", Email = "reviewee5@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "liza", UserName = "reviewee6@localhost.com", Email = "reviewee6@localhost.com" });
             count = 0;
             foreach (var reviewee in reviewees)
             {

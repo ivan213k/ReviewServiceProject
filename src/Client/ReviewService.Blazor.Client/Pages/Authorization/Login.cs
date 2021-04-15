@@ -21,7 +21,7 @@ namespace ReviewService.Blazor.Client.Pages.Authorization
             var result = await AuthorizationService.Login(_userForAuthentication);
             if (!result.IsAuthSuccessful)
             {
-                Error = result.ErrorMessage;
+                Error = "Invalid Email and (or) Password!";
                 ShowAuthError = true;
             }
             else

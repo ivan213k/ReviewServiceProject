@@ -4,9 +4,13 @@
 }
 else
 {
-    <MudContainer Style="position: fixed; top: 30%; left: 44%; color: #3F51B5 ">
-        <MudProgressCircular Color="Color.Primary" Style="height:100px;width:100px;" Indeterminate="true" />
-    </MudContainer>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12">
+            <MudPaper Class="d-flex align-center justify-center" Width="100%" Height="100vh" Elevation="0">
+                <MudProgressCircular Style="height:32px; width:32px; color: #3F51B5" Indeterminate="true" />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 }
 
 @code {
