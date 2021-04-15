@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <HeaderPanel />
+        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudMainContent>
+        <MudContainer>
+            @Body
+        </MudContainer>
+        <MudContainer Class="d-flex justify-end mt-10" MaxWidth="MaxWidth.False" Style="position: fixed; bottom: 0; left: 0; background-color: #f0f1ff;">
+            <FooterPanel />
+        </MudContainer>
+    </MudMainContent>
+
+</MudLayout>
+<MudThemeProvider />
+<MudDialogProvider MaxWidth="MaxWidth.ExtraSmall"
+                   CloseButton="true" />
+<MudSnackbarProvider />
+

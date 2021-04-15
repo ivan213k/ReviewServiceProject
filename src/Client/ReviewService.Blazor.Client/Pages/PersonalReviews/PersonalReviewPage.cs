@@ -20,7 +20,6 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
         private ReviewEvaluationApiModel reviewEvaluation;
         private EvaluationJsonApiModel evaluationJson;
         private ReviewSessionApiModel reviewSession;
-        private EvaluationPointApiModel midEvaluationPoint;
         private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
 
         private EvaluationAreaApiModel currentEvaluationArea;
@@ -46,11 +45,10 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
         public IDialogService DialogService { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetState("Personal Review", CreateFooterButtons());
             reviewEvaluation = await HttpClient.GetFromJsonAsync<ReviewEvaluationApiModel>($"api/PersonalReview/{ReviewEvaluationGuid}");
             reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{reviewEvaluation.ReviewSessionId}");
             evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
-            midEvaluationPoint = evaluationPointsTemplate.EvaluationPoints.FirstOrDefault(e => e.Id == reviewSession.MidEvaluationPointId);
+            ApplicationState.SetState($"{reviewSession.Name} - {reviewSession.PersonUnderReview}", CreateFooterButtons());
             InitializeEvaluationJson();
         }
         private List<FooterButton> CreateFooterButtons()
