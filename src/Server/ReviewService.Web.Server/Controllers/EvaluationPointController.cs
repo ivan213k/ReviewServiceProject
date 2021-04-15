@@ -29,10 +29,10 @@ namespace ReviewService.Web.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<EvaluationPointsTemplateApiModel> GetEvaluationPointTemplatesById(int id)
+        public async Task<EvaluationPointsTemplateApiModel> GetEvaluationPointTemplateById(int id)
         {
-            var evaluationPoint = await _evaluationPointService.GetByIdAsync(id);
-            return _mapper.Map<EvaluationPointsTemplateApiModel>(evaluationPoint);
+            var evaluationPointTemplate = await _evaluationPointService.GetByIdAsync(id);
+            return _mapper.Map<EvaluationPointsTemplateApiModel>(evaluationPointTemplate);
         }
 
         [HttpPost]

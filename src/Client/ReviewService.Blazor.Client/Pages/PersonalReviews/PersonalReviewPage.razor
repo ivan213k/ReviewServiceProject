@@ -1,0 +1,64 @@
+﻿@layout PersonalReviewLayout
+@page "/reviewpage/{ReviewEvaluationGuid:guid}"
+@if (reviewEvaluation is null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <MudPaper Style="position:relative" Height="450px" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <MudGrid>
+            <MudItem Style="width:auto" xs="12" sm="2">
+                <MudText Class="mt-7" Typo="Typo.h6">Area(@currentAreaIndex of @evaluationJson.Areas.Count) :</MudText>
+            </MudItem>
+            <MudItem xs="12" sm="10">
+                <MudSelect @bind-Value="currentEvaluationArea" SelectedValuesChanged="@((HashSet<EvaluationAreaApiModel> r)=> SelectedAreaChanged(r))">
+                    @foreach (var area in evaluationJson.Areas)
+                        {
+                        <MudSelectItem Value="area">
+                            <MudText Typo="Typo.h6">@area.Name</MudText>
+                        </MudSelectItem>
+                        }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+        <MudTable MultiSelection="false" SelectedItem="@selectedAreaItemRow" Class="mt4" Items="@currentEvaluationArea.AreaItems" Breakpoint="Breakpoint.None" Hover="true">
+            <HeaderContent>
+                <MudTh>Area item</MudTh>
+                <MudTh>Middle</MudTh>
+                <MudTh>Point</MudTh>
+                <MudTh>Comment</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                    <MudTd DataLabel="Area item">@context.Name</MudTd>
+                    <MudTd DataLabel="Middle">@context.MidEvaluationPoint</MudTd>
+                    <MudTd DataLabel="Point">
+                        <MudTextField @bind-Value="@context.EvaluationPoint" ReadOnly="true"></MudTextField>
+                    </MudTd>
+                    <MudTd DataLabel="Comment">
+                        <MudTextField @bind-Value="@context.Comment" ReadOnly="true"/>
+                    </MudTd>
+            </RowTemplate>
+            <RowEditingTemplate>
+                <MudTd DataLabel="Area item">@context.Name</MudTd>
+                <MudTd DataLabel="Middle">@context.MidEvaluationPoint</MudTd>
+                <MudTd DataLabel="Point">
+                    <MudSelect AutoFocus="true" @bind-Value="@context.EvaluationPoint">
+                        @foreach (var evaluationPoint in evaluationPointsTemplate.EvaluationPoints)
+                            {
+                            <MudSelectItem Value="@evaluationPoint.Name"></MudSelectItem>
+                            }
+                    </MudSelect>
+                </MudTd>
+                <MudTd DataLabel="Comment">
+                    <MudTextField Required="@(!string.IsNullOrEmpty(context.EvaluationPoint) && context.EvaluationPoint!=context.MidEvaluationPoint)" RequiredError="comment required" @bind-Value="@context.Comment" />
+                </MudTd>
+            </RowEditingTemplate>
+        </MudTable>
+        <MudItem Style="position: absolute; bottom: 0px; margin-bottom: 15px; right: 0;margin-right: 15px;">
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="PreviousPage">Previous Area</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="NextPage">Next Area</MudButton>
+        </MudItem>
+    </MudPaper>
+}
+

@@ -21,7 +21,7 @@ namespace ReviewService.Infrastructure.Persistance.Repositories
         }
         public async Task<ReviewTemplate> GetReviewTemplateById(int id)
         {
-            return await _dbContext.ReviewTemplates.Include(r => r.Areas).ThenInclude(a=>a.AreaItems).FirstOrDefaultAsync(r => r.Id == id);
+            return await _dbContext.ReviewTemplates.Include(r=>r.MidEvaluationPoint).Include(r => r.Areas).ThenInclude(a=>a.AreaItems).FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }

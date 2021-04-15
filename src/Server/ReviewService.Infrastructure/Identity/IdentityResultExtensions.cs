@@ -21,6 +21,7 @@ namespace ReviewService.Infrastructure.Identity
             {
                 applicationUsers.Add(new User 
                 {
+                    Id = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
                     UserName = user.UserName

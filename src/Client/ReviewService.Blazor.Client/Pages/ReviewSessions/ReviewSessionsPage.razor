@@ -19,7 +19,7 @@ else
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Person under review">@context.PersonUnderReview</MudTd>
             <MudTd DataLabel="Review Master">@context.ReviewMaster</MudTd>
-            <MudTd DataLabel="Reviews">0/2</MudTd>
+            <MudTd DataLabel="Reviews">@GetFinishedReviwersCount(context)/@context.ReviewEvaluations.Count</MudTd>
             <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
             <MudTd>
                 <MudButton Variant="Variant.Text" OnClick="()=>OnViewClicked(context.Id)" >View</MudButton>

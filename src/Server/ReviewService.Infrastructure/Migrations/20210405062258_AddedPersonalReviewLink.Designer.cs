@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReviewService.Infrastructure.Persistance;
 
 namespace ReviewService.Infrastructure.Migrations
 {
     [DbContext(typeof(ReviewServiceDbContext))]
-    partial class ReviewServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210405062258_AddedPersonalReviewLink")]
+    partial class AddedPersonalReviewLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,8 +285,8 @@ namespace ReviewService.Infrastructure.Migrations
                     b.Property<string>("Evaluation_json")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PersonalReviewLink")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReviewSessionId")
                         .HasColumnType("int");
@@ -295,9 +297,6 @@ namespace ReviewService.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -318,12 +317,6 @@ namespace ReviewService.Infrastructure.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("EvaluationPointsTemplateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MidEvaluationPointId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()

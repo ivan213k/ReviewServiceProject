@@ -27,7 +27,8 @@ namespace ReviewService.Infrastructure
             services.AddTransient<IEvaluationPointTemplateRepository, EvaluationPointTemplateRepository>();
             services.AddTransient<IRepository<EvaluationPointsTemplate>, Repository<EvaluationPointsTemplate>>();
             services.AddTransient<IRepository<ImportanceLevel>, Repository<ImportanceLevel>>();
-            services.AddTransient<IRepository<ReviewSession>, Repository<ReviewSession>>();
+            services.AddTransient<IRepository<ReviewEvaluation>, Repository<ReviewEvaluation>>();
+            services.AddTransient<IReviewSessionRepository, ReviewSessionRepository>();
             services.AddTransient<IReviewTemplateRepository, ReviewTemplateRepository>();
             services.AddTransient<IIdentityService, IdentityService>();
             return services;
