@@ -1,27 +1,24 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.JSInterop
 @using ReviewService.Blazor.Client
 @using ReviewService.Blazor.Client.Shared
+@using ReviewService.Blazor.Client.Layout
 @using ReviewService.Blazor.Client.Layout.Footer
 @using ReviewService.Blazor.Client.Layout.Header
 @using ReviewService.Blazor.Client.EnumExtensions
 @using ReviewService.Blazor.Client.Components
-@using ReviewService.Shared.ApiModels;
+@using ReviewService.Blazor.Client.Pages.Authorization
+@using ReviewService.Blazor.Client.Pages.PersonalReviews
+@using ReviewService.Shared.ApiModels
+@using ReviewService.Shared.ApiModels.PersonalReviewModels
 @using Blazored.FluentValidation
 @using MudBlazor
-@using Microsoft.AspNetCore.Components.Authorization; 
-@using ReviewService.Blazor.Client.Pages.PersonalReviews
-@using ReviewService.Shared.ApiModels.PersonalReviewModels;
-@using ReviewService.Blazor.Client.Layout;
-
-
-@using Microsoft.AspNetCore.Components.Authorization
-@using ReviewService.Blazor.Client.Pages.Authorization
-@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize];
