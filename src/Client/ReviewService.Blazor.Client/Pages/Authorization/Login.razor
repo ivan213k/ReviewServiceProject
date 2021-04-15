@@ -1,17 +1,27 @@
 ﻿@page "/login"
-<h3>Login</h3>
 
-<MudPaper>
-    @if (ShowAuthError)
-    {
-        <MudAlert Severity="Severity.Error">
-            @Error
-        </MudAlert>
-    }
-    <EditForm Model="_userForAuthentication">
-        <MudTextField Label="Email" Placeholder="email" @bind-Value="_userForAuthentication.Email"></MudTextField>
-        <MudTextField Label="Password" Placeholder="password" @bind-Value="_userForAuthentication.Password"></MudTextField>
-        <MudButton OnClick="@ExecuteLogin" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
-    </EditForm>
-</MudPaper>
 
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="8" sm="6" md="4">
+        <MudPaper Class="d-flex align-center justify-center" Width="100%" Height="100vh" Elevation="0">
+            <MudCard Class="flex-grow-1 flex-shrink-0 pa-4">
+                <EditForm Model="_userForAuthentication">
+                    <FluentValidationValidator />
+                    <MudCardContent>
+                        @if (ShowAuthError)
+                        {
+                            <MudAlert Severity="Severity.Error">
+                                @Error
+                            </MudAlert>
+                        }
+                        <MudTextField T="string" Label="Email" @bind-Value="_userForAuthentication.Email" For="@(() => _userForAuthentication.Email)" />
+                        <MudTextField T="string" Label="Password" @bind-Value="_userForAuthentication.Password" InputType="InputType.Password" For="@(() => _userForAuthentication.Password)" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton OnClick="@ExecuteLogin" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Log in</MudButton>
+                    </MudCardActions>
+                </EditForm>
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

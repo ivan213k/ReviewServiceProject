@@ -1,4 +1,27 @@
-﻿<div class="d-flex align-items-center">
-    <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
-    <strong>Loading...</strong>
-</div>
+﻿@if (isLoaded)
+{
+    @ChildContent
+}
+else
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12">
+            <MudPaper Class="d-flex align-center justify-center" Width="100%" Height="100vh" Elevation="0">
+                <MudProgressCircular Style="height:32px; width:32px; color: #3F51B5" Indeterminate="true" />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    bool isLoaded;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(4000); // TODO actual initialization job
+        isLoaded = true;
+    }
+}
