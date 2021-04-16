@@ -41,7 +41,7 @@
         </EditForm>
     </MudTabPanel>
     <MudTabPanel Style="position:relative" Disabled="@(ReviewSessionId == null)" Text="View">
-        <ReviewViewTable SessionId="ReviewSessionId.Value">
+        <ReviewViewTable FinalReviewAreas="finalReviewAreas" EvaluationPointsTemplate="evaluationPointsTemplate">
 
         </ReviewViewTable>
         <MudItem Style="position: absolute; bottom: 35px; right: 0; margin-right: 40px;">

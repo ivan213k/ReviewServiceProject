@@ -5,6 +5,7 @@ using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using ReviewService.Shared.ApiModels.PersonalReviewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
     public partial class ReviewSessionGeneral
     {
         private ReviewSessionApiModel reviewSession;
+        private List<FinalReviewAreaApiModel> finalReviewAreas;
+        private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
         private List<UserApiModel> users;
         private EditForm editForm;
 
@@ -48,6 +51,8 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             if (ReviewSessionId != null)
             {
                 reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{ReviewSessionId}");
+                evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
+                finalReviewAreas = await HttpClient.GetFromJsonAsync<List<FinalReviewAreaApiModel>>($"api/PersonalReviewView/{ReviewSessionId}");
                 ApplicationState.SetState($"Review session - {reviewSession.Name}", CreateFooterButtons());
             }
             else
@@ -78,6 +83,7 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         private async void SaveClicked()
         {
+            await SaveFinalReviews();
             if (editForm.EditContext.Validate())
             {
                 if (ReviewSessionId is null)
@@ -90,6 +96,10 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 }
                 NavigateToReviewSessions();
             }
+        }
+        private async Task SaveFinalReviews() 
+        {
+            await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{ReviewSessionId}", finalReviewAreas);
         }
         private void OnFullScreanClicked() 
         {

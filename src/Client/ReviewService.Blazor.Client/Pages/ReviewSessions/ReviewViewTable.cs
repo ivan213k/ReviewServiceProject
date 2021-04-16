@@ -1,37 +1,40 @@
 ﻿using Microsoft.AspNetCore.Components;
+using ReviewService.Shared.ApiModels;
 using ReviewService.Shared.ApiModels.PersonalReviewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
     public partial class ReviewViewTable
     {
-        private List<FinalReviewAreaApiModel> finalReviewAreas;
-
         private FinalReviewAreaApiModel currentFinalReviewArea;
         private int currentAreaIndex = 1;
+        
+        [Parameter]
+        public List<FinalReviewAreaApiModel> FinalReviewAreas { get; set; }
 
         [Parameter]
-        public int SessionId { get; set; }
-
+        public EvaluationPointsTemplateApiModel EvaluationPointsTemplate { get; set; }
+        
         [Inject]
         public HttpClient HttpClient { get; set; }
-        protected override async Task OnInitializedAsync()
+
+        protected override void OnParametersSet()
         {
-            finalReviewAreas = await HttpClient.GetFromJsonAsync<List<FinalReviewAreaApiModel>>($"api/PersonalReviewView/{SessionId}");
-            currentFinalReviewArea = finalReviewAreas.FirstOrDefault();
+            if (FinalReviewAreas != null)
+            {
+                currentFinalReviewArea = FinalReviewAreas.FirstOrDefault();
+            }
         }
 
         private void NextPage()
         {
-            if (currentAreaIndex < finalReviewAreas.Count)
+            if (currentAreaIndex < FinalReviewAreas.Count)
             {
                 currentAreaIndex++;
-                currentFinalReviewArea = finalReviewAreas[currentAreaIndex - 1];
+                currentFinalReviewArea = FinalReviewAreas[currentAreaIndex - 1];
             }
         }
         private void PreviousPage()
@@ -39,12 +42,12 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             if (currentAreaIndex > 1)
             {
                 currentAreaIndex--;
-                currentFinalReviewArea = finalReviewAreas[currentAreaIndex - 1];
+                currentFinalReviewArea = FinalReviewAreas[currentAreaIndex - 1];
             }
         }
         private void SelectedAreaChanged(HashSet<FinalReviewAreaApiModel> selectedAreas)
         {
-            currentAreaIndex = finalReviewAreas.IndexOf(currentFinalReviewArea) + 1;
+            currentAreaIndex = FinalReviewAreas.IndexOf(currentFinalReviewArea) + 1;
         }
     }
 }

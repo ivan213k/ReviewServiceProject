@@ -21,7 +21,8 @@ namespace ReviewService.Application.ReviewSessions.Services
         }
         public async Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession)
         {
-            reviewSession.Session_json = SerializeAreasToJson(template.Areas);
+            var reviewSessionJsonModel = new ReviewSessionJsonModel(template.Areas);
+            reviewSession.Session_json = SerializeReviewSessionToJson(reviewSessionJsonModel);
             reviewSession.EvaluationPointsTemplateId = template.EvaluationPointsTemplateId;
             reviewSession.MidEvaluationPointId = template.MidEvaluationPointId;
             await _reviewSessionRepository.CreateAsync(reviewSession);
@@ -43,8 +44,7 @@ namespace ReviewService.Application.ReviewSessions.Services
                     evaluationJsonModel.ReviewEvaluationId = reviewEvaluation.Id;
                     evaluationJsonModel.Areas = ConvertToEvaluationAreas(areas, midEvaluationPoint);
                     reviewEvaluation.Evaluation_json = JsonConvert.SerializeObject(evaluationJsonModel);
-                }
-                
+                }    
             }
         }
 
@@ -82,27 +82,27 @@ namespace ReviewService.Application.ReviewSessions.Services
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
         {
             var areas = JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
-            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointsTemplateByIdAsync(reviewSession.EvaluationPointsTemplateId);
-            string midPoint = evaluationPointsTemplate.EvaluationPoints.Where(r => r.Id == reviewSession.MidEvaluationPointId).First().Name;
+
+            var midPoint = await GetMidPointAsync(reviewSession);
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, areas, midPoint);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
-        private string SerializeAreasToJson(List<Area> areas)
+        private string SerializeReviewSessionToJson(ReviewSessionJsonModel reviewSessionJsonModel)
         {
             var jsonResolver = new PropertyRenameAndIgnoreSerializerContractResolver();
             jsonResolver.IgnoreProperty(typeof(Area), nameof(Area.ReviewTemplates));
 
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = jsonResolver;
-            return JsonConvert.SerializeObject(areas, serializerSettings);
+            return JsonConvert.SerializeObject(reviewSessionJsonModel, serializerSettings);
         }
 
         public async Task<List<FinalReviewArea>> GetFinalReviewAreasAsync(int sessionId)
         {
             var personalReviewAreas = new List<FinalReviewArea>();
             var reviewSession = await _reviewSessionRepository.GetReviewSessionByIdAsync(sessionId);
-
+            var midPoint = await GetMidPointAsync(reviewSession);
             var reviewEvaluations = reviewSession.ReviewEvaluations;
             List<EvaluationJsonModel> evaluations = GetEvaluations(reviewEvaluations);
             var areas = GetAreasFromJson(reviewSession);
@@ -111,7 +111,6 @@ namespace ReviewService.Application.ReviewSessions.Services
                 var finalReviewAreaItems = new List<FinalReviewAreaItem>();
                 foreach (var areaItem in area.AreaItems)
                 {
-                    var areaItemEvaluations = new List<EvaluationAreaItem>();
                     var reviewers = new List<Reviewer>();
                     foreach (var evaluation in evaluations)
                     {
@@ -120,7 +119,6 @@ namespace ReviewService.Application.ReviewSessions.Services
                         if (evaluationAreaItem != null)
                         {
                             var reviewerName = GetReviewerName(reviewSession, evaluation.ReviewEvaluationId);
-                            areaItemEvaluations.Add(evaluationAreaItem);
                             reviewers.Add(new Reviewer()
                             {
                                 Name = reviewerName,
@@ -131,16 +129,49 @@ namespace ReviewService.Application.ReviewSessions.Services
                     }
                     finalReviewAreaItems.Add(new FinalReviewAreaItem()
                     {
-                        AreaItemId = areaItem.Id,
+                        Id = areaItem.Id,
                         Name = areaItem.Name,
-                        Middle = areaItemEvaluations.First().MidEvaluationPoint,
-                        Reviewers = reviewers
+                        Middle = midPoint,
+                        Reviewers = reviewers,
+                        FinalReview = GetFinalReviewPoint(reviewSession,areaItem.Id)
                     });
                 }
                 personalReviewAreas.Add(new FinalReviewArea { Name = area.Name, ViewItems = finalReviewAreaItems });
             }
 
             return personalReviewAreas;
+        }
+
+        private async Task<string> GetMidPointAsync(ReviewSession reviewSession)
+        {
+            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointsTemplateByIdAsync(reviewSession.EvaluationPointsTemplateId);
+            string midPoint = evaluationPointsTemplate.EvaluationPoints.Where(r => r.Id == reviewSession.MidEvaluationPointId).First().Name;
+            return midPoint;
+        }
+
+        private string GetFinalReviewPoint(ReviewSession reviewSession, int areaItemId)
+        {
+            var reviewSessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            if (reviewSessionJsonModel.FinalReviewEvaluations is null)
+            {
+                return "";
+            }
+            var finalPoint = reviewSessionJsonModel.FinalReviewEvaluations.Where(r => r.AreaItemId == areaItemId).Select(r=>r.FinalPoint).FirstOrDefault();
+            return finalPoint;
+        }
+
+        public async Task UpdateFinalReviewsAsync(int sessionId, List<FinalReviewArea> finalReviewAreas) 
+        {
+            var reviewSession = await _reviewSessionRepository.GetReviewSessionByIdAsync(sessionId);
+            var reviewSessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            var finalReviews = new List<FinalReviewEvaluation>();
+            foreach (var area in finalReviewAreas)
+            {
+                finalReviews.AddRange(area.ViewItems.Select(viewItem => new FinalReviewEvaluation(viewItem.Id, viewItem.FinalReview)));
+            }
+            reviewSessionJsonModel.FinalReviewEvaluations = finalReviews;
+            reviewSession.Session_json = SerializeReviewSessionToJson(reviewSessionJsonModel);
+            await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
         private string GetReviewerName(ReviewSession reviewSession, int reviewEvaluationId)
@@ -158,7 +189,8 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         private List<Area> GetAreasFromJson(ReviewSession reviewSession)
         {
-            return JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
+            var sessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            return sessionJsonModel.Areas;
         }
         private List<EvaluationAreaItem> GetEvaluationAreaItems(List<EvaluationArea> evaluationAreas) 
         {
