@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
@@ -14,10 +15,7 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
     {
         private List<FinalReviewAreaApiModel> finalReviewAreas;
         private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
-        public ReviewSessionViewTableFullScrean()
-        {
-
-        }
+       
         [Parameter]
         public int SessionId { get; set; }
 
@@ -29,6 +27,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         [Inject]
         public HttpClient HttpClient { get; set; }
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -43,16 +44,20 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             return new List<FooterButton>()
             {
                 new FooterButton("Back to review session", BackToSessionClicked),
-                new FooterButton("Save", SaveClicked)
+                new FooterButton("Publish", SaveClicked)
             };
         }
         private async void SaveClicked() 
         {
-            await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{SessionId}", finalReviewAreas);
+            var result = await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{SessionId}", finalReviewAreas);
+            if (result.IsSuccessStatusCode)
+            {
+                await DialogService.ShowMessageBox("Information", "Final reviews published successfully!");
+            }
         }
         private void BackToSessionClicked() 
         {
-            NavigationManager.NavigateTo($"/reviewSessionEdit/{SessionId}");
+            NavigationManager.NavigateTo($"/reviewSessionEdit/{SessionId}/{1}");
         }
     }
 }

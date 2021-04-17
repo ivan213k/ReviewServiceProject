@@ -22,13 +22,18 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
         private List<UserApiModel> users;
         private EditForm editForm;
+        private Dictionary<int, List<FooterButton>> tabsFooterButtons;
+        private MudTabs mudTabs;
 
         [Parameter]
         public int TemplateId { get; set; }
 
         [Parameter]
         public int? ReviewSessionId { get; set; }
-       
+
+        [Parameter]
+        public int TabIndex { get; set; }
+
         [Inject]
         public HttpClient HttpClient { get; set; }
 
@@ -41,32 +46,47 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         [Inject]
         public IDialogService DialogService { get; set; }
 
-        public ReviewSessionGeneral()
-        {
-            reviewSession = new ReviewSessionApiModel();
-            reviewSession.ReviewEvaluations = new List<ReviewEvaluationApiModel>();
-        }
         protected override async Task OnInitializedAsync()
         {
-            if (ReviewSessionId != null)
+            if (ReviewSessionId is null)
+            {
+                reviewSession = new ReviewSessionApiModel();
+                reviewSession.ReviewEvaluations = new List<ReviewEvaluationApiModel>();
+            }
+            else
             {
                 reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{ReviewSessionId}");
                 evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
                 finalReviewAreas = await HttpClient.GetFromJsonAsync<List<FinalReviewAreaApiModel>>($"api/PersonalReviewView/{ReviewSessionId}");
-                ApplicationState.SetState($"Review session - {reviewSession.Name}", CreateFooterButtons());
             }
-            else
-            {
-                ApplicationState.SetState($"Review session create", CreateFooterButtons());
-            }
+            SetApplicationState(CreateGeneralTabFooterButtons());
+            tabsFooterButtons = InitializeTabsFooterButtons();
+            
         }
-
-        private async Task<List<UserApiModel>> LoadUsers()
+        protected override void OnAfterRender(bool firstRender)
         {
-            return await HttpClient.GetFromJsonAsync<List<UserApiModel>>("api/Users");
+            if (mudTabs != null && mudTabs.ActivePanelIndex != TabIndex)
+            {
+                mudTabs.ActivatePanel(TabIndex);
+            }   
+        }
+        private void SetApplicationState(List<FooterButton> footerButtons) 
+        {
+            string header = ReviewSessionId is null ? "Review session create" : $"Review session - {reviewSession.Name}";
+            ApplicationState.SetState(header, footerButtons);
+        }
+        private Dictionary<int, List<FooterButton>> InitializeTabsFooterButtons() 
+        {
+            var tabsFooterButtons = new Dictionary<int, List<FooterButton>>
+            {
+                { 0, CreateGeneralTabFooterButtons() },
+                { 1, CreateViewTabFooterButtons() },
+                { 2, new List<FooterButton>() }
+            };
+            return tabsFooterButtons;
         }
 
-        private List<FooterButton> CreateFooterButtons()
+        private List<FooterButton> CreateGeneralTabFooterButtons()
         {
             var buttons = new List<FooterButton>
             {
@@ -74,6 +94,19 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 new FooterButton("Save",SaveClicked)
             };
             return buttons;
+        }
+        private List<FooterButton> CreateViewTabFooterButtons()
+        {
+            var buttons = new List<FooterButton>
+            {
+                new FooterButton("View on fullscreen", NavigateToFullScreen),
+                new FooterButton("Publish", SaveFinalReviews)
+            };
+            return buttons;
+        }
+        private async Task<List<UserApiModel>> LoadUsers()
+        {
+            return await HttpClient.GetFromJsonAsync<List<UserApiModel>>("api/Users");
         }
 
         private void CancelClicked()
@@ -83,25 +116,29 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         private async void SaveClicked()
         {
-            await SaveFinalReviews();
             if (editForm.EditContext.Validate())
             {
                 if (ReviewSessionId is null)
                 {
                     await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                    NavigateToReviewSessions();
                 }
                 else
                 {
                     await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
+                    await DialogService.ShowMessageBox("Information", "Session saved successfully!");
                 }
-                NavigateToReviewSessions();
             }
         }
-        private async Task SaveFinalReviews() 
+        private async void SaveFinalReviews() 
         {
-            await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{ReviewSessionId}", finalReviewAreas);
+            var result = await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{ReviewSessionId}", finalReviewAreas);
+            if (result.IsSuccessStatusCode)
+            {
+                await DialogService.ShowMessageBox("Information", "Final reviews published successfully!");
+            }
         }
-        private void OnFullScreanClicked() 
+        private void NavigateToFullScreen() 
         {
             NavigationManager.NavigateTo($"/reviewViewTableFullScrean/{ReviewSessionId}");
         }
@@ -162,6 +199,12 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         private async void DeleteReviewSession(int reviewSessionId)
         {
             await HttpClient.DeleteAsync($"api/ReviewSession/{reviewSessionId}");
+        }
+
+        private void OnActivePanelIndexChanged(int activeTabIndex) 
+        {
+            TabIndex = activeTabIndex;
+            SetApplicationState(tabsFooterButtons[activeTabIndex]);
         }
     }
 }

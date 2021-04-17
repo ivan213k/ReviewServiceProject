@@ -4,7 +4,7 @@
 }
 else
 {
-<MudPaper Style="position:relative" Height="450px">
+<MudPaper Style="position:relative" Height="400px">
     <MudGrid>
         <MudItem Class="mt-6" Style="width:auto" xs="12" sm="2">
             <MudText Style="text-align:center" Class="mt-2">Area(@currentAreaIndex of @FinalReviewAreas.Count) :</MudText>
@@ -56,7 +56,7 @@ else
             </MudTd>
         </RowEditingTemplate>
     </MudTable>
-    <MudItem Style="position: absolute; bottom: 0px; margin-bottom: 15px; left: 0;margin-left: 15px;">
+    <MudItem Style="position: absolute; bottom: 0px; margin-bottom: 15px; right: 0; margin-right: 15px;">
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="PreviousPage">Previous Area</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="NextPage">Next Area</MudButton>
     </MudItem>

@@ -18,7 +18,7 @@ else
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Person under review">@context.PersonUnderReview</MudTd>
-            <MudTd DataLabel="Review Master">@context.ReviewMaster</MudTd>
+            <MudTd DataLabel="Review Master">@context.ReviewManager</MudTd>
             <MudTd DataLabel="Reviews">@GetFinishedReviwersCount(context)/@context.ReviewEvaluations.Count</MudTd>
             <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
             <MudTd>

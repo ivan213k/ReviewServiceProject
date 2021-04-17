@@ -10,7 +10,7 @@ namespace ReviewService.Shared.ApiModels
         public string Name { get; set; }
         public string Description { get; set; }
         public ReviewSessionStatusApiEnum Status { get; set; }
-        public string ReviewMaster { get; set; }
+        public string ReviewManager { get; set; }
         public string PersonUnderReview { get; set; }
         public DateTime? DueDate { get; set; }
         public string Session_json { get; set; }

@@ -10,7 +10,7 @@ namespace ReviewService.Shared.FluentValidators
             RuleFor(r => r.Name).NotEmpty().WithMessage("Review session name required");
             RuleFor(r => r.DueDate).NotEmpty().WithMessage("Due date required");
             RuleFor(r => r.PersonUnderReview).NotEmpty().WithMessage("Person under review required");
-            RuleFor(r => r.ReviewMaster).NotEmpty().WithMessage("Review master required");
+            RuleFor(r => r.ReviewManager).NotEmpty().WithMessage("Review master required");
         }
     }
 }
