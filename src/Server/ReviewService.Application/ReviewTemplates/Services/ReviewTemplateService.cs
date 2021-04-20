@@ -18,6 +18,12 @@ namespace ReviewService.Application.ReviewTemplates.Services
         }
         public async Task AddReviewTemplateAsync(ReviewTemplate reviewTemplate)
         {
+            await ValidateForUniqueName(reviewTemplate);
+            await _reviewTemplateRepository.CreateAsync(reviewTemplate);
+        }
+
+        private async Task ValidateForUniqueName(ReviewTemplate reviewTemplate)
+        {
             var reviewTemplates = await _reviewTemplateRepository.GetReviewTemplatesAsync();
             List<ValidationFailure> failures = new List<ValidationFailure>();
             if (reviewTemplates.Any(r => r.Name == reviewTemplate.Name))
@@ -25,7 +31,6 @@ namespace ReviewService.Application.ReviewTemplates.Services
                 failures.Add(new ValidationFailure(nameof(reviewTemplate.Name), "Review template with the same name already exist"));
                 throw new ValidationException(failures);
             }
-            await _reviewTemplateRepository.CreateAsync(reviewTemplate);
         }
 
         public async Task DeleteReviewTemplateAsync(ReviewTemplate reviewTemplate)

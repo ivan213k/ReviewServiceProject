@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using ReviewService.Shared.ApiModels.PersonalReviewModels;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
-    public partial class ReviewSessionGeneral
+    public partial class ReviewSessionGeneral : IDisposable
     {
         private ReviewSessionApiModel reviewSession;
         private List<FinalReviewAreaApiModel> finalReviewAreas;
@@ -45,9 +46,13 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         [Inject]
         public IDialogService DialogService { get; set; }
+        
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             if (ReviewSessionId is null)
             {
                 reviewSession = new ReviewSessionApiModel();
@@ -120,8 +125,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             {
                 if (ReviewSessionId is null)
                 {
-                    await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
-                    NavigateToReviewSessions();
+                    var response = await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        NavigateToReviewSessions();
+                    }
                 }
                 else
                 {
@@ -206,5 +214,6 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             TabIndex = activeTabIndex;
             SetApplicationState(tabsFooterButtons[activeTabIndex]);
         }
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

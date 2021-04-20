@@ -7,6 +7,8 @@ using ReviewService.Domain.Enums;
 using Newtonsoft.Json;
 using NJsonSchema.Infrastructure;
 using System.Linq;
+using FluentValidation.Results;
+using ReviewService.Application.Common.Exceptions;
 
 namespace ReviewService.Application.ReviewSessions.Services
 {
@@ -21,6 +23,7 @@ namespace ReviewService.Application.ReviewSessions.Services
         }
         public async Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession)
         {
+            await ValidateForUniqueName(reviewSession);
             var reviewSessionJsonModel = new ReviewSessionJsonModel(template.Areas);
             reviewSession.Session_json = SerializeReviewSessionToJson(reviewSessionJsonModel);
             reviewSession.EvaluationPointsTemplateId = template.EvaluationPointsTemplateId;
@@ -28,6 +31,16 @@ namespace ReviewService.Application.ReviewSessions.Services
             await _reviewSessionRepository.CreateAsync(reviewSession);
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, template.Areas, template.MidEvaluationPoint.Name);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
+        }
+        private async Task ValidateForUniqueName(ReviewSession reviewSession)
+        {
+            var reviewSessions = await _reviewSessionRepository.GetAllReviewSessionsAsync();
+            List<ValidationFailure> failures = new List<ValidationFailure>();
+            if (reviewSessions.Any(r => r.Name == reviewSession.Name))
+            {
+                failures.Add(new ValidationFailure(nameof(reviewSession.Name), "Review session with the same name already exist"));
+                throw new ValidationException(failures);
+            }
         }
 
         private void FillReviewEvaluationsJson(List<ReviewEvaluation> reviewEvaluations, List<Area> areas, string midEvaluationPoint)

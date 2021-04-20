@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
@@ -11,10 +9,11 @@ using ReviewService.Blazor.Client.State;
 using ReviewService.Blazor.Client.Layout.Footer;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
+using ReviewService.Blazor.Client.Services;
 
 namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 {
-    public partial class EvaluationPointsCreate
+    public partial class EvaluationPointsCreate : IDisposable
     {
         private EvaluationPointsTemplateApiModel _evaluationPointsTemplate;
         private EvaluationPointApiModel _evaluationPoint;
@@ -33,6 +32,9 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
 
         public EvaluationPointsCreate()
         {
@@ -44,6 +46,7 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
 
         protected override void OnInitialized()
         {
+            Interceptor.RegisterEvent();
             ApplicationState.SetState("Evaluation Point Add", SetButtons());
         }
 
@@ -89,8 +92,11 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
         {
             if(_editForm.EditContext.Validate())
             {
-                await HttpClient.PostAsJsonAsync("api/EvaluationPoint", _evaluationPointsTemplate);
-                NavigationManager.NavigateTo("/evaluationpoints");
+                var response = await HttpClient.PostAsJsonAsync("api/EvaluationPoint", _evaluationPointsTemplate);
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/evaluationpoints");
+                }
             }
         }
 
@@ -99,6 +105,6 @@ namespace ReviewService.Blazor.Client.Pages.EvaluationPoints
             NavigationManager.NavigateTo("/evaluationpoints");
         }
 
-
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }
