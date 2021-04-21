@@ -35,6 +35,12 @@ namespace ReviewService.Blazor.Client.Services
                     case HttpStatusCode.Unauthorized:
                         _navManager.NavigateTo("/login");
                         break;
+                    case HttpStatusCode.NotFound:
+                        _navManager.NavigateTo("/notFound");
+                        break;
+                    case HttpStatusCode.Forbidden:
+                        _navManager.NavigateTo("/accessForbidden");
+                        break;
                     default:
                         _snackbar.Add($"{e.Response.ReasonPhrase}", Severity.Error);
                         break;

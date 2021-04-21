@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.ReviewSessions.Interfaces;
 using ReviewService.Application.ReviewTemplates.Interfaces;

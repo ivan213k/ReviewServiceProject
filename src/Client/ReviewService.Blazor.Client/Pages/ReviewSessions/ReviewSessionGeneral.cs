@@ -133,8 +133,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 }
                 else
                 {
-                    await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
-                    await DialogService.ShowMessageBox("Information", "Session saved successfully!");
+                    var response = await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await DialogService.ShowMessageBox("Information", "Session saved successfully!");
+                    }
                 }
             }
         }

@@ -94,9 +94,10 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
         {
-            var areas = JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
+            var areas = GetAreasFromJson(reviewSession);
 
             var midPoint = await GetMidPointAsync(reviewSession);
+            await _reviewSessionRepository.UpdateAsync(reviewSession);
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, areas, midPoint);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
         }

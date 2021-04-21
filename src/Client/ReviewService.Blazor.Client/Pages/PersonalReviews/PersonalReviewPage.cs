@@ -2,6 +2,7 @@
 using MudBlazor;
 using Newtonsoft.Json;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiEnums;
 using ReviewService.Shared.ApiModels;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.PersonalReviews
 {
-    public partial class PersonalReviewPage
+    public partial class PersonalReviewPage : IDisposable
     {
         private ReviewEvaluationApiModel reviewEvaluation;
         private EvaluationJsonApiModel evaluationJson;
@@ -43,13 +44,21 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
 
         [Inject]
         public IDialogService DialogService { get; set; }
+        
+        [Inject]
+        public HttpInterceptorService HttpInterceptor { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            reviewEvaluation = await HttpClient.GetFromJsonAsync<ReviewEvaluationApiModel>($"api/PersonalReview/{ReviewEvaluationGuid}");
-            reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{reviewEvaluation.ReviewSessionId}");
-            evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
-            ApplicationState.SetState($"{reviewSession.Name} - {reviewSession.PersonUnderReview}", CreateFooterButtons());
-            InitializeEvaluationJson();
+            HttpInterceptor.RegisterEvent();
+            var response = await HttpClient.GetAsync($"api/PersonalReview/{ReviewEvaluationGuid}");
+            if (response.IsSuccessStatusCode)
+            {
+                reviewEvaluation = await response.Content.ReadFromJsonAsync<ReviewEvaluationApiModel>();
+                reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{reviewEvaluation.ReviewSessionId}");
+                evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
+                ApplicationState.SetState($"{reviewSession.Name} - {reviewSession.PersonUnderReview}", CreateFooterButtons());
+                InitializeEvaluationJson();
+            }  
         }
         private List<FooterButton> CreateFooterButtons()
         {
@@ -114,5 +123,7 @@ namespace ReviewService.Blazor.Client.Pages.PersonalReviews
         {
             currentAreaIndex = evaluationJson.Areas.IndexOf(currentEvaluationArea) + 1;
         }
+
+        public void Dispose() => HttpInterceptor.DisposeEvent();
     }
 }
