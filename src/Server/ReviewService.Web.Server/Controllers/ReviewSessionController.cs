@@ -12,6 +12,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator,Manager")]
     public class ReviewSessionController : ControllerBase
     {
         private readonly IReviewSessionService _reviewSessionService;

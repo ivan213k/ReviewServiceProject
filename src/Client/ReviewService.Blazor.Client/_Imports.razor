@@ -21,4 +21,4 @@
 @using ReviewService.Shared.ApiModels.PersonalReviewModels
 @using Blazored.FluentValidation
 @using MudBlazor
-@attribute [Authorize];
+@attribute [Authorize (Roles ="Administrator,Manager")];

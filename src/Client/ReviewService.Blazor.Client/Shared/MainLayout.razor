@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-<AuthorizeView>
+<AuthorizeView Roles="Administrator,Manager">
     <Authorized>
         <MudLayout>
             <MudAppBar Elevation="1">
@@ -18,9 +18,8 @@
                     <FooterPanel />
                 </MudContainer>
             </MudMainContent>
-            </MudLayout>
+        </MudLayout>
     </Authorized>
-
     <NotAuthorized>
                
             @Body
