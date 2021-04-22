@@ -1,21 +1,37 @@
-﻿@if (viewItems is null)
+﻿@if (FinalReviewAreas is null)
 {
     <Loading></Loading>
 }
 else
 {
-    <MudTable Class="mb-7" Breakpoint="Breakpoint.None" Items="viewItems" Hover="true">
+<MudPaper Style="position:relative" Height="400px">
+    <MudGrid>
+        <MudItem Class="mt-6" Style="width:auto" xs="12" sm="2">
+            <MudText Style="text-align:center" Class="mt-2">Area(@currentAreaIndex of @FinalReviewAreas.Count) :</MudText>
+        </MudItem>
+        <MudItem xs="12" sm="10">
+            <MudSelect @bind-Value="currentFinalReviewArea" SelectedValuesChanged="@((HashSet<FinalReviewAreaApiModel> r)=> SelectedAreaChanged(r))">
+                @foreach (var area in FinalReviewAreas)
+                    {
+                    <MudSelectItem Value="area">
+                        <MudText>@area.Name</MudText>
+                    </MudSelectItem>
+                    }
+            </MudSelect>
+        </MudItem>
+    </MudGrid>
+    <MudTable Class="mb-7" Breakpoint="Breakpoint.None" Items="currentFinalReviewArea.ViewItems" Hover="true">
         <HeaderContent>
             <MudTh>Area item</MudTh>
             <MudTh>Middle</MudTh>
-            @foreach (var reviewer in viewItems.First().Reviewers)
+            @foreach (var reviewer in currentFinalReviewArea.ViewItems.First().Reviewers)
             {
                 <MudTh>@reviewer.Name</MudTh>
             }
             <MudTh>Final Review</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Area item">@context.AreaItem</MudTd>
+            <MudTd DataLabel="Area item">@context.Name</MudTd>
             <MudTd DataLabel="Middle">@context.Middle</MudTd>
             @foreach (var reviewer in context.Reviewers)
                 {
@@ -23,5 +39,26 @@ else
                 }
             <MudTd DataLabel="Final Review"><MudTextField @bind-Value="context.FinalReview" ReadOnly="true"></MudTextField></MudTd>
         </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Area item">@context.Name</MudTd>
+            <MudTd DataLabel="Middle">@context.Middle</MudTd>
+            @foreach (var reviewer in context.Reviewers)
+                {
+                <MudTd DataLabel="@reviewer.Name">@reviewer.Point</MudTd>
+                }
+            <MudTd DataLabel="Final Review">
+                <MudSelect AutoFocus="true" @bind-Value="@context.FinalReview">
+                    @foreach (var evaluationPoint in EvaluationPointsTemplate.EvaluationPoints)
+                        {
+                        <MudSelectItem Value="@evaluationPoint.Name"></MudSelectItem>
+                        }
+                </MudSelect>
+            </MudTd>
+        </RowEditingTemplate>
     </MudTable>
+    <MudItem Style="position: absolute; bottom: 0px; margin-bottom: 15px; right: 0; margin-right: 15px;">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="PreviousPage">Previous Area</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="NextPage">Next Area</MudButton>
+    </MudItem>
+</MudPaper>  
 }

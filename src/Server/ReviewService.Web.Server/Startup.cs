@@ -39,8 +39,6 @@ namespace ReviewService.Web.Server
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //ValidateIssuer = true,
-                    //ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 

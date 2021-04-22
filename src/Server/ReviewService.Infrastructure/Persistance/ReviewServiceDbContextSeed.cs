@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ReviewService.Infrastructure.Identity;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ReviewService.Infrastructure.Persistance
@@ -36,8 +34,8 @@ namespace ReviewService.Infrastructure.Persistance
             reviewees.Add(new ApplicationUser { FullName = "Bob", UserName = "reviewee2@localhost.com", Email = "reviewee2@localhost.com" });
             reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee3@localhost.com", Email = "reviewee3@localhost.com" });
             reviewees.Add(new ApplicationUser { FullName = "Lilia", UserName = "reviewee4@localhost.com", Email = "reviewee4@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "John", UserName = "reviewee5@localhost.com", Email = "reviewee5@localhost.com" });
-            reviewees.Add(new ApplicationUser { FullName = "liza", UserName = "reviewee6@localhost.com", Email = "reviewee6@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "John B", UserName = "reviewee5@localhost.com", Email = "reviewee5@localhost.com" });
+            reviewees.Add(new ApplicationUser { FullName = "Lida", UserName = "reviewee6@localhost.com", Email = "reviewee6@localhost.com" });
             count = 0;
             foreach (var reviewee in reviewees)
             {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 {
-    public partial class AddReviewTemplatePage
+    public partial class AddReviewTemplatePage : IDisposable
     {
         private ReviewTemplateApiModel reviewTemplate;
         private EditForm editForm;
@@ -31,6 +32,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
         public AddReviewTemplatePage()
         {
             reviewTemplate = new ReviewTemplateApiModel();
@@ -40,6 +44,7 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
 
         protected override async Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             evaluationPointsTemplates = await HttpClient.GetFromJsonAsync<List<EvaluationPointsTemplateApiModel>>("api/EvaluationPoint");
             if (Id is null)
             {
@@ -81,15 +86,19 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
         {
             if (editForm.EditContext.Validate())
             {
+                HttpResponseMessage responseMessage;
                 if (Id is null)
                 {
-                    await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+                    responseMessage = await HttpClient.PostAsJsonAsync("api/ReviewTemplate", reviewTemplate);
                 }
                 else
                 {
-                    await HttpClient.PutAsJsonAsync("api/ReviewTemplate", reviewTemplate);
+                    responseMessage = await HttpClient.PutAsJsonAsync("api/ReviewTemplate", reviewTemplate);
                 }
-                NavigateToReviewTemplates();
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    NavigateToReviewTemplates();
+                }
             }
         }
         private void OnCancelClicked()
@@ -128,5 +137,6 @@ namespace ReviewService.Blazor.Client.Pages.ReviewTemplates
             }
             AddAreaRow(selectedArea);
         }
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

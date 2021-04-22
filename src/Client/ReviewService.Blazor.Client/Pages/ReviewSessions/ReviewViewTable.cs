@@ -1,24 +1,53 @@
 ﻿using Microsoft.AspNetCore.Components;
+using ReviewService.Shared.ApiModels;
 using ReviewService.Shared.ApiModels.PersonalReviewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
     public partial class ReviewViewTable
     {
-        private List<PersonalReviewViewItemApiModel> viewItems { get; set; }
+        private FinalReviewAreaApiModel currentFinalReviewArea;
+        private int currentAreaIndex = 1;
         
         [Parameter]
-        public int SessionId { get; set; }
+        public List<FinalReviewAreaApiModel> FinalReviewAreas { get; set; }
 
+        [Parameter]
+        public EvaluationPointsTemplateApiModel EvaluationPointsTemplate { get; set; }
+        
         [Inject]
         public HttpClient HttpClient { get; set; }
-        protected override async Task OnInitializedAsync()
+
+        protected override void OnParametersSet()
         {
-            viewItems = await HttpClient.GetFromJsonAsync<List<PersonalReviewViewItemApiModel>>($"api/PersonalReviewView/{SessionId}");
+            if (FinalReviewAreas != null)
+            {
+                currentFinalReviewArea = FinalReviewAreas.FirstOrDefault();
+            }
+        }
+
+        private void NextPage()
+        {
+            if (currentAreaIndex < FinalReviewAreas.Count)
+            {
+                currentAreaIndex++;
+                currentFinalReviewArea = FinalReviewAreas[currentAreaIndex - 1];
+            }
+        }
+        private void PreviousPage()
+        {
+            if (currentAreaIndex > 1)
+            {
+                currentAreaIndex--;
+                currentFinalReviewArea = FinalReviewAreas[currentAreaIndex - 1];
+            }
+        }
+        private void SelectedAreaChanged(HashSet<FinalReviewAreaApiModel> selectedAreas)
+        {
+            currentAreaIndex = FinalReviewAreas.IndexOf(currentFinalReviewArea) + 1;
         }
     }
 }

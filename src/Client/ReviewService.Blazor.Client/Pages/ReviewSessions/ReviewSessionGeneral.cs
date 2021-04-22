@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using ReviewService.Shared.ApiModels.PersonalReviewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +16,25 @@ using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 {
-    public partial class ReviewSessionGeneral
+    public partial class ReviewSessionGeneral : IDisposable
     {
         private ReviewSessionApiModel reviewSession;
+        private List<FinalReviewAreaApiModel> finalReviewAreas;
+        private EvaluationPointsTemplateApiModel evaluationPointsTemplate;
         private List<UserApiModel> users;
         private EditForm editForm;
+        private Dictionary<int, List<FooterButton>> tabsFooterButtons;
+        private MudTabs mudTabs;
 
         [Parameter]
         public int TemplateId { get; set; }
 
         [Parameter]
         public int? ReviewSessionId { get; set; }
-       
+
+        [Parameter]
+        public int TabIndex { get; set; }
+
         [Inject]
         public HttpClient HttpClient { get; set; }
 
@@ -37,31 +46,52 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         [Inject]
         public IDialogService DialogService { get; set; }
+        
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
 
-        public ReviewSessionGeneral()
-        {
-            reviewSession = new ReviewSessionApiModel();
-            reviewSession.ReviewEvaluations = new List<ReviewEvaluationApiModel>();
-        }
         protected override async Task OnInitializedAsync()
         {
-            if (ReviewSessionId != null)
+            Interceptor.RegisterEvent();
+            if (ReviewSessionId is null)
             {
-                reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{ReviewSessionId}");
-                ApplicationState.SetState($"Review session - {reviewSession.Name}", CreateFooterButtons());
+                reviewSession = new ReviewSessionApiModel();
+                reviewSession.ReviewEvaluations = new List<ReviewEvaluationApiModel>();
             }
             else
             {
-                ApplicationState.SetState($"Review session create", CreateFooterButtons());
+                reviewSession = await HttpClient.GetFromJsonAsync<ReviewSessionApiModel>($"api/ReviewSession/{ReviewSessionId}");
+                evaluationPointsTemplate = await HttpClient.GetFromJsonAsync<EvaluationPointsTemplateApiModel>($"api/EvaluationPoint/{reviewSession.EvaluationPointsTemplateId}");
+                finalReviewAreas = await HttpClient.GetFromJsonAsync<List<FinalReviewAreaApiModel>>($"api/PersonalReviewView/{ReviewSessionId}");
             }
+            SetApplicationState(CreateGeneralTabFooterButtons());
+            tabsFooterButtons = InitializeTabsFooterButtons();
+            
         }
-
-        private async Task<List<UserApiModel>> LoadUsers()
+        protected override void OnAfterRender(bool firstRender)
         {
-            return await HttpClient.GetFromJsonAsync<List<UserApiModel>>("api/Users");
+            if (mudTabs != null && mudTabs.ActivePanelIndex != TabIndex)
+            {
+                mudTabs.ActivatePanel(TabIndex);
+            }   
+        }
+        private void SetApplicationState(List<FooterButton> footerButtons) 
+        {
+            string header = ReviewSessionId is null ? "Review session create" : $"Review session - {reviewSession.Name}";
+            ApplicationState.SetState(header, footerButtons);
+        }
+        private Dictionary<int, List<FooterButton>> InitializeTabsFooterButtons() 
+        {
+            var tabsFooterButtons = new Dictionary<int, List<FooterButton>>
+            {
+                { 0, CreateGeneralTabFooterButtons() },
+                { 1, CreateViewTabFooterButtons() },
+                { 2, new List<FooterButton>() }
+            };
+            return tabsFooterButtons;
         }
 
-        private List<FooterButton> CreateFooterButtons()
+        private List<FooterButton> CreateGeneralTabFooterButtons()
         {
             var buttons = new List<FooterButton>
             {
@@ -69,6 +99,19 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
                 new FooterButton("Save",SaveClicked)
             };
             return buttons;
+        }
+        private List<FooterButton> CreateViewTabFooterButtons()
+        {
+            var buttons = new List<FooterButton>
+            {
+                new FooterButton("View on fullscreen", NavigateToFullScreen),
+                new FooterButton("Publish", SaveFinalReviews)
+            };
+            return buttons;
+        }
+        private async Task<List<UserApiModel>> LoadUsers()
+        {
+            return await HttpClient.GetFromJsonAsync<List<UserApiModel>>("api/Users");
         }
 
         private void CancelClicked()
@@ -82,16 +125,31 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
             {
                 if (ReviewSessionId is null)
                 {
-                    await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                    var response = await HttpClient.PostAsJsonAsync($"api/ReviewSession/{TemplateId}", reviewSession);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        NavigateToReviewSessions();
+                    }
                 }
                 else
                 {
-                    await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
+                    var response = await HttpClient.PutAsJsonAsync($"api/ReviewSession", reviewSession);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await DialogService.ShowMessageBox("Information", "Session saved successfully!");
+                    }
                 }
-                NavigateToReviewSessions();
             }
         }
-        private void OnFullScreanClicked() 
+        private async void SaveFinalReviews() 
+        {
+            var result = await HttpClient.PutAsJsonAsync($"api/PersonalReviewView/{ReviewSessionId}", finalReviewAreas);
+            if (result.IsSuccessStatusCode)
+            {
+                await DialogService.ShowMessageBox("Information", "Final reviews published successfully!");
+            }
+        }
+        private void NavigateToFullScreen() 
         {
             NavigationManager.NavigateTo($"/reviewViewTableFullScrean/{ReviewSessionId}");
         }
@@ -153,5 +211,12 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         {
             await HttpClient.DeleteAsync($"api/ReviewSession/{reviewSessionId}");
         }
+
+        private void OnActivePanelIndexChanged(int activeTabIndex) 
+        {
+            TabIndex = activeTabIndex;
+            SetApplicationState(tabsFooterButtons[activeTabIndex]);
+        }
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }
