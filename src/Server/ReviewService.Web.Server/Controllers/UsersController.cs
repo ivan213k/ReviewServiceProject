@@ -26,6 +26,10 @@ namespace ReviewService.Web.Server.Controllers
         public async Task<List<UserApiModel>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
+            foreach(var user in users)
+            {
+                user.Roles = await _userService.GetRolesByUserIdAsync(user.Id);
+            }
 
             return _mapper.Map<List<UserApiModel>>(users);
         }

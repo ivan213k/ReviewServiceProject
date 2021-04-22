@@ -34,11 +34,20 @@ namespace ReviewService.Infrastructure.Identity
             _authorizationService = authorizationService;
             _jwtSettings = configuration.GetSection("JwtSettings");
         }
+
         public async Task<List<User>> GetAllUsersAsync()
         {
             var users = await _userManager.Users.ToListAsync();
             return users.ToApplicationUsers();
         }
+
+        public async Task<IList<string>> GetRolesByUserIdAsync(string userId)
+        {
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles;
+        }
+
         public async Task<string> GetUserNameAsync(string userId)
         {
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
