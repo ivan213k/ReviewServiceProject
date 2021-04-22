@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
-using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
 using System;
@@ -10,15 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.Areas
 {
-    public partial class AddAreaPage
+    public partial class AddAreaPage : IDisposable
     {
         private AreaApiModel area;
         private EditForm editForm;
-        private ErrorMessage errorMessage;
         private AreaItemApiModel areaItem;
 
         [Inject]
@@ -30,6 +27,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
         [Inject]
         public HttpClient HttpClient { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
         public AddAreaPage()
         {
             area = new AreaApiModel();
@@ -39,6 +39,7 @@ namespace ReviewService.Blazor.Client.Pages.Areas
 
         protected override void OnInitialized()
         {
+            Interceptor.RegisterEvent();
             ApplicationState.SetState("Area Add", CreateFooterButtons());
         }
 
@@ -60,33 +61,24 @@ namespace ReviewService.Blazor.Client.Pages.Areas
             }
             area.AreaItems.Add(new AreaItemApiModel 
             {
-                Name= areaItem.Name, Description = areaItem.Description 
+                Name = areaItem.Name, Description = areaItem.Description 
             });
         }
-        
-        private void DeleteRow(AreaItemApiModel areaItem)
-        {
-            area.AreaItems.Remove(areaItem);
-        }
-        private void OnCancelClicked()
-        {
-            NavigationManager.NavigateTo("/areas");
-        }
+
+        private void DeleteRow(AreaItemApiModel areaItem) => area.AreaItems.Remove(areaItem);
+        private void OnCancelClicked() => NavigationManager.NavigateTo("/areas");
         private async void OnSaveClicked()
         {
             if (editForm.EditContext.Validate())
             {
                 var responseMessage = await HttpClient.PostAsJsonAsync("api/Area", area);
+                await HttpClient.PostAsJsonAsync("api/Area", area);
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     NavigationManager.NavigateTo("/areas");
                 }
-                else
-                {
-                    var error = await responseMessage.Content.ReadFromJsonAsync<ProblemDetails>();            
-                    errorMessage.Show($"{responseMessage.ReasonPhrase}: {error.Title} {error.Detail}");
-                }
             }
         }
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

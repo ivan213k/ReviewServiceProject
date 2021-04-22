@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
-using ReviewService.Blazor.Client.Components;
 using ReviewService.Blazor.Client.Layout.Footer;
+using ReviewService.Blazor.Client.Services;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -13,11 +13,10 @@ using System.Threading.Tasks;
 
 namespace ReviewService.Blazor.Client.Pages.Areas
 {
-    partial class EditAreaPage
+    partial class EditAreaPage : IDisposable
     {
         private AreaApiModel area;
         private EditForm editForm;
-        private ErrorMessage errorMessage;
         private AreaItemApiModel areaItem;
 
         [Parameter]
@@ -31,6 +30,9 @@ namespace ReviewService.Blazor.Client.Pages.Areas
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
         protected override async Task OnInitializedAsync()
         {
             ApplicationState.SetState("Edit Area",CreateFooterButtons());
@@ -58,14 +60,8 @@ namespace ReviewService.Blazor.Client.Pages.Areas
                 Description = areaItem.Description
             });
         }
-        private void DeleteRow(AreaItemApiModel areaItem)
-        {
-            area.AreaItems.Remove(areaItem);
-        }
-        private void OnCancelClicked()
-        {
-            NavigationManager.NavigateTo("/areas");
-        }
+        private void DeleteRow(AreaItemApiModel areaItem) => area.AreaItems.Remove(areaItem);
+        private void OnCancelClicked() => NavigationManager.NavigateTo("/areas");
         private async void OnSaveClicked()
         {
             if (editForm.EditContext.Validate())
@@ -75,12 +71,8 @@ namespace ReviewService.Blazor.Client.Pages.Areas
                 {
                     NavigationManager.NavigateTo("/areas");
                 }
-                else
-                {
-                    var error = await responseMessage.Content.ReadFromJsonAsync<ProblemDetails>();
-                    errorMessage.Show($"{responseMessage.ReasonPhrase}: {error.Title} {error.Detail}");
-                }
             }
         }
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.PersonalReviewEvaluations.Interfaces;
 using ReviewService.Shared.ApiModels;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PersonalReviewController : ControllerBase
     {
         private readonly IReviewEvaluationService _reviewEvaluationService;
@@ -21,11 +24,19 @@ namespace ReviewService.Web.Server.Controllers
         }
 
         [HttpGet("{guid}")]
-        public async Task<ReviewEvaluationApiModel> GetByGuid(Guid guid)
+        public async Task<IActionResult> GetByGuid(Guid guid)
         {
             var reviewEvaluation = await _reviewEvaluationService.GetByGuidAsync(guid);
-         
-            return _mapper.Map<ReviewEvaluationApiModel>(reviewEvaluation);
+            if (reviewEvaluation is null)
+            {
+                return NotFound();
+            }
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId != reviewEvaluation.UserId)
+            {
+                return Forbid();
+            }
+            return Ok(_mapper.Map<ReviewEvaluationApiModel>(reviewEvaluation));
         }
 
         [HttpPut]

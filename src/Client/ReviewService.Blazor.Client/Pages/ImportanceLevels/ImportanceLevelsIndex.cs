@@ -24,7 +24,6 @@ namespace ReviewService.Blazor.Client.Pages.ImportanceLevels
         public IDialogService DialogService { get; set; }
 
         public bool IsOpened { get; set; } = false;
-        //public string ColorField { get; set; }
 
         [Inject]
         public ApplicationState ApplicationState{ get; set; }

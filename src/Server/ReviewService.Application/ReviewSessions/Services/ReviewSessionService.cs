@@ -7,6 +7,8 @@ using ReviewService.Domain.Enums;
 using Newtonsoft.Json;
 using NJsonSchema.Infrastructure;
 using System.Linq;
+using FluentValidation.Results;
+using ReviewService.Application.Common.Exceptions;
 
 namespace ReviewService.Application.ReviewSessions.Services
 {
@@ -21,12 +23,24 @@ namespace ReviewService.Application.ReviewSessions.Services
         }
         public async Task CreateReviewSessionAsync(ReviewTemplate template, ReviewSession reviewSession)
         {
-            reviewSession.Session_json = SerializeAreasToJson(template.Areas);
+            await ValidateForUniqueName(reviewSession);
+            var reviewSessionJsonModel = new ReviewSessionJsonModel(template.Areas);
+            reviewSession.Session_json = SerializeReviewSessionToJson(reviewSessionJsonModel);
             reviewSession.EvaluationPointsTemplateId = template.EvaluationPointsTemplateId;
             reviewSession.MidEvaluationPointId = template.MidEvaluationPointId;
             await _reviewSessionRepository.CreateAsync(reviewSession);
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, template.Areas, template.MidEvaluationPoint.Name);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
+        }
+        private async Task ValidateForUniqueName(ReviewSession reviewSession)
+        {
+            var reviewSessions = await _reviewSessionRepository.GetAllReviewSessionsAsync();
+            List<ValidationFailure> failures = new List<ValidationFailure>();
+            if (reviewSessions.Any(r => r.Name == reviewSession.Name))
+            {
+                failures.Add(new ValidationFailure(nameof(reviewSession.Name), "Review session with the same name already exist"));
+                throw new ValidationException(failures);
+            }
         }
 
         private void FillReviewEvaluationsJson(List<ReviewEvaluation> reviewEvaluations, List<Area> areas, string midEvaluationPoint)
@@ -43,8 +57,7 @@ namespace ReviewService.Application.ReviewSessions.Services
                     evaluationJsonModel.ReviewEvaluationId = reviewEvaluation.Id;
                     evaluationJsonModel.Areas = ConvertToEvaluationAreas(areas, midEvaluationPoint);
                     reviewEvaluation.Evaluation_json = JsonConvert.SerializeObject(evaluationJsonModel);
-                }
-                
+                }    
             }
         }
 
@@ -81,62 +94,98 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         public async Task UpdateReviewSessionAsync(ReviewSession reviewSession)
         {
-            var areas = JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
-            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointsTemplateByIdAsync(reviewSession.EvaluationPointsTemplateId);
-            string midPoint = evaluationPointsTemplate.EvaluationPoints.Where(r => r.Id == reviewSession.MidEvaluationPointId).First().Name;
+            var areas = GetAreasFromJson(reviewSession);
+
+            var midPoint = await GetMidPointAsync(reviewSession);
+            await _reviewSessionRepository.UpdateAsync(reviewSession);
             FillReviewEvaluationsJson(reviewSession.ReviewEvaluations, areas, midPoint);
             await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
-        private string SerializeAreasToJson(List<Area> areas)
+        private string SerializeReviewSessionToJson(ReviewSessionJsonModel reviewSessionJsonModel)
         {
             var jsonResolver = new PropertyRenameAndIgnoreSerializerContractResolver();
             jsonResolver.IgnoreProperty(typeof(Area), nameof(Area.ReviewTemplates));
 
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = jsonResolver;
-            return JsonConvert.SerializeObject(areas, serializerSettings);
+            return JsonConvert.SerializeObject(reviewSessionJsonModel, serializerSettings);
         }
 
-        public async Task<List<PersonalReviewViewItem>> GetReviewViewItemsAsync(int sessionId)
+        public async Task<List<FinalReviewArea>> GetFinalReviewAreasAsync(int sessionId)
         {
-            List<PersonalReviewViewItem> personalReviews = new List<PersonalReviewViewItem>();
+            var personalReviewAreas = new List<FinalReviewArea>();
             var reviewSession = await _reviewSessionRepository.GetReviewSessionByIdAsync(sessionId);
-
+            var midPoint = await GetMidPointAsync(reviewSession);
             var reviewEvaluations = reviewSession.ReviewEvaluations;
             List<EvaluationJsonModel> evaluations = GetEvaluations(reviewEvaluations);
             var areas = GetAreasFromJson(reviewSession);
-            var areaItems = GetAreaItems(areas);
-
-            foreach (var areaItem in areaItems)
+            foreach (var area in areas)
             {
-                var areaItemEvaluations = new List<EvaluationAreaItem>();
-                var reviewers = new List<Reviewer>();
-                foreach (var evaluation in evaluations)
+                var finalReviewAreaItems = new List<FinalReviewAreaItem>();
+                foreach (var areaItem in area.AreaItems)
                 {
-                    var evaluationAreaItems = GetEvaluationAreaItems(evaluation.Areas);
-                    var evaluationAreaItem = evaluationAreaItems.Where(r => r.Id == areaItem.Id).FirstOrDefault();
-                    if (evaluationAreaItem != null)
+                    var reviewers = new List<Reviewer>();
+                    foreach (var evaluation in evaluations)
                     {
-                        var reviewerName = GetReviewerName(reviewSession, evaluation.ReviewEvaluationId);
-                        areaItemEvaluations.Add(evaluationAreaItem);
-                        reviewers.Add(new Reviewer()
+                        var evaluationAreaItems = GetEvaluationAreaItems(evaluation.Areas);
+                        var evaluationAreaItem = evaluationAreaItems.Where(r => r.Id == areaItem.Id).FirstOrDefault();
+                        if (evaluationAreaItem != null)
                         {
-                            Name = reviewerName,
-                            Comment = evaluationAreaItem.Comment,
-                            Point = evaluationAreaItem.EvaluationPoint
-                        });
+                            var reviewerName = GetReviewerName(reviewSession, evaluation.ReviewEvaluationId);
+                            reviewers.Add(new Reviewer()
+                            {
+                                Name = reviewerName,
+                                Comment = evaluationAreaItem.Comment,
+                                Point = evaluationAreaItem.EvaluationPoint
+                            });
+                        }
                     }
+                    finalReviewAreaItems.Add(new FinalReviewAreaItem()
+                    {
+                        Id = areaItem.Id,
+                        Name = areaItem.Name,
+                        Middle = midPoint,
+                        Reviewers = reviewers,
+                        FinalReview = GetFinalReviewPoint(reviewSession,areaItem.Id)
+                    });
                 }
-                personalReviews.Add(new PersonalReviewViewItem()
-                {
-                    AreaItem = areaItem.Name,
-                    Middle = areaItemEvaluations.First().MidEvaluationPoint,
-                    Reviewers = reviewers
-                });
+                personalReviewAreas.Add(new FinalReviewArea { Name = area.Name, ViewItems = finalReviewAreaItems });
             }
 
-            return personalReviews;
+            return personalReviewAreas;
+        }
+
+        private async Task<string> GetMidPointAsync(ReviewSession reviewSession)
+        {
+            var evaluationPointsTemplate = await _evaluationPointsRepository.GetEvaluationPointsTemplateByIdAsync(reviewSession.EvaluationPointsTemplateId);
+            string midPoint = evaluationPointsTemplate.EvaluationPoints.Where(r => r.Id == reviewSession.MidEvaluationPointId).First().Name;
+            return midPoint;
+        }
+
+        private string GetFinalReviewPoint(ReviewSession reviewSession, int areaItemId)
+        {
+            var reviewSessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            if (reviewSessionJsonModel.FinalReviewEvaluations is null)
+            {
+                return "";
+            }
+            var finalPoint = reviewSessionJsonModel.FinalReviewEvaluations.Where(r => r.AreaItemId == areaItemId).Select(r=>r.FinalPoint).FirstOrDefault();
+            return finalPoint;
+        }
+
+        public async Task UpdateFinalReviewsAsync(int sessionId, List<FinalReviewArea> finalReviewAreas) 
+        {
+            var reviewSession = await _reviewSessionRepository.GetReviewSessionByIdAsync(sessionId);
+            var reviewSessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            var finalReviews = new List<FinalReviewEvaluation>();
+            foreach (var area in finalReviewAreas)
+            {
+                finalReviews.AddRange(area.ViewItems.Select(viewItem => new FinalReviewEvaluation(viewItem.Id, viewItem.FinalReview)));
+            }
+            reviewSessionJsonModel.FinalReviewEvaluations = finalReviews;
+            reviewSession.Session_json = SerializeReviewSessionToJson(reviewSessionJsonModel);
+            await _reviewSessionRepository.UpdateAsync(reviewSession);
         }
 
         private string GetReviewerName(ReviewSession reviewSession, int reviewEvaluationId)
@@ -154,19 +203,13 @@ namespace ReviewService.Application.ReviewSessions.Services
 
         private List<Area> GetAreasFromJson(ReviewSession reviewSession)
         {
-            return JsonConvert.DeserializeObject<List<Area>>(reviewSession.Session_json);
+            var sessionJsonModel = JsonConvert.DeserializeObject<ReviewSessionJsonModel>(reviewSession.Session_json);
+            return sessionJsonModel.Areas;
         }
         private List<EvaluationAreaItem> GetEvaluationAreaItems(List<EvaluationArea> evaluationAreas) 
         {
             var areaItems = new List<EvaluationAreaItem>();
             evaluationAreas.ForEach(a => areaItems.AddRange(a.AreaItems));
-
-            return areaItems;
-        }
-        private List<AreaItem> GetAreaItems(List<Area> areas)
-        {
-            var areaItems = new List<AreaItem>();
-            areas.ForEach(a => areaItems.AddRange(a.AreaItems));
 
             return areaItems;
         }

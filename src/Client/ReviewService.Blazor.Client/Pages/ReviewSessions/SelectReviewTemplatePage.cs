@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
@@ -24,6 +25,9 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -61,6 +65,11 @@ namespace ReviewService.Blazor.Client.Pages.ReviewSessions
         {
             if (selectedReviewTemplate != null)
             {
+                if (selectedReviewTemplate.Areas is null || selectedReviewTemplate.Areas.Count == 0)
+                {
+                    Snackbar.Add($"{selectedReviewTemplate.Name} template has no areas", Severity.Error);
+                    return;
+                }
                 NavigationManager.NavigateTo($"/reviewSessionGeneral/{selectedReviewTemplate.Id}");
             }
         }

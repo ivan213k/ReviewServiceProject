@@ -18,6 +18,13 @@ namespace ReviewService.Application.ReviewTemplates.Services
         }
         public async Task AddReviewTemplateAsync(ReviewTemplate reviewTemplate)
         {
+            await ValidateForUniqueName(reviewTemplate);
+            ValidateAreas(reviewTemplate);
+            await _reviewTemplateRepository.CreateAsync(reviewTemplate);
+        }
+
+        private async Task ValidateForUniqueName(ReviewTemplate reviewTemplate)
+        {
             var reviewTemplates = await _reviewTemplateRepository.GetReviewTemplatesAsync();
             List<ValidationFailure> failures = new List<ValidationFailure>();
             if (reviewTemplates.Any(r => r.Name == reviewTemplate.Name))
@@ -25,7 +32,19 @@ namespace ReviewService.Application.ReviewTemplates.Services
                 failures.Add(new ValidationFailure(nameof(reviewTemplate.Name), "Review template with the same name already exist"));
                 throw new ValidationException(failures);
             }
-            await _reviewTemplateRepository.CreateAsync(reviewTemplate);
+        }
+
+        private void ValidateAreas(ReviewTemplate reviewTemplate) 
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure>();
+            foreach (var area in reviewTemplate.Areas)
+            {
+                if (area.AreaItems is null || area.AreaItems.Count == 0)
+                {
+                    failures.Add(new ValidationFailure(nameof(reviewTemplate.Areas), $"Area \"{area.Name}\" has no items, can not save"));
+                    throw new ValidationException(failures);
+                }
+            }
         }
 
         public async Task DeleteReviewTemplateAsync(ReviewTemplate reviewTemplate)
@@ -45,6 +64,7 @@ namespace ReviewService.Application.ReviewTemplates.Services
 
         public async Task UpdateReviewTemplateAsync(ReviewTemplate reviewTemplate)
         {
+            ValidateAreas(reviewTemplate);
             await _reviewTemplateRepository.UpdateAsync(reviewTemplate);
         }
         
