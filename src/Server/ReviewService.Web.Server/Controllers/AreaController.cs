@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.Areas.Interfaces;
 using ReviewService.Domain.Entites;
@@ -10,6 +11,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator,Manager")]
     public class AreaController : ControllerBase
     {
         private readonly IAreaService _areaService;

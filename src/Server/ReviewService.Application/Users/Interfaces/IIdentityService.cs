@@ -10,6 +10,8 @@ namespace ReviewService.Application.Users.Interfaces
         Task<List<User>> GetAllUsersAsync();
         Task<string> GetUserNameAsync(string userId);
 
+        Task<IList<string>> GetRolesByUserIdAsync(string userId);
+
         Task<bool> IsInRoleAsync(string userId, string role);
 
         Task<AuthResult> AuthorizeAsync(string email, string password);

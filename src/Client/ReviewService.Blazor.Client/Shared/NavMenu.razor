@@ -1,10 +1,10 @@
-﻿<MudNavMenu>
-    <MudNavLink Match="NavLinkMatch.All" Href="reviewsessions">Review Sessions</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="reviewtemplates">Review Templates</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="areas">Areas</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="importancelevels">Importance Levels</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="evaluationpoints">Evaluation Points</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="roles">Roles</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Href="users">Users</MudNavLink>
-    <MudNavLink Href="">Main</MudNavLink>
-</MudNavMenu>
+﻿<AuthorizeView Roles="Administrator,Manager">
+    <MudNavMenu>
+        <MudNavLink Match="NavLinkMatch.All" Href="reviewsessions">Review Sessions</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="reviewtemplates">Review Templates</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="areas">Areas</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="importancelevels">Importance Levels</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="evaluationpoints">Evaluation Points</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="users">Users</MudNavLink>
+    </MudNavMenu>
+</AuthorizeView>

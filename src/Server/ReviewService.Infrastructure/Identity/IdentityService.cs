@@ -34,11 +34,20 @@ namespace ReviewService.Infrastructure.Identity
             _authorizationService = authorizationService;
             _jwtSettings = configuration.GetSection("JwtSettings");
         }
+
         public async Task<List<User>> GetAllUsersAsync()
         {
             var users = await _userManager.Users.ToListAsync();
             return users.ToApplicationUsers();
         }
+
+        public async Task<IList<string>> GetRolesByUserIdAsync(string userId)
+        {
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles;
+        }
+
         public async Task<string> GetUserNameAsync(string userId)
         {
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
@@ -76,7 +85,7 @@ namespace ReviewService.Infrastructure.Identity
                     ErrorMessage = "Invalid Authentication"
                 };
             var signingCredentials = GetSigningCredentials();
-            var claims = GetClaims(user);
+            var claims = await GetClaims(user);
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
@@ -108,7 +117,7 @@ namespace ReviewService.Infrastructure.Identity
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
-        private List<Claim> GetClaims(IdentityUser user)
+        private async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -116,6 +125,11 @@ namespace ReviewService.Infrastructure.Identity
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             return claims;
         }
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)

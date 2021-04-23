@@ -33,9 +33,9 @@ namespace ReviewService.Web.Server
                     }
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                    await ReviewServiceDbContextSeed.SeedDefaultUserAsync(userManager);
+                    await ReviewServiceDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {

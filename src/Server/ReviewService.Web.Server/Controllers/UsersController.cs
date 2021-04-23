@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.Users.Interfaces;
 using ReviewService.Shared.ApiModels;
@@ -10,6 +11,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator,Manager")]
     public class UsersController : ControllerBase
     {
         private readonly IIdentityService _userService;
@@ -24,6 +26,10 @@ namespace ReviewService.Web.Server.Controllers
         public async Task<List<UserApiModel>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
+            foreach(var user in users)
+            {
+                user.Roles = await _userService.GetRolesByUserIdAsync(user.Id);
+            }
 
             return _mapper.Map<List<UserApiModel>>(users);
         }

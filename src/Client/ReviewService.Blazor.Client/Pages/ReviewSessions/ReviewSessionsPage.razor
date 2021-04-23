@@ -1,4 +1,5 @@
-﻿@page "/reviewSessions";
+﻿@page "/"
+@page "/reviewSessions";
 @if (reviewSessions is null)
 {
     <Loading></Loading>
@@ -22,7 +23,7 @@ else
             <MudTd DataLabel="Reviews">@GetFinishedReviwersCount(context)/@context.ReviewEvaluations.Count</MudTd>
             <MudTd DataLabel="Due Date">@context.DueDate.Value.ToShortDateString()</MudTd>
             <MudTd>
-                <MudButton Variant="Variant.Text" OnClick="()=>OnViewClicked(context.Id)" >View</MudButton>
+                <MudButton Variant="Variant.Text" OnClick="()=>OnViewClicked(context.Id)">View</MudButton>
             </MudTd>
             <MudTd>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" OnClick="()=>DeleteSessionClicked(context)" Color="Color.Error" Class="ml-auto">Delete</MudButton>
