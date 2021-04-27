@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using ReviewService.Blazor.Client.Layout.Footer;
 using ReviewService.Blazor.Client.State;
 using ReviewService.Shared.ApiModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -25,7 +24,7 @@ namespace ReviewService.Blazor.Client.Pages.Users
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationState.SetState("Users");
+            ApplicationState.SetState("Users", new List<FooterButton>());
             _users = await HttpClient.GetFromJsonAsync<List<UserApiModel>>("api/Users");
         }
 

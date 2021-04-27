@@ -1,5 +1,5 @@
-﻿@page "/login"
-
+﻿@layout EmptyLayout
+@page "/login"
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="8" sm="6" md="4">
@@ -14,7 +14,7 @@
                                 @Error
                             </MudAlert>
                         }
-                        <MudTextField T="string" Label="Email" @bind-Value="_userForAuthentication.Email" For="@(() => _userForAuthentication.Email)" />
+                        <MudTextField AutoFocus="true" T="string" Label="Email" @bind-Value="_userForAuthentication.Email" For="@(() => _userForAuthentication.Email)" />
                         <MudTextField T="string" Label="Password" @bind-Value="_userForAuthentication.Password" InputType="InputType.Password" For="@(() => _userForAuthentication.Password)" />
                     </MudCardContent>
                     <MudCardActions>
