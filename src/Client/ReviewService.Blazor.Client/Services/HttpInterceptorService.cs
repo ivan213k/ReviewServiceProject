@@ -33,7 +33,7 @@ namespace ReviewService.Blazor.Client.Services
                         _snackbar.Add($"{e.Response.ReasonPhrase}: {error.Detail}", Severity.Error);
                         break;
                     case HttpStatusCode.Unauthorized:
-                        _navManager.NavigateTo("/login");
+                        _navManager.NavigateTo("/login", true);
                         break;
                     case HttpStatusCode.NotFound:
                         _navManager.NavigateTo("/notFound");

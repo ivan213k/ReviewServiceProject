@@ -34,7 +34,7 @@ namespace ReviewService.Blazor.Client.Services.AuthorizationServices
             await _localStorage.SetItemAsync("authToken", result.Token);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
             ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Token);
-            return new AuthResponseDto { IsAuthSuccessful = true };
+            return result;
         }
 
         public async Task Logout()
