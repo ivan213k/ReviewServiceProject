@@ -30,6 +30,7 @@ namespace ReviewService.Web.Server.AutoMapperProfiles
             CreateMap<FinalReviewAreaItem, FinalReviewAreaItemApiModel>().ReverseMap();
             CreateMap<FinalReviewArea, FinalReviewAreaApiModel>().ReverseMap();
             CreateMap<Reviewer, ReviewerApiModel>().ReverseMap();
+            CreateMap<PersonalReview, PersonalReviewApiModel>().ReverseMap();
 
             CreateMap<ReviewSessionStatus, ReviewSessionStatusApiEnum>().ReverseMap();
             CreateMap<ReviewEvaluationStatus, ReviewEvaluationStatusApiEnum>().ReverseMap();

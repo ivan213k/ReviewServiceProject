@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewService.Application.PersonalReviewEvaluations.Interfaces;
 using ReviewService.Shared.ApiModels;
+using ReviewService.Shared.ApiModels.PersonalReviewModels;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -22,7 +24,13 @@ namespace ReviewService.Web.Server.Controllers
             _reviewEvaluationService = reviewEvaluationService;
             _mapper = autoMapper;
         }
-
+        [HttpGet]
+        public async Task<List<PersonalReviewApiModel>> GetPersonalReviews() 
+        {
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var personalReviews = await _reviewEvaluationService.GetPersonalReviewsAsync(currentUserId);
+            return _mapper.Map<List<PersonalReviewApiModel>>(personalReviews);
+        }
         [HttpGet("{guid}")]
         public async Task<IActionResult> GetByGuid(Guid guid)
         {

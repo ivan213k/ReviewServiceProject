@@ -1,0 +1,24 @@
+﻿@page "/personalReviews"
+@if (personalReviews is null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <MudTable Items="@personalReviews" Breakpoint="Breakpoint.None" Hover="true" Class="px-4 mt-8 ml-8 mr-8" Elevation="14">
+        <HeaderContent>
+            <MudTh>Session</MudTh>
+            <MudTh>Person under review</MudTh>
+            <MudTh>Review status</MudTh>
+            <MudTh>Link</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Session">@context.Session</MudTd>
+            <MudTd DataLabel="Person under review">@context.PersonUnderReview</MudTd>
+            <MudTd DataLabel="Review status">@context.ReviewStatus.ToUserFriendlyString()</MudTd>
+            <MudTd DataLabel="Link">
+                <MudButton @onclick="@(() => NavigateToReviewPage(context.ReviewLink))" Variant="Variant.Filled" Color="Color.Primary">Go to review page</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
