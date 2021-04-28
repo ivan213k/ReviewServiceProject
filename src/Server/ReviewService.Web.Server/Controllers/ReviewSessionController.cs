@@ -12,7 +12,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator,Manager")]
+    [Authorize(Roles = "Administrator,Manager,Reviewer")]
     public class ReviewSessionController : ControllerBase
     {
         private readonly IReviewSessionService _reviewSessionService;

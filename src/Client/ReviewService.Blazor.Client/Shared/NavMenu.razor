@@ -1,11 +1,14 @@
-﻿<AuthorizeView Roles="Administrator,Manager">
-    <MudNavMenu>
+﻿<MudNavMenu>
+    <AuthorizeView Roles="Reviewer">
+        <MudNavLink Match="NavLinkMatch.All" Href="personalReviews">My Reviews</MudNavLink>
+    </AuthorizeView>
+    <AuthorizeView Roles="Administrator,Manager">
         <MudNavLink Match="NavLinkMatch.All" Href="reviewsessions">Review Sessions</MudNavLink>
-        <MudNavLink Match="NavLinkMatch.All" Href="personalReviews">Reviews</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Href="personalReviews">My Reviews</MudNavLink>
         <MudNavLink Match="NavLinkMatch.All" Href="reviewtemplates">Review Templates</MudNavLink>
         <MudNavLink Match="NavLinkMatch.All" Href="areas">Areas</MudNavLink>
         <MudNavLink Match="NavLinkMatch.All" Href="importancelevels">Importance Levels</MudNavLink>
         <MudNavLink Match="NavLinkMatch.All" Href="evaluationpoints">Evaluation Points</MudNavLink>
         <MudNavLink Match="NavLinkMatch.All" Href="users">Users</MudNavLink>
-    </MudNavMenu>
-</AuthorizeView>
+    </AuthorizeView>
+</MudNavMenu>

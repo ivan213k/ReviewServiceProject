@@ -11,7 +11,7 @@ namespace ReviewService.Web.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator,Manager")]
+    [Authorize(Roles = "Administrator,Manager,Reviewer")]
     public class EvaluationPointController : ControllerBase
     {
         private readonly IEvaluationPointService _evaluationPointService;
