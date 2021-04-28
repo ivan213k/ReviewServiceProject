@@ -15,11 +15,17 @@ namespace ReviewService.Blazor.Client.Shared
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            NavigationManager.NavigateTo("/personalReviews");
+        }
+
         private void DrawerToggle()
         {
             _drawerOpen = !_drawerOpen;
         }
-
+        
         private void ClickLogOut()
         {
             NavigationManager.NavigateTo("/logout");

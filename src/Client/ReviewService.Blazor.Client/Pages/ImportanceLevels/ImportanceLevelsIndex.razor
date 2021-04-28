@@ -7,46 +7,46 @@
 }
 else
 {
-<MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
-    <EditForm Model="@_importanceLevel" @ref="@_editForm">
-        <FluentValidationValidator />
-        <MudGrid>
-            <MudItem xs="12" sm="5">
-                <MudTextField Label="Name" @bind-Value="@_importanceLevel.Name" For="@(() => _importanceLevel.Name)" />
-            </MudItem>
-            <MudItem xs="12" sm="5">
-                <MudTextField Label="Description" @bind-Value="@_importanceLevel.Description" For="@(() => _importanceLevel.Description)" />
-            </MudItem>
-            <MudItem xs="12" sm="2">
-                <MudButton Class="mt-4" OnClick="OpenModal" Style=@ColorField(_importanceLevel.Color)>
-                    Select Color
-                </MudButton>
-                <ValidationMessage For="@(() => _importanceLevel.Description)"></ValidationMessage>
-                <ColorPicker IsOpened="IsOpened" Closed="ClosedEvent" MyColor="@_importanceLevel.Color"></ColorPicker>
-            </MudItem>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="AddRowClicked">AddRow</MudButton>
-        </MudGrid>
-    </EditForm>
-</MudPaper>
-<MudTable Items="@_importanceLevels" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8 mb-10" Elevation="14">
-    <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Description</MudTh>
-        <MudTh>Color</MudTh>
-        <MudTh>Action</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Description">@context.Description</MudTd>
-        <MudTd DataLabel="Color">
-            <MudPaper Style=@ColorField(context.Color) Elevation="1" Class="pa-5">
-            </MudPaper>
-        </MudTd>
-        <MudTd  DataLabel="Action">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+    <MudPaper Elevation="14" Class="px-4 mt-8 ml-8 mr-8">
+        <EditForm Model="@_importanceLevel" @ref="@_editForm">
+            <FluentValidationValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="5">
+                    <MudTextField Label="Name" @bind-Value="@_importanceLevel.Name" For="@(() => _importanceLevel.Name)" />
+                </MudItem>
+                <MudItem xs="12" sm="5">
+                    <MudTextField Label="Description" @bind-Value="@_importanceLevel.Description" For="@(() => _importanceLevel.Description)" />
+                </MudItem>
+                <MudItem xs="12" sm="2">
+                    <MudButton Class="mt-4" OnClick="OpenModal" Style=@ColorField(_importanceLevel.Color)>
+                        Select Color
+                    </MudButton>
+                    <ValidationMessage For="@(() => _importanceLevel.Description)"></ValidationMessage>
+                    <ColorPicker IsOpened="IsOpened" Closed="ClosedEvent" MyColor="@_importanceLevel.Color"></ColorPicker>
+                </MudItem>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto mt-2 mb-2 mr-2" OnClick="AddRowClicked">AddRow</MudButton>
+            </MudGrid>
+        </EditForm>
+    </MudPaper>
+    <MudTable Items="@_importanceLevels" Hover="true" Breakpoint="Breakpoint.None" Class="px-4 mt-8 ml-8 mr-8 mb-10" Elevation="14">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Color</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Color">
+                <MudPaper Style=@ColorField(context.Color) Elevation="1" Class="pa-5">
+                </MudPaper>
+            </MudTd>
+            <MudTd DataLabel="Action">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Class="ml-auto" OnClick="() => OnDeleteClicked(context)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 
 }
 

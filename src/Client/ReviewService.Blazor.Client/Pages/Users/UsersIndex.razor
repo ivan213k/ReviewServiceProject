@@ -14,10 +14,12 @@ else
         <RowTemplate>
             <MudTd DataLabel="Full name">@context.FullName</MudTd>
             <MudTd DataLabel="Email">@context.Email</MudTd>
-            @foreach(var role in context.Roles)
-                {
-                    <MudTd>@role</MudTd>
-                }
+            <MudTd>
+                @foreach (var role in context.Roles)
+                    {
+                    @role
+                    }
+            </MudTd>
         </RowTemplate>
     </MudTable>
 }
