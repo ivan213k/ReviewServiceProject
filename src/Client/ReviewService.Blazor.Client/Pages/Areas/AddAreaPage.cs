@@ -72,7 +72,6 @@ namespace ReviewService.Blazor.Client.Pages.Areas
             if (editForm.EditContext.Validate())
             {
                 var responseMessage = await HttpClient.PostAsJsonAsync("api/Area", area);
-                await HttpClient.PostAsJsonAsync("api/Area", area);
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     NavigationManager.NavigateTo("/areas");
