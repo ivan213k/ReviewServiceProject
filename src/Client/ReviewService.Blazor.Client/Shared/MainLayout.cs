@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Components;
 
 
 namespace ReviewService.Blazor.Client.Shared
@@ -18,7 +13,6 @@ namespace ReviewService.Blazor.Client.Shared
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            NavigationManager.NavigateTo("/personalReviews");
         }
 
         private void DrawerToggle()
